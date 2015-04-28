@@ -66,13 +66,13 @@ def compare_efficiencies(ntuple, variable, PtCut, binning, filename,
                          title='', xaxis='',yaxis=''):
     denom = make_plot(
         ntuple, variable,
-        "", # No selection
+        "dmf>0&&genMatchedTau==1&&pt> %0.2f"%(PtCut), #
         binning
     )
 
     num = make_plot(
         ntuple, variable,
-        "pt > %0.2f && passDiscr>0" % (PtCut),
+        "pt > %0.2f && dmf>0 &&genMatchedTau==1&&passDiscr>0" % (PtCut),
         binning
     )
     frame = ROOT.TH1F("frame", "frame", *binning)
@@ -96,10 +96,10 @@ def compare_efficiencies(ntuple, variable, PtCut, binning, filename,
 # Efficiency for a 20 GeV cut on tau Pt 
 ################################################################################
 
-compare_efficiencies(ntuple, 'pt',  20, [20, 0, 120],#variable, ptcut, binning
-                    'tauPt_20',#filename
+compare_efficiencies(ntuple, 'pt', 0, [20, 0, 120],#variable, ptcut, binning
+                    'tauPt_0',#filename
                     "Tau Efficiency ByLooseIsolation",#title
                     "pf Tau p_{T} (GeV)",#xaxis
-                    "Pf Tau pass tauID/(all Pf tau)" #yaxis             
+                    "(Pf Tau gen dmf tauID)/(dmf gen pftau)" #yaxis             
 )
 

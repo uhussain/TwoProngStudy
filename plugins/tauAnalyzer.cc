@@ -70,7 +70,11 @@ class tauAnalyzer : public edm::EDAnalyzer {
       edm::InputTag discriminatorSrc_;
       TTree* tree;
       std::vector<Float_t>* pts_;
+      std::vector<Int_t>* dmf_;
       std::vector<Int_t>* passDiscr_;
+      std::vector<Int_t>* genMatchedJet_;
+      std::vector<Int_t>* genMatchedTau_;
+      std::vector<Float_t>* genMatchedPt_;
       double maxDR_;
 
       //virtual void beginRun(edm::Run const&, edm::EventSetup const&) override;
@@ -102,9 +106,17 @@ tauAnalyzer::tauAnalyzer(const edm::ParameterSet& cfg)
   //ntuple additions
   tree = fs->make<TTree>("Ntuple", "Ntuple");
   pts_ = new std::vector<Float_t>();
+  dmf_ = new std::vector<Int_t>();
   passDiscr_ = new std::vector<Int_t>();
+  genMatchedTau_ = new std::vector<Int_t>();
+  genMatchedJet_ = new std::vector<Int_t>();
+  genMatchedPt_ = new std::vector<Float_t>();
   tree->Branch("pt", "std::vector<float>", &pts_);
+  tree->Branch("dmf", "std::vector<int>", &dmf_);
   tree->Branch("passDiscr", "std::vector<int>", &passDiscr_);
+  tree->Branch("genMatchedJet", "std::vector<int>", &genMatchedJet_);
+  tree->Branch("genMatchedTau", "std::vector<int>", &genMatchedTau_);
+  tree->Branch("genMatchedPt", "std::vector<float>", &genMatchedPt_);
   maxDR_ = 0.5;
 }
 
@@ -115,7 +127,11 @@ tauAnalyzer::~tauAnalyzer()
    // do anything here that needs to be done at desctruction time
    // (e.g. close files, deallocate resources etc.)
    delete pts_;
+   delete dmf_;
    delete passDiscr_;
+   delete genMatchedJet_;
+   delete genMatchedTau_;
+   delete genMatchedPt_;
 }
 
 
@@ -140,16 +156,16 @@ std::vector<const reco::GenParticle*> getGenParticleCollection(const edm::Event&
 
 // Get collection of pat::taus
 //
-std::vector<const pat::Tau*> getRecoCandCollections(const edm::Event& evt, const edm::InputTag& collection) {
+std::vector<const reco::PFTau*> getRecoCandCollections(const edm::Event& evt, const edm::InputTag& collection) {
     std::cout<<"Here 1.a"<<std::endl;
-    std::vector<const pat::Tau*> output;
+    std::vector<const reco::PFTau*> output;
     std::cout<<"Here 1.b"<<std::endl;
-    edm::Handle<std::vector<pat::Tau> > handle;
+    edm::Handle<std::vector<reco::PFTau> > handle;
     evt.getByLabel(collection, handle);
     std::cout<<"Here 1.c"<<std::endl;
     // Loop over objects in current collection
     for (size_t j = 0; j < handle->size(); ++j) {
-      const pat::Tau& object = handle->at(j);
+      const reco::PFTau& object = handle->at(j);
       if(object.pt()>15. && fabs(object.eta())< 3.){
         output.push_back(&object);
       }
@@ -157,12 +173,12 @@ std::vector<const pat::Tau*> getRecoCandCollections(const edm::Event& evt, const
   return output;
 }
 // Method to find the best match between tag tau and gen object. The best matched gen tau object will be returned. If there is no match within a DR < 0.5, a null pointer is returned
-const reco::GenParticle* findBestGenMatch(const pat::Tau* TagTauObj,
+const reco::GenParticle* findBestGenMatch(const reco::PFTau TagTauObj,
     std::vector<const reco::GenParticle*>& GenPart, double maxDR) {
   const reco::GenParticle* output = NULL;
   double bestDeltaR = -1;
   for (size_t i = 0; i < GenPart.size(); ++i) {
-    double deltaR = reco::deltaR(*TagTauObj, *GenPart[i]);
+    double deltaR = reco::deltaR(TagTauObj, *GenPart[i]);
     if (deltaR < maxDR) {
       if (!output || deltaR < bestDeltaR) {
         output = GenPart[i];
@@ -178,18 +194,27 @@ void
 tauAnalyzer::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 {
   using namespace edm;
-  //Handle<pat::TauCollection> tauObjects;
-  //Handle<reco::PFTauCollection> tauObjects;
-  //evt.getByLabel(tauSrc_, tauObjects);
+  Handle<reco::PFTauCollection> tauObjects;
+  evt.getByLabel(tauSrc_, tauObjects);
   
   edm::Handle<reco::PFTauDiscriminator> discriminator;
   evt.getByLabel(discriminatorSrc_, discriminator);
 
-/*  pts_->clear();
+  edm::Handle<reco::PFTauDiscriminator> DMF; 
+  evt.getByLabel("hpsPFTauDiscriminationByDecayModeFinding",DMF);
+
+  pts_->clear();
+  dmf_->clear();
   passDiscr_->clear();
-  for (unsigned int iTau = 0; iTau<taus->size() ; ++iTau){
-        reco::PFTauRef tauCandidate(taus, iTau);
+  genMatchedTau_->clear();
+  genMatchedJet_->clear();
+  genMatchedPt_->clear();
+  for (unsigned int iTau = 0; iTau<tauObjects->size() ; ++iTau){
+        reco::PFTauRef tauCandidate(tauObjects, iTau);
         pts_->push_back(tauCandidate->pt());
+        // check if tau candidate has passed discriminator
+        if( (*DMF)[tauCandidate] > 0.5 ) dmf_->push_back(1);
+        else dmf_->push_back(0);
         // check if tau candidate has passed discriminator
         if( (*discriminator)[tauCandidate] > 0.5 ){
         // do something with your candidate
@@ -199,76 +224,86 @@ tauAnalyzer::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
         passDiscr_->push_back(0);
         }
   }//end tau loop 
-*/
-  std::cout<<"Here 1"<<std::endl;
-  std::vector<const pat::Tau*> tauObjects = getRecoCandCollections(evt, tauSrc_);
-  
-  std::cout<<"Here 2"<<std::endl;
-  std::vector<const reco::GenParticle*> GenObjects = getGenParticleCollection(evt);
-  std::cout<<"Here 3"<<std::endl;
-  for(unsigned int i = 0; i<tauObjects.size(); i++){
-            const pat::Tau* TagTau = tauObjects[i];
-            const reco::Candidate* bestGenMatch = findBestGenMatch(TagTau,GenObjects, maxDR_) ;
-            std::cout<<"BestGenMatch Pt: "<<bestGenMatch->pt()<<std::endl;
-   }
 
-tree->Fill();
+  
+  std::vector<const reco::GenParticle*> GenObjects = getGenParticleCollection(evt);
+  for(unsigned int iTau = 0; iTau<tauObjects->size(); iTau++){
+	  const reco::PFTau tauCand=tauObjects->at(iTau);
+	  const reco::Candidate* bestGenMatch = findBestGenMatch(tauCand,GenObjects, maxDR_) ;
+	  if(bestGenMatch) {
+		  genMatchedPt_->push_back(bestGenMatch->pt());
+		  if (abs(bestGenMatch->pdgId())==15){
+			  genMatchedTau_->push_back(1);
+			  genMatchedJet_->push_back(0);
+		  }
+		  else{
+			  genMatchedJet_->push_back(1);//Not Necessarily a jet, but certainly not a tau
+			  genMatchedTau_->push_back(0);}
+	  }
+	  else {
+		  genMatchedPt_->push_back(-1);
+		  genMatchedJet_->push_back(-1);
+		  genMatchedTau_->push_back(-1);
+	  }
+  }
+
+  tree->Fill();
 
 }
 
 
 // ------------ method called once each job just before starting event loop  ------------
-void 
+	void 
 tauAnalyzer::beginJob()
 {
 }
 
 // ------------ method called once each job just after ending the event loop  ------------
-void 
+	void 
 tauAnalyzer::endJob() 
 {
 }
 
 // ------------ method called when starting to processes a run  ------------
 /*
-void 
-tauAnalyzer::beginRun(edm::Run const&, edm::EventSetup const&)
-{
-}
-*/
+   void 
+   tauAnalyzer::beginRun(edm::Run const&, edm::EventSetup const&)
+   {
+   }
+   */
 
 // ------------ method called when ending the processing of a run  ------------
 /*
-void 
-tauAnalyzer::endRun(edm::Run const&, edm::EventSetup const&)
-{
-}
-*/
+   void 
+   tauAnalyzer::endRun(edm::Run const&, edm::EventSetup const&)
+   {
+   }
+   */
 
 // ------------ method called when starting to processes a luminosity block  ------------
 /*
-void 
-tauAnalyzer::beginLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
-{
-}
-*/
+   void 
+   tauAnalyzer::beginLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
+   {
+   }
+   */
 
 // ------------ method called when ending the processing of a luminosity block  ------------
 /*
-void 
-tauAnalyzer::endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
-{
-}
-*/
+   void 
+   tauAnalyzer::endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
+   {
+   }
+   */
 
 // ------------ method fills 'descriptions' with the allowed parameters for the module  ------------
 void
 tauAnalyzer::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
-  //The following says we do not know what parameters are allowed so do no validation
-  // Please change this to state exactly what you do use, even if it is no parameters
-//  edm::ParameterSetDescription desc;
-//  desc.setUnknown();
-//  descriptions.addDefault(desc);
+	//The following says we do not know what parameters are allowed so do no validation
+	// Please change this to state exactly what you do use, even if it is no parameters
+	//  edm::ParameterSetDescription desc;
+	//  desc.setUnknown();
+	//  descriptions.addDefault(desc);
 }
 
 //define this as a plug-in
