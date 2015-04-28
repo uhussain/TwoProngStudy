@@ -1,0 +1,73 @@
+# Conditions read from  CMS_CONDITIONS  via FrontierProd 
+ switching PAT Tau input to:  cms.InputTag("hpsPFTauProducer")
+28-Apr-2015 03:56:30 CDT  Initiating request to open file file:/hdfs/store/mc/Phys14DR/WJetsToLNu_13TeV-madgraph-pythia8-tauola/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/28C4E0C1-7F6F-E411-AE20-0025905B85EE.root
+28-Apr-2015 03:56:35 CDT  Successfully opened file file:/hdfs/store/mc/Phys14DR/WJetsToLNu_13TeV-madgraph-pythia8-tauola/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/28C4E0C1-7F6F-E411-AE20-0025905B85EE.root
+Begin processing the 1st record. Run 1, Event 1312207, LumiSection 13123 at 28-Apr-2015 03:56:51.602 CDT
+Begin processing the 101st record. Run 1, Event 1312496, LumiSection 13125 at 28-Apr-2015 03:57:47.721 CDT
+Begin processing the 201st record. Run 1, Event 1323607, LumiSection 13237 at 28-Apr-2015 03:58:30.346 CDT
+Begin processing the 301st record. Run 1, Event 1323908, LumiSection 13240 at 28-Apr-2015 03:59:14.347 CDT
+Begin processing the 401st record. Run 1, Event 1342219, LumiSection 13423 at 28-Apr-2015 04:00:00.668 CDT
+Begin processing the 501st record. Run 1, Event 9245914, LumiSection 92460 at 28-Apr-2015 04:00:43.858 CDT
+Begin processing the 601st record. Run 1, Event 9340438, LumiSection 93405 at 28-Apr-2015 04:01:25.488 CDT
+Begin processing the 701st record. Run 1, Event 9340789, LumiSection 93408 at 28-Apr-2015 04:02:08.118 CDT
+Begin processing the 801st record. Run 1, Event 22879496, LumiSection 228795 at 28-Apr-2015 04:02:51.416 CDT
+Begin processing the 901st record. Run 1, Event 22879787, LumiSection 228798 at 28-Apr-2015 04:03:37.549 CDT
+Begin processing the 1001st record. Run 1, Event 50409689, LumiSection 504097 at 28-Apr-2015 04:04:27.332 CDT
+Begin processing the 1101st record. Run 1, Event 35126475, LumiSection 351265 at 28-Apr-2015 04:05:21.322 CDT
+Begin processing the 1201st record. Run 1, Event 35126784, LumiSection 351268 at 28-Apr-2015 04:06:05.377 CDT
+Begin processing the 1301st record. Run 1, Event 35128870, LumiSection 351289 at 28-Apr-2015 04:06:55.454 CDT
+Begin processing the 1401st record. Run 1, Event 35129220, LumiSection 351293 at 28-Apr-2015 04:07:43.632 CDT
+Begin processing the 1501st record. Run 1, Event 35140324, LumiSection 351404 at 28-Apr-2015 04:08:32.523 CDT
+Begin processing the 1601st record. Run 1, Event 53226436, LumiSection 532265 at 28-Apr-2015 04:09:22.591 CDT
+Begin processing the 1701st record. Run 1, Event 53226736, LumiSection 532268 at 28-Apr-2015 04:10:03.669 CDT
+Begin processing the 1801st record. Run 1, Event 53227086, LumiSection 532271 at 28-Apr-2015 04:10:48.147 CDT
+Begin processing the 1901st record. Run 1, Event 53228030, LumiSection 532281 at 28-Apr-2015 04:11:31.307 CDT
+Begin processing the 2001st record. Run 1, Event 53228343, LumiSection 532284 at 28-Apr-2015 04:12:17.213 CDT
+Begin processing the 2101st record. Run 1, Event 56976020, LumiSection 569761 at 28-Apr-2015 04:13:03.664 CDT
+Begin processing the 2201st record. Run 1, Event 56976298, LumiSection 569763 at 28-Apr-2015 04:13:46.226 CDT
+Begin processing the 2301st record. Run 1, Event 56977179, LumiSection 569772 at 28-Apr-2015 04:14:29.978 CDT
+Begin processing the 2401st record. Run 1, Event 56977478, LumiSection 569775 at 28-Apr-2015 04:15:13.717 CDT
+Begin processing the 2501st record. Run 1, Event 56977800, LumiSection 569778 at 28-Apr-2015 04:15:57.510 CDT
+Begin processing the 2601st record. Run 1, Event 76945823, LumiSection 769459 at 28-Apr-2015 04:16:44.357 CDT
+Begin processing the 2701st record. Run 1, Event 76946100, LumiSection 769461 at 28-Apr-2015 04:17:29.224 CDT
+Begin processing the 2801st record. Run 1, Event 76947039, LumiSection 769471 at 28-Apr-2015 04:18:17.879 CDT
+Begin processing the 2901st record. Run 1, Event 76947328, LumiSection 769474 at 28-Apr-2015 04:19:01.113 CDT
+Begin processing the 3001st record. Run 1, Event 76948264, LumiSection 769483 at 28-Apr-2015 04:19:51.848 CDT
+Begin processing the 3101st record. Run 1, Event 86146051, LumiSection 861461 at 28-Apr-2015 04:20:34.864 CDT
+Begin processing the 3201st record. Run 1, Event 86146340, LumiSection 861464 at 28-Apr-2015 04:21:22.723 CDT
+Begin processing the 3301st record. Run 1, Event 86153889, LumiSection 861539 at 28-Apr-2015 04:22:06.535 CDT
+Begin processing the 3401st record. Run 1, Event 86154154, LumiSection 861542 at 28-Apr-2015 04:22:54.352 CDT
+Begin processing the 3501st record. Run 1, Event 86155667, LumiSection 861557 at 28-Apr-2015 04:23:39.971 CDT
+Begin processing the 3601st record. Run 1, Event 107471674, LumiSection 1074717 at 28-Apr-2015 04:24:25.087 CDT
+Begin processing the 3701st record. Run 1, Event 107471960, LumiSection 1074720 at 28-Apr-2015 04:25:13.965 CDT
+Begin processing the 3801st record. Run 1, Event 107706496, LumiSection 1077065 at 28-Apr-2015 04:25:57.955 CDT
+Begin processing the 3901st record. Run 1, Event 107706800, LumiSection 1077068 at 28-Apr-2015 04:26:42.938 CDT
+Begin processing the 4001st record. Run 1, Event 107788427, LumiSection 1077885 at 28-Apr-2015 04:27:31.348 CDT
+Begin processing the 4101st record. Run 1, Event 107788758, LumiSection 1077888 at 28-Apr-2015 04:28:21.317 CDT
+Begin processing the 4201st record. Run 1, Event 107789063, LumiSection 1077891 at 28-Apr-2015 04:29:07.518 CDT
+Begin processing the 4301st record. Run 1, Event 107789398, LumiSection 1077894 at 28-Apr-2015 04:29:57.445 CDT
+Begin processing the 4401st record. Run 1, Event 107789742, LumiSection 1077898 at 28-Apr-2015 04:30:49.244 CDT
+Begin processing the 4501st record. Run 1, Event 123109926, LumiSection 1231100 at 28-Apr-2015 04:31:35.838 CDT
+Begin processing the 4601st record. Run 1, Event 123110282, LumiSection 1231103 at 28-Apr-2015 04:32:24.556 CDT
+Begin processing the 4701st record. Run 1, Event 123111834, LumiSection 1231119 at 28-Apr-2015 04:33:10.312 CDT
+Begin processing the 4801st record. Run 1, Event 123112175, LumiSection 1231122 at 28-Apr-2015 04:33:58.567 CDT
+Begin processing the 4901st record. Run 1, Event 123113089, LumiSection 1231131 at 28-Apr-2015 04:34:44.314 CDT
+28-Apr-2015 04:35:27 CDT  Closed file file:/hdfs/store/mc/Phys14DR/WJetsToLNu_13TeV-madgraph-pythia8-tauola/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/28C4E0C1-7F6F-E411-AE20-0025905B85EE.root
+
+=============================================
+
+MessageLogger Summary
+
+ type     category        sev    module        subroutine        count    total
+ ---- -------------------- -- ---------------- ----------------  -----    -----
+    1 fileAction           -s file_close                             1        1
+    2 fileAction           -s file_open                              2        2
+
+ type    category    Examples: run/evt        run/evt          run/evt
+ ---- -------------------- ---------------- ---------------- ----------------
+    1 fileAction           PostEndRun                        
+    2 fileAction           pre-events       pre-events       
+
+Severity    # Occurrences   Total Occurrences
+--------    -------------   -----------------
+System                  3                   3
