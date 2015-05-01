@@ -65,8 +65,8 @@ switchJetCollection(
 )
 
 
-process.patJets.addTagInfos = cms.bool(True)
-process.patJets.addBTagInfo = cms.bool(True)
+#process.patJets.addTagInfos = cms.bool(True)
+#process.patJets.addBTagInfo = cms.bool(True)
 
 
 #--------------------------------------------------------------------------------
@@ -122,7 +122,7 @@ process.p = cms.Path(process.selectPrimaryVertex *
                      process.makePatMuons*
                      process.makePatElectrons*
                      process.makePatTaus*
-                     #process.makePatJets*
+                     process.makePatJets*
                      process.makePatMETs*
                      process.makePatTrigger*
                      process.tauAnalyzer
