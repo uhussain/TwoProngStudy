@@ -19,7 +19,7 @@ process.GlobalTag = customiseGlobalTag(process.GlobalTag, globaltag = 'PHYS14_25
 #process.GlobalTag.globaltag = cms.string('PHYS14_25_V2::All')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(5000)
+    input = cms.untracked.int32(500)
 )
 
 process.source = cms.Source("PoolSource",
@@ -70,6 +70,7 @@ switchJetCollection(
 
 
 #--------------------------------------------------------------------------------
+process.load("RecoTauTag.Configuration.RecoPFTauTag_cff") #loading the configuration
 # switch to HPS PFTaus (and disable all "cleaning" cuts)
 from PhysicsTools.PatAlgos.tools.tauTools import *
 switchToPFTauHPS(process)
@@ -110,10 +111,28 @@ process.selectPrimaryVertex = cms.Sequence(
 ##################################################
 # Main
 
-process.tauAnalyzer = cms.EDAnalyzer('tauAnalyzer',
+process.byLooseIsolation = cms.EDAnalyzer('tauAnalyzer',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByLooseIsolation")
 )
+
+process.byVLooseIsolation = cms.EDAnalyzer('tauAnalyzer',
+                                     recoTau              = cms.InputTag("hpsPFTauProducer"),
+                                     recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByVLooseIsolation")
+)
+
+
+process.byVLooseCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('tauAnalyzer',
+                                     recoTau              = cms.InputTag("hpsPFTauProducer"),
+                                     recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByVLooseCombinedIsolationDBSumPtCorr")
+)
+
+process.byLooseCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('tauAnalyzer',
+                                     recoTau              = cms.InputTag("hpsPFTauProducer"),
+                                     recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr")
+)
+
+
 
 ###################################################
 #Global sequence
@@ -125,7 +144,11 @@ process.p = cms.Path(process.selectPrimaryVertex *
                      process.makePatJets*
                      process.makePatMETs*
                      process.makePatTrigger*
-                     process.tauAnalyzer
+		     process.PFTau*
+                     process.byLooseIsolation*
+                     process.byVLooseIsolation*
+                     process.byVLooseCombinedIsolationDBSumPtCorr*
+                     process.byLooseCombinedIsolationDBSumPtCorr
                      )
 
 process.TFileService = cms.Service("TFileService",
@@ -141,7 +164,8 @@ process.out.outputCommands = cms.untracked.vstring('keep *')
 
 process.schedule = cms.Schedule(process.p)
 
-
+dump_file = open('dump.py','w')
+dump_file.write(process.dumpPython())
 
 
 
