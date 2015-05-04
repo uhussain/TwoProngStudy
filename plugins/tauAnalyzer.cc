@@ -256,8 +256,10 @@ tauAnalyzer::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 			genMatchedJet.push_back(-1);
 			genMatchedTau.push_back(-1);
 		}
-		//if (PFJetRef& jetRef_()
-		jetPts.push_back(0);
+		if (tauCand.jetRef().isNonnull()){
+		jetPts.push_back(tauCand.jetRef()->pt());
+                }
+                else jetPts.push_back(0);
 	}
 	for (size_t i = 0; i < tauObjects->size(); ++i) {
 		pts_->clear();
