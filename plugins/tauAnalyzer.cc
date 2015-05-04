@@ -75,6 +75,7 @@ class tauAnalyzer : public edm::EDAnalyzer {
       std::vector<Int_t>* genMatchedJet_;
       std::vector<Int_t>* genMatchedTau_;
       std::vector<Float_t>* genMatchedPt_;
+      std::vector<Float_t>* jetPts_;
       double maxDR_;
 
       //virtual void beginRun(edm::Run const&, edm::EventSetup const&) override;
@@ -111,12 +112,14 @@ tauAnalyzer::tauAnalyzer(const edm::ParameterSet& cfg)
   genMatchedTau_ = new std::vector<Int_t>();
   genMatchedJet_ = new std::vector<Int_t>();
   genMatchedPt_ = new std::vector<Float_t>();
+  jetPts_ = new std::vector<Float_t>();
   tree->Branch("pt", "std::vector<float>", &pts_);
   tree->Branch("dmf", "std::vector<int>", &dmf_);
   tree->Branch("passDiscr", "std::vector<int>", &passDiscr_);
   tree->Branch("genMatchedJet", "std::vector<int>", &genMatchedJet_);
   tree->Branch("genMatchedTau", "std::vector<int>", &genMatchedTau_);
   tree->Branch("genMatchedPt", "std::vector<float>", &genMatchedPt_);
+  tree->Branch("jetPt", "std::vector<float>", &jetPts_);
   maxDR_ = 0.5;
 }
 
@@ -132,6 +135,7 @@ tauAnalyzer::~tauAnalyzer()
    delete genMatchedJet_;
    delete genMatchedTau_;
    delete genMatchedPt_;
+   delete jetPts_;
 }
 
 
@@ -157,12 +161,9 @@ std::vector<const reco::GenParticle*> getGenParticleCollection(const edm::Event&
 // Get collection of pat::taus
 //
 std::vector<const reco::PFTau*> getRecoCandCollections(const edm::Event& evt, const edm::InputTag& collection) {
-    std::cout<<"Here 1.a"<<std::endl;
     std::vector<const reco::PFTau*> output;
-    std::cout<<"Here 1.b"<<std::endl;
     edm::Handle<std::vector<reco::PFTau> > handle;
     evt.getByLabel(collection, handle);
-    std::cout<<"Here 1.c"<<std::endl;
     // Loop over objects in current collection
     for (size_t j = 0; j < handle->size(); ++j) {
       const reco::PFTau& object = handle->at(j);
@@ -209,6 +210,7 @@ tauAnalyzer::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
   genMatchedTau_->clear();
   genMatchedJet_->clear();
   genMatchedPt_->clear();
+  jetPts_->clear();
   for (unsigned int iTau = 0; iTau<tauObjects->size() ; ++iTau){
         reco::PFTauRef tauCandidate(tauObjects, iTau);
         pts_->push_back(tauCandidate->pt());
@@ -245,6 +247,8 @@ tauAnalyzer::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 		  genMatchedJet_->push_back(-1);
 		  genMatchedTau_->push_back(-1);
 	  }
+  //if (PFJetRef& jetRef_()
+  jetPts_->push_back(0);
   }
 
   tree->Fill();

@@ -40,8 +40,8 @@ else:
 #####################################
 
 
-LooseIso = ntuple_file.Get("ByLooseIsolation/Ntuple")
-VLooseIso = ntuple_file.Get("ByVLooseIsolation/Ntuple")
+LooseIso = ntuple_file.Get("byLooseIsolation/Ntuple")
+VLooseIso = ntuple_file.Get("byVLooseIsolation/Ntuple")
 
 canvas = ROOT.TCanvas("asdf", "adsf", 800, 800)
 
@@ -65,14 +65,14 @@ def make_efficiency(denom, num):
 def make_num(ntuple, variable,PtCut,binning):
     num = make_plot(
         ntuple, variable,
-        "pt > %0.2f && dmf>0 &&genMatchedTau==1&&passDiscr>0" % (PtCut),
+        "pt[0] > %0.2f && dmf[0]>0 &&genMatchedTau[0]==1&&passDiscr[0]>0" % (PtCut),
         binning
     )
     return num
 def make_denom(ntuple, variable,PtCut,binning):
     denom = make_plot(
         ntuple, variable,
-        "dmf>0&&genMatchedTau==1&&pt> %0.2f"%(PtCut), #
+        "dmf[0]>0&&genMatchedTau[0]==1&&pt[0]> %0.2f"%(PtCut), #
         binning
     )
     return denom
@@ -110,7 +110,7 @@ def compare_efficiencies(ntuple1,ntuple2, variable, PtCut, binning, filename,
 # Efficiency for a 20 GeV cut on tau Pt 
 ################################################################################
 
-compare_efficiencies(LooseIso, VLooseIso,'pt', 0, [20, 0, 120],#variable, ptcut, binning
+compare_efficiencies(LooseIso, VLooseIso,'pt[0]', 0, [20, 0, 120],#variable, ptcut, binning
                     'tauPt_0',#filename
                     "Tau Efficiency ByLooseIsolation",#title
                     "pf Tau p_{T} (GeV)",#xaxis
