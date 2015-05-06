@@ -1,13 +1,17 @@
 import FWCore.ParameterSet.Config as cms
 
 process = cms.Process("TreeProducerFromAOD")
+#from FWCore.ParameterSet.VarParsing import VarParsing
+#options = VarParsing ('analysis')
+
+#options.inputFiles ='file:/hdfs/store/mc/Phys14DR/WJetsToLNu_13TeV-madgraph-pythia8-tauola/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/28C4E0C1-7F6F-E411-AE20-0025905B85EE.root'
+#options.outputFiles ='outputReRunNonStdStrip.root'
+
+
 
 process.load('FWCore/MessageService/MessageLogger_cfi')
 process.MessageLogger.cerr.FwkReport.reportEvery = 100
 process.MessageLogger.cerr.threshold = cms.untracked.string('INFO')
-#process.load('Configuration.StandardSequences.Geometry_cff')
-#process.load('Configuration.Geometry.GeometryIdeal_cff')
-#process.load('Configuration.StandardSequences.MagneticField_cff')
 
 process.load("Configuration.Geometry.GeometryDB_cff")
 process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_cff')
@@ -19,17 +23,12 @@ process.GlobalTag = customiseGlobalTag(process.GlobalTag, globaltag = 'PHYS14_25
 #process.GlobalTag.globaltag = cms.string('PHYS14_25_V2::All')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(10000)
+    input = cms.untracked.int32(-1)
 )
 
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring(
-# AODSIM        
-        #'file:/hdfs/store/mc/Fall13dr/GluGluToHToTauTau_M-125_13TeV-powheg-pythia6/AODSIM/tsg_PU40bx25_POSTLS162_V2-v1/00000/4A1577F6-4472-E311-886E-7845C4FC39E3.root'
-        'file:/hdfs/store/mc/Phys14DR/WJetsToLNu_13TeV-madgraph-pythia8-tauola/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/28C4E0C1-7F6F-E411-AE20-0025905B85EE.root'
-        #'/store/mc/Phys14DR/DYJetsToLL_M-50_13TeV-madgraph-pythia8/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/00CC714A-F86B-E411-B99A-0025904B5FB8.root'
-        #'/store/mc/Phys14DR/QCD_Pt-15to3000_Tune4C_Flat_13TeV_pythia8/AODSIM/PU20bx25_trkalmb_PHYS14_25_V1-v1/00000/125A6B71-C56A-E411-9D2B-0025907609BE.root'
-    ),
+    fileNames = cms.untracked.vstring($inputFileNames),
+    #fileNames = cms.untracked.vstring(options.inputFiles),
     dropDescendantsOfDroppedBranches=cms.untracked.bool(False),
     inputCommands=cms.untracked.vstring(
         'keep *'
@@ -74,6 +73,8 @@ process.load("RecoTauTag.Configuration.RecoPFTauTag_cff") #loading the configura
 # switch to HPS PFTaus (and disable all "cleaning" cuts)
 from PhysicsTools.PatAlgos.tools.tauTools import *
 switchToPFTauHPS(process)
+
+#process.ak4PFJetsLegacyHPSPiZeros.stripPhiAssociationDistance = cms.double(0.9)
 
 # switch on PAT trigger                                                                                                                      
 from PhysicsTools.PatAlgos.tools.trigTools import switchOnTrigger
@@ -132,6 +133,22 @@ process.byLooseCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('tauAnalyzer',
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr")
 )
 
+process.byLooseCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('tauAnalyzer',
+                                     recoTau              = cms.InputTag("hpsPFTauProducer"),
+                                     recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr3Hits")
+)
+
+process.byMediumCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('tauAnalyzer',
+                                     recoTau              = cms.InputTag("hpsPFTauProducer"),
+                                     recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr3Hits")
+)
+
+process.byTightCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('tauAnalyzer',
+                                     recoTau              = cms.InputTag("hpsPFTauProducer"),
+                                     recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr3Hits")
+)
+
+
 
 
 ###################################################
@@ -148,11 +165,15 @@ process.p = cms.Path(process.selectPrimaryVertex *
                      process.byLooseIsolation*
                      process.byVLooseIsolation*
                      process.byVLooseCombinedIsolationDBSumPtCorr*
-                     process.byLooseCombinedIsolationDBSumPtCorr
+                     process.byLooseCombinedIsolationDBSumPtCorr*
+                     process.byLooseCombinedIsolationDBSumPtCorr3Hits*
+                     process.byMediumCombinedIsolationDBSumPtCorr3Hits*
+                     process.byTightCombinedIsolationDBSumPtCorr3Hits
                      )
 
-process.TFileService = cms.Service("TFileService",
-    fileName = cms.string("outputReRunStdStrip.root")
+process.TFileService = cms.Service(
+   "TFileService",
+   fileName = cms.string($outputFileName)
 )
 
 # Let it run
@@ -164,8 +185,8 @@ process.out.outputCommands = cms.untracked.vstring('keep *')
 
 process.schedule = cms.Schedule(process.p)
 
-dump_file = open('dump.py','w')
-dump_file.write(process.dumpPython())
+#dump_file = open('dump.py','w')
+#dump_file.write(process.dumpPython())
 
 
 

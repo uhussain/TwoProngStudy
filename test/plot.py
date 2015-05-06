@@ -42,6 +42,8 @@ else:
 
 LooseIso = ntuple_file.Get("byLooseIsolation/Ntuple")
 VLooseIso = ntuple_file.Get("byVLooseIsolation/Ntuple")
+byLooseCmbIso = ntuple_file.Get("byLooseCombinedIsolationDBSumPtCorr/Ntuple")
+byVLooseCmbIso = ntuple_file.Get("byVLooseCombinedIsolationDBSumPtCorr/Ntuple")
 
 canvas = ROOT.TCanvas("asdf", "adsf", 800, 800)
 
@@ -84,11 +86,11 @@ def produce_efficiency(ntuple, variable, PtCut,binning, filename,color):
     l1.SetMarkerColor(color)
     return l1
 
-def compare_efficiencies(ntuple1,ntuple2, variable, PtCut, binning, filename,
+def compare_efficiencies(ntuple1,legend1,ntuple2,legend2, variable, PtCut, binning, filename,
                          title='', xaxis='',yaxis=''):
     frame = ROOT.TH1F("frame", "frame", *binning)
     l1 = produce_efficiency(ntuple1,variable, PtCut,binning, filename,ROOT.kMagenta-3)
-    l2 = produce_efficiency(ntuple2,variable, PtCut,binning, filename,ROOT.kMagenta-7)
+    l2 = produce_efficiency(ntuple2,variable, PtCut,binning, filename,ROOT.kBlue-9)
     frame.SetMaximum(1.2)
     frame.SetTitle(title)
     frame.GetXaxis().SetTitle(xaxis)
@@ -96,11 +98,11 @@ def compare_efficiencies(ntuple1,ntuple2, variable, PtCut, binning, filename,
     frame.Draw()
     l1.Draw('pe')
     l2.Draw('pesame')
-    legend = ROOT.TLegend(0.7, 0.2, 0.89, 0.4, "", "brNDC")
+    legend = ROOT.TLegend(0.6, 0.2, 0.89, 0.5, "", "brNDC")
     legend.SetFillColor(ROOT.kWhite)
     legend.SetBorderSize(1)
-    legend.AddEntry(l1, "ByLooseIsolation", "pe")
-    legend.AddEntry(l2, "ByVLooseIsolation", "pe")
+    legend.AddEntry(l1,legend1, "pe")
+    legend.AddEntry(l2,legend2, "pe")
     legend.Draw()
     saveas = saveWhere+filename+'.png'
     print saveas
@@ -110,10 +112,30 @@ def compare_efficiencies(ntuple1,ntuple2, variable, PtCut, binning, filename,
 # Efficiency for a 20 GeV cut on tau Pt 
 ################################################################################
 
-compare_efficiencies(LooseIso, VLooseIso,'pt[0]', 0, [20, 0, 120],#variable, ptcut, binning
+compare_efficiencies(LooseIso, "LooseIsolation",VLooseIso,"VLooseIso",'pt[0]', 0, [20, 0, 120],#variable, ptcut, binning
                     'tauPt_0',#filename
-                    "Tau Efficiency ByLooseIsolation",#title
+                    "Tau Efficiency",#title
                     "pf Tau p_{T} (GeV)",#xaxis
                     "(Pf Tau gen dmf tauID)/(dmf gen pftau)" #yaxis             
 )
 
+compare_efficiencies(byLooseCmbIso, 'byLooseCombIsoDBSumPtCorr', byVLooseCmbIso,'byVLooseCombIsoDBSumPtCorr','pt[0]', 0, [20, 0, 120],#variable, ptcut, binning
+                    'tauPtcmb_0',#filename
+                    "Tau Efficiency",#title
+                    "pf Tau p_{T} (GeV)",#xaxis
+                    "(Pf Tau gen dmf tauID)/(dmf gen pftau)" #yaxis             
+)
+
+compare_efficiencies(byLooseCmbIso, 'byLooseCombIsoDBSumPtCorr', LooseIso,'LooseIsolation','pt[0]', 0, [20, 0, 120],#variable, ptcut, binning
+                    'tauPtloose_0',#filename
+                    "Tau Efficiency",#title
+                    "pf Tau p_{T} (GeV)",#xaxis
+                    "(Pf Tau gen dmf tauID)/(dmf gen pftau)" #yaxis             
+)
+
+compare_efficiencies(byVLooseCmbIso, 'byVLooseCombIsoDBSumPtCorr', VLooseIso,'VLooseIsolation','pt[0]', 0, [20, 0, 120],#variable, ptcut, binning
+                    'tauPtvloose_0',#filename
+                    "Tau Efficiency",#title
+                    "pf Tau p_{T} (GeV)",#xaxis
+                    "(Pf Tau gen dmf tauID)/(dmf gen pftau)" #yaxis             
+)
