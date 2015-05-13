@@ -67,15 +67,22 @@ class tauAnalyzer : public edm::EDAnalyzer {
 		virtual void endJob() override;
 
 		edm::InputTag tauSrc_;
+		edm::InputTag jetSrc_;
 		edm::InputTag discriminatorSrc_;
 		TTree* tree;
 		std::vector<Float_t>* pts_;
+		std::vector<Float_t>* etas_;
 		std::vector<Int_t>* dmf_;
 		std::vector<Int_t>* passDiscr_;
 		std::vector<Int_t>* genMatchedJet_;
 		std::vector<Int_t>* genMatchedTau_;
 		std::vector<Float_t>* genMatchedPt_;
+		std::vector<Float_t>* jetRefPts_;
 		std::vector<Float_t>* jetPts_;
+		std::vector<Float_t>* jetEtas_;
+		std::vector<Int_t>* jetIDLoose_;
+		std::vector<Int_t>* jetIDMed_;
+		std::vector<Int_t>* jetIDTight_;
 		double maxDR_;
 
 		//virtual void beginRun(edm::Run const&, edm::EventSetup const&) override;
@@ -101,6 +108,7 @@ tauAnalyzer::tauAnalyzer(const edm::ParameterSet& cfg)
 {
 	//now do what ever initialization is needed
 	tauSrc_              = cfg.getParameter<edm::InputTag>("recoTau");
+	jetSrc_              = cfg.getParameter<edm::InputTag>("recoJet");
 	discriminatorSrc_    = cfg.getParameter<edm::InputTag>("recoTauDiscriminator");
 
 	edm::Service<TFileService> fs;
@@ -112,15 +120,26 @@ tauAnalyzer::tauAnalyzer(const edm::ParameterSet& cfg)
 	genMatchedTau_ = new std::vector<Int_t>();
 	genMatchedJet_ = new std::vector<Int_t>();
 	genMatchedPt_ = new std::vector<Float_t>();
+	jetRefPts_ = new std::vector<Float_t>();
 	jetPts_ = new std::vector<Float_t>();
+	jetEtas_ = new std::vector<Float_t>();
+	jetIDLoose_ = new std::vector<Int_t>();
+	jetIDMed_ = new std::vector<Int_t>();
+	jetIDTight_ = new std::vector<Int_t>();
 	tree->Branch("pt", "std::vector<float>", &pts_);
+	tree->Branch("eta", "std::vector<float>", &etas_);
 	tree->Branch("dmf", "std::vector<int>", &dmf_);
 	tree->Branch("passDiscr", "std::vector<int>", &passDiscr_);
 	tree->Branch("genMatchedJet", "std::vector<int>", &genMatchedJet_);
 	tree->Branch("genMatchedTau", "std::vector<int>", &genMatchedTau_);
 	tree->Branch("genMatchedPt", "std::vector<float>", &genMatchedPt_);
+	tree->Branch("jetRefPt", "std::vector<float>", &jetRefPts_);
 	tree->Branch("jetPt", "std::vector<float>", &jetPts_);
-	maxDR_ = 0.5;
+	tree->Branch("jetEta", "std::vector<float>", &jetEtas_);
+	tree->Branch("jetIDLoose", "std::vector<int>", &jetIDLoose_);
+	tree->Branch("jetIDMed", "std::vector<int>", &jetIDMed_);
+	tree->Branch("jetIDTight", "std::vector<int>", &jetIDTight_);
+	maxDR_ = 0.2;
 }
 
 
@@ -130,12 +149,18 @@ tauAnalyzer::~tauAnalyzer()
 	// do anything here that needs to be done at desctruction time
 	// (e.g. close files, deallocate resources etc.)
 	delete pts_;
+	delete etas_;
 	delete dmf_;
 	delete passDiscr_;
 	delete genMatchedJet_;
 	delete genMatchedTau_;
 	delete genMatchedPt_;
+	delete jetRefPts_;
 	delete jetPts_;
+	delete jetEtas_;
+	delete jetIDLoose_;
+	delete jetIDMed_;
+	delete jetIDTight_;
 }
 
 
@@ -198,6 +223,10 @@ tauAnalyzer::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 	Handle<reco::PFTauCollection> tauObjects;
 	evt.getByLabel(tauSrc_, tauObjects);
 
+	Handle<reco::PFJetCollection> jetObjects;
+	evt.getByLabel(jetSrc_, jetObjects);
+
+
 	edm::Handle<reco::PFTauDiscriminator> discriminator;
 	evt.getByLabel(discriminatorSrc_, discriminator);
 
@@ -205,33 +234,33 @@ tauAnalyzer::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 	evt.getByLabel("hpsPFTauDiscriminationByDecayModeFinding",DMF);
 
 	pts_->clear();
-	std::vector<float> pts;
+	etas_->clear();
 	dmf_->clear();
-	std::vector<int> dmf;
 	passDiscr_->clear();
-	std::vector<int> passDiscr;
 	genMatchedTau_->clear();
-	std::vector<int> genMatchedTau;
 	genMatchedJet_->clear();
-	std::vector<int> genMatchedJet;
 	genMatchedPt_->clear();
-	std::vector<float> genMatchedPt;
+	jetRefPts_->clear();
 	jetPts_->clear();
-	std::vector<float> jetPts;
+	jetEtas_->clear();
+	jetIDLoose_->clear();
+	jetIDMed_->clear();
+	jetIDTight_->clear();
 
 	for (unsigned int iTau = 0; iTau<tauObjects->size() ; ++iTau){
 		reco::PFTauRef tauCandidate(tauObjects, iTau);
-		pts.push_back(tauCandidate->pt());
+		pts_->push_back(tauCandidate->pt());
+		etas_->push_back(tauCandidate->eta());
 		// check if tau candidate has passed discriminator
-		if( (*DMF)[tauCandidate] > 0.5 ) dmf.push_back(1);
-		else dmf.push_back(0);
+		if( (*DMF)[tauCandidate] > 0.5 ) dmf_->push_back(1);
+		else dmf_->push_back(0);
 		// check if tau candidate has passed discriminator
 		if( (*discriminator)[tauCandidate] > 0.5 ){
 			// do something with your candidate
-			passDiscr.push_back(1);
+			passDiscr_->push_back(1);
 		}
 		else{
-			passDiscr.push_back(0);
+			passDiscr_->push_back(0);
 		}
 	}//end tau loop 
 
@@ -241,44 +270,81 @@ tauAnalyzer::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 		const reco::PFTau tauCand=tauObjects->at(iTau);
 		const reco::Candidate* bestGenMatch = findBestGenMatch(tauCand,GenObjects, maxDR_) ;
 		if(bestGenMatch) {
-			genMatchedPt.push_back(bestGenMatch->pt());
+			genMatchedPt_->push_back(bestGenMatch->pt());
 			if (abs(bestGenMatch->pdgId())==15){
-				genMatchedTau.push_back(1);
-				genMatchedJet.push_back(0);
+				genMatchedTau_->push_back(1);
+				genMatchedJet_->push_back(0);
 			}
 			else{
-				genMatchedJet.push_back(1);//Not Necessarily a jet, but certainly not a tau
-				genMatchedTau.push_back(0);
+				genMatchedJet_->push_back(1);//Not Necessarily a jet, but certainly not a tau
+				genMatchedTau_->push_back(0);
 			}
 		}
 		else {
-			genMatchedPt.push_back(-1);
-			genMatchedJet.push_back(-1);
-			genMatchedTau.push_back(-1);
+			genMatchedPt_->push_back(-1);
+			genMatchedJet_->push_back(-1);
+			genMatchedTau_->push_back(-1);
 		}
 		if (tauCand.jetRef().isNonnull()){
-		jetPts.push_back(tauCand.jetRef()->pt());
-                }
-                else jetPts.push_back(0);
+			jetRefPts_->push_back(tauCand.jetRef()->pt());
+		}
+		else jetRefPts_->push_back(0);
 	}
-	for (size_t i = 0; i < tauObjects->size(); ++i) {
-		pts_->clear();
-		dmf_->clear();
-		passDiscr_->clear();
-		genMatchedTau_->clear();
-		genMatchedJet_->clear();
-		genMatchedPt_->clear();
-		jetPts_->clear();
 
-		pts_->push_back(pts.at(i));
-		dmf_->push_back(dmf.at(i));
-		passDiscr_->push_back(passDiscr.at(i));
-		genMatchedTau_->push_back(genMatchedTau.at(i));
-		genMatchedJet_->push_back(genMatchedJet.at(i));
-		genMatchedPt_->push_back(genMatchedPt.at(i));
-		jetPts_->push_back(jetPts.at(i));
-		tree->Fill();  // create TTree
-	}
+	for(unsigned int iJet = 0; iJet<jetObjects->size(); iJet++){
+		//std::cout<<"getting jetCand"<<std::endl;
+		const reco::PFJet jetCand=jetObjects->at(iJet);
+		//std::cout<<"getting jetCand Pts"<<std::endl;
+		if (fabs(jetCand.eta())<2.3&&jetCand.pt()>20){ 
+			jetPts_->push_back(jetCand.pt());
+			jetEtas_->push_back(jetCand.pt());
+			bool loose = true;
+			bool medium = true;
+			bool tight = true;
+			if (jetCand.neutralHadronEnergyFraction() >= 0.99)
+				loose = false;
+			if (jetCand.neutralHadronEnergyFraction() >= 0.95)
+				medium = false;
+			if (jetCand.neutralHadronEnergyFraction() >= 0.90)
+				tight = false;
+
+			if (jetCand.neutralEmEnergyFraction() >= 0.99)
+				loose = false;
+			if (jetCand.neutralEmEnergyFraction() >= 0.95)
+				medium = false;
+			if (jetCand.neutralEmEnergyFraction() >= 0.90)
+				tight = false;
+
+			if (jetCand.numberOfDaughters() <= 1) { //getPFConstitutents broken in miniAOD
+				loose = false;
+				medium = false;
+				tight = false;
+			}
+
+			if (std::abs(jetCand.eta()) < 2.4) {
+				if (jetCand.chargedHadronEnergyFraction() == 0) {
+					loose = false;
+					medium = false;
+					tight = false;
+				}
+				if (jetCand.chargedHadronMultiplicity() == 0) {
+					loose = false;
+					medium = false;
+					tight = false;
+				}
+				if (jetCand.chargedEmEnergyFraction() >= 0.99) {
+					loose = false;
+					medium = false;
+					tight = false;
+				}
+			}
+
+			jetIDLoose_->push_back(loose);
+			jetIDMed_->push_back(medium);
+			jetIDTight_->push_back(tight);
+		}
+	}//endJet
+	tree->Fill();  // create TTree
 
 }
 
