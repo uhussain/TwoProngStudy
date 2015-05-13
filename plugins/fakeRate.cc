@@ -65,6 +65,7 @@ class fakeRate : public edm::EDAnalyzer {
 		edm::InputTag jetSrc_;
 		edm::InputTag discriminatorSrc_;
 		TTree* tree;
+                int jetbool;
 		std::vector<Float_t>* pts_;
 		std::vector<Float_t>* etas_;
 		std::vector<Int_t>* dmf_;
@@ -126,6 +127,7 @@ fakeRate::fakeRate(const edm::ParameterSet& cfg)
 	tree->Branch("eta", "std::vector<float>", &etas_);
 	tree->Branch("dmf", "std::vector<int>", &dmf_);
 	tree->Branch("passDiscr", "std::vector<int>", &passDiscr_);
+	tree->Branch("jetpass", &jetbool,"jetbool/i");
 	tree->Branch("genMatchedJet", "std::vector<int>", &genMatchedJet_);
 	tree->Branch("genMatchedTau", "std::vector<int>", &genMatchedTau_);
 	tree->Branch("genMatchedPt", "std::vector<float>", &genMatchedPt_);
@@ -135,7 +137,7 @@ fakeRate::fakeRate(const edm::ParameterSet& cfg)
 	tree->Branch("jetIDLoose", "std::vector<int>", &jetIDLoose_);
 	tree->Branch("jetIDMed", "std::vector<int>", &jetIDMed_);
 	tree->Branch("jetIDTight", "std::vector<int>", &jetIDTight_);
-	maxDR_ = 0.2;
+	maxDR_ = 0.3;
 }
 
 
@@ -179,21 +181,6 @@ std::vector<const reco::GenParticle*> getGenParticleCollection2(const edm::Event
 }
 
 
-// Get collection of pat::taus
-//
-std::vector<const reco::PFTau*> getRecoCandCollections2(const edm::Event& evt, const edm::InputTag& collection) {
-	std::vector<const reco::PFTau*> output;
-	edm::Handle<std::vector<reco::PFTau> > handle;
-	evt.getByLabel(collection, handle);
-	// Loop over objects in current collection
-	for (size_t j = 0; j < handle->size(); ++j) {
-		const reco::PFTau& object = handle->at(j);
-		if(object.pt()>15. && fabs(object.eta())< 3.){
-			output.push_back(&object);
-		}
-	}
-	return output;
-}
 // Method to find the best match between tag tau and gen object. The best matched gen tau object will be returned. If there is no match within a DR < 0.5, a null pointer is returned
 const reco::GenParticle* findBestGenMatch2(const reco::PFTau TagTauObj,
 		std::vector<const reco::GenParticle*>& GenPart, double maxDR) {
@@ -227,6 +214,8 @@ fakeRate::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 
 	edm::Handle<reco::PFTauDiscriminator> DMF; 
 	evt.getByLabel("hpsPFTauDiscriminationByDecayModeFinding",DMF);
+
+        jetbool=0;
 
 	pts_->clear();
 	std::vector<float> pts;
@@ -304,6 +293,7 @@ fakeRate::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 		const reco::PFJet jetCand=jetObjects->at(iJet);
 		//std::cout<<"getting jetCand Pts"<<std::endl;
 		if (fabs(jetCand.eta())<2.3&&jetCand.pt()>20){ 
+                        jetbool=1;
 			jetPts.push_back(jetCand.pt());
 			bool loose = true;
 			bool medium = true;
