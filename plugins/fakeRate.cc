@@ -37,6 +37,7 @@ Implementation:
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "TTree.h"
 #include "TauTrigMatch.h"
+#include "helpers.h"
 
 #include "FWCore/Framework/interface/EventSetup.h"
 //
@@ -135,86 +136,6 @@ fakeRate::~fakeRate()
 //
 // member functions
 //
-bool isLooseJet1(const reco::PFJet jet){
-	bool loose = true;
-	if (jet.neutralHadronEnergyFraction() >= 0.99) loose = false;
-	if (jet.neutralEmEnergyFraction() >= 0.99) loose = false;
-	if (jet.numberOfDaughters() <= 1) loose = false; //getPFConstitutents broken in miniAOD
-	if (std::abs(jet.eta()) < 2.4) {
-		if (jet.chargedHadronEnergyFraction() == 0) loose = false;
-		if (jet.chargedHadronMultiplicity() == 0) loose = false;
-		if (jet.chargedEmEnergyFraction() >= 0.99) loose = false;
-	}
-	return loose;
-}
-bool isMediumJet1(const reco::PFJet jet){
-	bool medium = true;
-	if (jet.neutralHadronEnergyFraction() >= 0.95) medium = false;
-	if (jet.neutralEmEnergyFraction() >= 0.95) medium = false;
-	if (jet.numberOfDaughters() <= 1) medium = false; //getPFConstitutents broken in miniAOD
-	if (std::abs(jet.eta()) < 2.4) {
-		if (jet.chargedHadronEnergyFraction() == 0) medium = false;
-		if (jet.chargedHadronMultiplicity() == 0) medium = false;
-		if (jet.chargedEmEnergyFraction() >= 0.99) medium = false;
-	}
-	return medium;
-}
-
-bool isTightJet1(const reco::PFJet jet){
-	bool tight = true;
-	if (jet.neutralHadronEnergyFraction() >= 0.90) tight = false;
-	if (jet.neutralEmEnergyFraction() >= 0.90) tight = false;
-	if (jet.numberOfDaughters() <= 1) tight = false; //getPFConstitutents broken in miniAOD
-	if (std::abs(jet.eta()) < 2.4) {
-		if (jet.chargedHadronEnergyFraction() == 0) tight = false;
-		if (jet.chargedHadronMultiplicity() == 0) tight = false;
-		if (jet.chargedEmEnergyFraction() >= 0.99) tight = false;
-	}
-	return tight;
-}
-
-
-reco::PFJetRef getJetRef3(const reco::PFTau& tau) {
-	if (tau.jetRef().isNonnull())
-		return tau.jetRef();
-	else if (tau.pfTauTagInfoRef()->pfjetRef().isNonnull())
-		return tau.pfTauTagInfoRef()->pfjetRef();
-	else throw cms::Exception("cant find jet ref");
-}
-
-
-// Get collection of generator particles with status 2
-std::vector<const reco::GenParticle*> getGenParticleCollection3(const edm::Event& evt) {
-	std::vector<const reco::GenParticle*> output;
-	edm::Handle< std::vector<reco::GenParticle> > handle;
-	evt.getByLabel("genParticles", handle);
-	// Loop over objects in current collection
-	for (size_t j = 0; j < handle->size(); ++j) {
-		const reco::GenParticle& object = handle->at(j);
-		//if(fabs(object.pdgId())==15 && object.status() == 2) output.push_back(&object);
-		if(object.status() == 2) output.push_back(&object);
-	}
-	return output;
-}
-
-
-// Method to find the best match between tag tau and gen object. The best matched gen tau object will be returned. If there is no match within a DR < 0.5, a null pointer is returned
-//const reco::GenParticle* findBestGenMatch1(const reco::PFTau TagTauObj,
-const reco::GenParticle* findBestGenMatch3(const reco::PFTau& TagTauObj,
-		std::vector<const reco::GenParticle*>& GenPart, double maxDR) {
-	const reco::GenParticle* output = NULL;
-	double bestDeltaR = -1;
-	for (size_t i = 0; i < GenPart.size(); ++i) {
-		double deltaR = reco::deltaR(TagTauObj, *GenPart[i]);
-		if (deltaR < maxDR) {
-			if (!output || deltaR < bestDeltaR) {
-				output = GenPart[i];
-				bestDeltaR = deltaR;
-			}
-		}
-	}
-	return output;
-}
 
 // ------------ method called for each event  ------------
 	void
@@ -233,15 +154,15 @@ fakeRate::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 	edm::Handle<reco::PFTauDiscriminator> DMF; 
 	evt.getByLabel("hpsPFTauDiscriminationByDecayModeFinding",DMF);
 
-	std::vector<const reco::GenParticle*> GenObjects = getGenParticleCollection3(evt);
+	std::vector<const reco::GenParticle*> GenObjects = getGenParticleCollection(evt);
 	for(unsigned int iJet = 0; iJet<jetObjects->size(); iJet++){
 		const reco::PFJet jetCand=jetObjects->at(iJet);
 		if (std::abs(jetCand.eta())<2.3&&jetCand.pt()>20){
 			jetPt_=jetCand.pt();
 			jetEta_=jetCand.eta();
-			jetIDLoose_=isLooseJet1(jetCand);
-			jetIDMed_=isMediumJet1(jetCand);
-			jetIDTight_=isTightJet1(jetCand);
+			jetIDLoose_=isLooseJet(jetCand);
+			jetIDMed_=isMediumJet(jetCand);
+			jetIDTight_=isTightJet(jetCand);
 
 			//initialize
 			int bestDR=999;//right placement?
@@ -258,7 +179,7 @@ fakeRate::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 
 			for (unsigned int iTau = 0; iTau<tauObjects->size() ; ++iTau){
 				reco::PFTauRef tauCandidate(tauObjects, iTau);
-				const reco::Candidate* bestGenMatch = findBestGenMatch3(*tauCandidate,GenObjects, maxDR_) ;
+				const reco::Candidate* bestGenMatch = findBestGenMatch(*tauCandidate,GenObjects, maxDR_) ;
 				genMatchedTau_=0;
 				tau_position++;
 				if(bestGenMatch) {
@@ -274,7 +195,7 @@ fakeRate::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 							else{passDiscr_=0;}
 							tauPt_=tauCandidate->pt();
 							tauEta_=tauCandidate->eta();
-							reco::PFJetRef jet = getJetRef3(*tauCandidate);
+							reco::PFJetRef jet = getJetRef(*tauCandidate);
 							jetRefPt_= jet->pt();
 							jetRefEta_=jet->eta();
 							tauIndex_=tau_position;

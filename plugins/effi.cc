@@ -37,6 +37,7 @@ Implementation:
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "TTree.h"
 #include "TauTrigMatch.h"
+#include "helpers.h"
 
 #include "FWCore/Framework/interface/EventSetup.h"
 //
@@ -123,49 +124,6 @@ effi::~effi()
 //
 // member functions
 //
-
-reco::PFJetRef getJetRef1(const reco::PFTau& tau) {
-	if (tau.jetRef().isNonnull())
-		return tau.jetRef();
-	else if (tau.pfTauTagInfoRef()->pfjetRef().isNonnull())
-		return tau.pfTauTagInfoRef()->pfjetRef();
-	else throw cms::Exception("cant find jet ref");
-}
-
-
-// Get collection of generator particles with status 2
-std::vector<const reco::GenParticle*> getGenParticleCollection1(const edm::Event& evt) {
-	std::vector<const reco::GenParticle*> output;
-	edm::Handle< std::vector<reco::GenParticle> > handle;
-	evt.getByLabel("genParticles", handle);
-	// Loop over objects in current collection
-	for (size_t j = 0; j < handle->size(); ++j) {
-		const reco::GenParticle& object = handle->at(j);
-		//if(fabs(object.pdgId())==15 && object.status() == 2) output.push_back(&object);
-		if(object.status() == 2) output.push_back(&object);
-	}
-	return output;
-}
-
-
-// Method to find the best match between tag tau and gen object. The best matched gen tau object will be returned. If there is no match within a DR < 0.5, a null pointer is returned
-//const reco::GenParticle* findBestGenMatch1(const reco::PFTau TagTauObj,
-const reco::GenParticle* findBestGenMatch1(const reco::PFTau& TagTauObj,
-		std::vector<const reco::GenParticle*>& GenPart, double maxDR) {
-	const reco::GenParticle* output = NULL;
-	double bestDeltaR = -1;
-	for (size_t i = 0; i < GenPart.size(); ++i) {
-		double deltaR = reco::deltaR(TagTauObj, *GenPart[i]);
-		if (deltaR < maxDR) {
-			if (!output || deltaR < bestDeltaR) {
-				output = GenPart[i];
-				bestDeltaR = deltaR;
-			}
-		}
-	}
-	return output;
-}
-
 // ------------ method called for each event  ------------
 	void
 effi::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
@@ -184,7 +142,7 @@ effi::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 	evt.getByLabel("hpsPFTauDiscriminationByDecayModeFinding",DMF);
 
 	int tau_position=0;
-	std::vector<const reco::GenParticle*> GenObjects = getGenParticleCollection1(evt);
+	std::vector<const reco::GenParticle*> GenObjects = getGenParticleCollection(evt);
 	for (unsigned int iTau = 0; iTau<tauObjects->size() ; ++iTau){
 		reco::PFTauRef tauCandidate(tauObjects, iTau);
 		const reco::PFTau tauCand=tauObjects->at(iTau);
@@ -198,7 +156,7 @@ effi::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 		if( (*discriminator)[tauCandidate] > 0.5 ){passDiscr_=1;}
 		else{passDiscr_=0;}
 
-		const reco::Candidate* bestGenMatch = findBestGenMatch1(*tauCandidate,GenObjects, maxDR_) ;
+		const reco::Candidate* bestGenMatch = findBestGenMatch(*tauCandidate,GenObjects, maxDR_) ;
 		if(bestGenMatch) {
 			genMatchedPt_=bestGenMatch->pt();
 			if (abs(bestGenMatch->pdgId())==15){
@@ -212,7 +170,7 @@ effi::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 			genMatchedPt_=-1;//No Gen Match
 			genMatchedTau_=-1; //No Gen Match
 		}
-		reco::PFJetRef jet = getJetRef1(*tauCandidate);
+		reco::PFJetRef jet = getJetRef(*tauCandidate);
 		jetRefPts_= jet->pt();
 		jetRefEtas_=jet->eta();
 
