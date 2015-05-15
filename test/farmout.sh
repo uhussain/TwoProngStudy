@@ -11,7 +11,7 @@ farmoutAnalysisJobs $1-WJets \
   --input-file-list=WJets.txt \
   --input-dir=root://cmsxrootd.fnal.gov/ \
   --assume-input-files-exist \
-  ./runAODSIM_goddammit.py  \
+  ./runAODSIM_fakeRate.py  \
   'inputFiles=$inputFileNames' 'outputFile=$outputFileName'
 
 farmoutAnalysisJobs $1-ggHtautau \
