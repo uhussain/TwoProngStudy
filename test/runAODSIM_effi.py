@@ -123,49 +123,56 @@ process.selectPrimaryVertex = cms.Sequence(
 ##################################################
 # Main
 
+#testing
+process.byVLooseIsolation = cms.EDAnalyzer('effi',
+                                     recoTau              = cms.InputTag("hpsPFTauProducer"),
+			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
+                                     recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByVLooseIsolation")
+)
 process.byLooseIsolation = cms.EDAnalyzer('effi',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByLooseIsolation")
 )
 
-process.byVLooseIsolation = cms.EDAnalyzer('effi',
-                                     recoTau              = cms.InputTag("hpsPFTauProducer"),
-			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
-                                     recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByVLooseIsolation")
-)
-
-
+#dB
 process.byVLooseCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('effi',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByVLooseCombinedIsolationDBSumPtCorr")
 )
-
 process.byLooseCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('effi',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr")
 )
+process.byMediumCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('effi',
+                                     recoTau              = cms.InputTag("hpsPFTauProducer"),
+			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
+                                     recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr")
+)
+process.byTightCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('effi',
+                                     recoTau              = cms.InputTag("hpsPFTauProducer"),
+			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
+                                     recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr")
+)
 
+#3Hits
 process.byLooseCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('effi',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr3Hits")
 )
-
 process.byMediumCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('effi',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr3Hits")
 )
-
 process.byTightCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('effi',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr3Hits")
 )
-
 
 
 
@@ -180,10 +187,12 @@ process.p = cms.Path(process.selectPrimaryVertex *
                      process.makePatMETs*
                      process.makePatTrigger*
 		     process.PFTau*
-                     process.byLooseIsolation*
                      process.byVLooseIsolation*
+                     process.byLooseIsolation*
                      process.byVLooseCombinedIsolationDBSumPtCorr*
                      process.byLooseCombinedIsolationDBSumPtCorr*
+                     process.byMediumCombinedIsolationDBSumPtCorr*
+                     process.byTightCombinedIsolationDBSumPtCorr*
                      process.byLooseCombinedIsolationDBSumPtCorr3Hits*
                      process.byMediumCombinedIsolationDBSumPtCorr3Hits*
                      process.byTightCombinedIsolationDBSumPtCorr3Hits

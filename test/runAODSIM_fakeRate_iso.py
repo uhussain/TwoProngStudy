@@ -1,13 +1,20 @@
 import FWCore.ParameterSet.Config as cms
+import os
+#########Var Parsin##########
+from FWCore.ParameterSet.VarParsing import VarParsing
+options = VarParsing ('analysis')
+options.inputFiles = 'file:/hdfs/store/mc/Phys14DR/WJetsToLNu_13TeV-madgraph-pythia8-tauola/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/28C4E0C1-7F6F-E411-AE20-0025905B85EE.root'
+options.outputFile = "testTau_fakeRate.root"
+
+options.register ('isoDBCone',  0.8, VarParsing.multiplicity.singleton, VarParsing.varType.float,
+                  "isoConeSizeForDeltaBeta")
+
+options.parseArguments()
+print '========Tau Isolation Cone Configuration======='
+print 'isoConeSizeForDeltaBeta =   ',options.isoDBCone,''
+
 
 process = cms.Process("TreeProducerFromAOD")
-#from FWCore.ParameterSet.VarParsing import VarParsing
-#options = VarParsing ('analysis')
-
-#options.inputFiles ='file:/hdfs/store/mc/Phys14DR/WJetsToLNu_13TeV-madgraph-pythia8-tauola/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/28C4E0C1-7F6F-E411-AE20-0025905B85EE.root'
-#options.outputFiles ='outputReRunNonStdStrip.root'
-
-
 
 process.load('FWCore/MessageService/MessageLogger_cfi')
 process.MessageLogger.cerr.FwkReport.reportEvery = 100
@@ -27,8 +34,7 @@ process.maxEvents = cms.untracked.PSet(
 )
 
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring($inputFileNames),
-    #fileNames = cms.untracked.vstring(options.inputFiles),
+    fileNames = cms.untracked.vstring(options.inputFiles),
     dropDescendantsOfDroppedBranches=cms.untracked.bool(False),
     inputCommands=cms.untracked.vstring(
         'keep *'
@@ -36,7 +42,13 @@ process.source = cms.Source("PoolSource",
         #'drop *PFTau*_*_*_*'
     )
 )
- 
+
+process.TFileService = cms.Service(
+   "TFileService",
+   fileName = cms.string(options.outputFile)
+)
+
+
 from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
 process.out = cms.OutputModule("PoolOutputModule",#dummy
         fileName = cms.untracked.string('patTuple.root'),
@@ -74,7 +86,13 @@ process.load("RecoTauTag.Configuration.RecoPFTauTag_cff") #loading the configura
 from PhysicsTools.PatAlgos.tools.tauTools import *
 switchToPFTauHPS(process)
 
-#process.ak4PFJetsLegacyHPSPiZeros.stripPhiAssociationDistance = cms.double(0.9)
+process.hpsPFTauDiscriminationByVLooseCombinedIsolationDBSumPtCorr.isoConeSizeForDeltaBeta = cms.double(options.isoDBCone)
+process.hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr.isoConeSizeForDeltaBeta = cms.double(options.isoDBCone)
+process.hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr.isoConeSizeForDeltaBeta = cms.double(options.isoDBCone)
+process.hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr.isoConeSizeForDeltaBeta = cms.double(options.isoDBCone)
+process.hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr3Hits.isoConeSizeForDeltaBeta = cms.double(options.isoDBCone)
+process.hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr3Hits.isoConeSizeForDeltaBeta = cms.double(options.isoDBCone)
+process.hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr3Hits.isoConeSizeForDeltaBeta = cms.double(options.isoDBCone)
 
 # switch on PAT trigger                                                                                                                      
 from PhysicsTools.PatAlgos.tools.trigTools import switchOnTrigger
@@ -112,44 +130,52 @@ process.selectPrimaryVertex = cms.Sequence(
 ##################################################
 # Main
 
-process.byLooseIsolation = cms.EDAnalyzer('tauAnalyzer',
+#testing
+process.byVLooseIsolation = cms.EDAnalyzer('fakeRate',
+                                     recoTau              = cms.InputTag("hpsPFTauProducer"),
+			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
+                                     recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByVLooseIsolation")
+)
+process.byLooseIsolation = cms.EDAnalyzer('fakeRate',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByLooseIsolation")
 )
 
-process.byVLooseIsolation = cms.EDAnalyzer('tauAnalyzer',
-                                     recoTau              = cms.InputTag("hpsPFTauProducer"),
-			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
-                                     recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByVLooseIsolation")
-)
-
-
-process.byVLooseCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('tauAnalyzer',
+#dB
+process.byVLooseCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('fakeRate',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByVLooseCombinedIsolationDBSumPtCorr")
 )
-
-process.byLooseCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('tauAnalyzer',
+process.byLooseCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('fakeRate',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr")
 )
+process.byMediumCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('fakeRate',
+                                     recoTau              = cms.InputTag("hpsPFTauProducer"),
+			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
+                                     recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr")
+)
+process.byTightCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('fakeRate',
+                                     recoTau              = cms.InputTag("hpsPFTauProducer"),
+			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
+                                     recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr")
+)
 
-process.byLooseCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('tauAnalyzer',
+#3Hits
+process.byLooseCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('fakeRate',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr3Hits")
 )
-
-process.byMediumCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('tauAnalyzer',
+process.byMediumCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('fakeRate',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr3Hits")
 )
-
-process.byTightCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('tauAnalyzer',
+process.byTightCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('fakeRate',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr3Hits")
@@ -169,19 +195,16 @@ process.p = cms.Path(process.selectPrimaryVertex *
                      process.makePatMETs*
                      process.makePatTrigger*
 		     process.PFTau*
-                     process.byLooseIsolation*
                      process.byVLooseIsolation*
+                     process.byLooseIsolation*
                      process.byVLooseCombinedIsolationDBSumPtCorr*
                      process.byLooseCombinedIsolationDBSumPtCorr*
+                     process.byMediumCombinedIsolationDBSumPtCorr*
+                     process.byTightCombinedIsolationDBSumPtCorr*
                      process.byLooseCombinedIsolationDBSumPtCorr3Hits*
                      process.byMediumCombinedIsolationDBSumPtCorr3Hits*
                      process.byTightCombinedIsolationDBSumPtCorr3Hits
                      )
-
-process.TFileService = cms.Service(
-   "TFileService",
-   fileName = cms.string($outputFileName)
-)
 
 # Let it run
 process.pathEnd = cms.EndPath(
