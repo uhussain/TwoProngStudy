@@ -66,15 +66,15 @@ def make_efficiency(denom, num):
 
 def make_num(ntuple, variable,PtCut,binning):
     num = make_plot(
-        ntuple, variable,
-        "tauPt > %0.2f &&fabs(tauEta)<2.3&& dmf>0 &&genMatchedTau==1&&passDiscr>0" % (PtCut),
+        ntuple, 'tauPt',
+        "tauPt>%0.2f && fabs(tauEta)<2.3&&dmf>0&&passDiscr>0" % (PtCut),
         binning
     )
     return num
 def make_denom(ntuple, variable,PtCut,binning):
     denom = make_plot(
         ntuple, variable,
-        "dmf>0&&fabs(tauEta)<2.3&&genMatchedTau==1&&tauPt> %0.2f"%(PtCut), #
+        "jetIDLoose&&jetPt>%0.2f"%(PtCut), #
         binning
     )
     return denom
@@ -86,19 +86,20 @@ def produce_efficiency(ntuple, variable, PtCut,binning, filename,color):
     l1.SetMarkerColor(color)
     return l1
 
-def compare_efficiencies(ntuple1,legend1,ntuple2,legend2, variable, PtCut, binning, filename,
+def compare_efficiencies(ntuple1,legend1,ntuple2, legend2, variable, PtCut, binning, filename,
                          title='', xaxis='',yaxis=''):
     frame = ROOT.TH1F("frame", "frame", *binning)
     l1 = produce_efficiency(ntuple1,variable, PtCut,binning, filename,ROOT.kMagenta-3)
     l2 = produce_efficiency(ntuple2,variable, PtCut,binning, filename,ROOT.kBlue-9)
     frame.SetMaximum(1.2)
+    canvas.SetLogy()
     frame.SetTitle(title)
     frame.GetXaxis().SetTitle(xaxis)
     frame.GetYaxis().SetTitle(yaxis)
     frame.Draw()
     l1.Draw('pe')
     l2.Draw('pesame')
-    legend = ROOT.TLegend(0.5, 0.1, 0.89, 0.4, "", "brNDC")
+    legend = ROOT.TLegend(0.5, 0.7, 0.95, 0.9, "", "brNDC")
     legend.SetFillColor(ROOT.kWhite)
     legend.SetBorderSize(1)
     legend.AddEntry(l1,legend1, "pe")
@@ -112,30 +113,31 @@ def compare_efficiencies(ntuple1,legend1,ntuple2,legend2, variable, PtCut, binni
 # Efficiency for a 20 GeV cut on tau Pt 
 ################################################################################
 
-compare_efficiencies(LooseIso, "LooseIsolation",VLooseIso,"VLooseIso",'tauPt', 20, [20, 0, 120],#variable, ptcut, binning
-                    'tauPt',#filename
-                    "Tau Efficiency",#title
-                    "pf Tau p_{T} (GeV)",#xaxis
-                    "efficiency" #yaxis             
+compare_efficiencies(LooseIso,'byLooseIsolation', VLooseIso,'byVLooseIsolation','jetPt', 20, [20, 0, 120],#variable, ptcut, binning
+                    'tauPtFR',#filename
+                    "Jet#rightarrow#tau Fake rate",#title
+                    "pf Jet p_{T} (GeV)",#xaxis
+                    "Fake Rate" #yaxis             
 )
 
-compare_efficiencies(byLooseCmbIso, 'byLooseCombIsoDBSumPtCorr', byVLooseCmbIso,'byVLooseCombIsoDBSumPtCorr','tauPt', 20, [20, 0, 120],#variable, ptcut, binning
-                    'tauPtcmb',#filename
-                    "Tau Efficiency",#title
-                    "pf Tau p_{T} (GeV)",#xaxis
-                    "efficiency" #yaxis             
+compare_efficiencies(byLooseCmbIso, 'byLooseCombIsoDBSumPtCorr', byVLooseCmbIso,'byVLooseCombIsoDBSumPtCorr','jetPt',20, [20, 0, 120],#variable, ptcut, binning
+                    'tauPtcmb_FR',#filename
+                    "Jet#rightarrow#tau Fake rate",#title
+                    "pf Jet p_{T} (GeV)",#xaxis
+                    "Fake Rate" #yaxis             
 )
 
-compare_efficiencies(byLooseCmbIso, 'byLooseCombIsoDBSumPtCorr', LooseIso,'LooseIsolation','tauPt', 20, [20, 0, 120],#variable, ptcut, binning
-                    'tauPtloose',#filename
-                    "Tau Efficiency",#title
-                    "pf Tau p_{T} (GeV)",#xaxis
-                    "efficiency" #yaxis             
+compare_efficiencies(byLooseCmbIso, 'byLooseCombIsoDBSumPtCorr', LooseIso,'LooseIsolation','jetPt', 20, [20, 0, 120],#variable, ptcut, binning
+                    'tauPtloose_FR',#filename
+                    "Jet#rightarrow#tau Fake rate",#title
+                    "pf Jet p_{T} (GeV)",#xaxis
+                    "Fake Rate" #yaxis             
 )
 
-compare_efficiencies(byVLooseCmbIso, 'byVLooseCombIsoDBSumPtCorr', VLooseIso,'VLooseIsolation','tauPt', 20, [20, 0, 120],#variable, ptcut, binning
-                    'tauPtvloose',#filename
-                    "Tau Efficiency",#title
-                    "pf Tau p_{T} (GeV)",#xaxis
-                    "efficiency" #yaxis             
+compare_efficiencies(byVLooseCmbIso, 'byVLooseCombIsoDBSumPtCorr', VLooseIso,'VLooseIsolation','jetPt', 20, [20, 0, 120],#variable, ptcut, binning
+                    'tauPtvloose_FR',#filename
+                    "Jet#rightarrow#tau Fake rate",#title
+                    "pf Jet p_{T} (GeV)",#xaxis
+                    "Fake Rate" #yaxis             
 )
+

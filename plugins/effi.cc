@@ -1,9 +1,9 @@
 // -*- C++ -*-
 //
-// Package:    RecoTauTag/fakeRate
-// Class:      fakeRate
+// Package:    RecoTauTag/effi
+// Class:      effi
 // 
-/**\class fakeRate fakeRate.cc RecoTauTag/fakeRate/plugins/fakeRate.cc
+/**\class effi effi.cc RecoTauTag/effi/plugins/effi.cc
 
 Description: [one line class summary]
 
@@ -43,10 +43,10 @@ Implementation:
 // class declaration
 //
 
-class fakeRate : public edm::EDAnalyzer {
+class effi : public edm::EDAnalyzer {
 	public:
-		explicit fakeRate(const edm::ParameterSet&);
-		~fakeRate();
+		explicit effi(const edm::ParameterSet&);
+		~effi();
 
 		static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
 
@@ -59,22 +59,16 @@ class fakeRate : public edm::EDAnalyzer {
 		edm::InputTag tauSrc_;
 		edm::InputTag jetSrc_;
 		edm::InputTag discriminatorSrc_;
-		TTree* tree;
-		Float_t jetPt_;
-		Float_t jetEta_;
-		Int_t jetIDLoose_;
-		Int_t jetIDMed_;
-		Int_t jetIDTight_;
-		Int_t genMatchedTau_;
-		Int_t isFake_;
+		TTree* treeEF;
+		Float_t tauPt_;
+		Float_t tauEta_;
 		Int_t tauIndex_;
 		Int_t dmf_;
 		Int_t passDiscr_;
-		Float_t tauPt_;
-		Float_t tauEta_;
-		Float_t jetRefEta_;
-		Float_t jetRefPt_;
-
+		Int_t genMatchedTau_;
+		Float_t genMatchedPt_;
+		Float_t jetRefPts_;
+		Float_t jetRefEtas_;
 		double maxDR_;
 
 		//virtual void beginRun(edm::Run const&, edm::EventSetup const&) override;
@@ -96,7 +90,7 @@ class fakeRate : public edm::EDAnalyzer {
 //
 // constructors and destructor
 //
-fakeRate::fakeRate(const edm::ParameterSet& cfg)
+effi::effi(const edm::ParameterSet& cfg)
 {
 	//now do what ever initialization is needed
 	tauSrc_              = cfg.getParameter<edm::InputTag>("recoTau");
@@ -105,27 +99,21 @@ fakeRate::fakeRate(const edm::ParameterSet& cfg)
 
 	edm::Service<TFileService> fs;
 	//ntuple additions
-	tree = fs->make<TTree>("Ntuple", "Ntuple");
-	tree->Branch("jetPt", &jetPt_,"jetPt_/F");
-	tree->Branch("tauPt", &tauPt_,"tauPt_/F");
-	tree->Branch("jetEta", &jetEta_,"jetEta_/F");
-	tree->Branch("tauEta", &tauEta_,"tauEta_/F");
-	tree->Branch("jetRefPt",&jetRefPt_,"jetRefPt/F");
-	tree->Branch("jetRefEta",&jetRefEta_,"jetRefEta/F");
-	tree->Branch("jetIDLoose",&jetIDLoose_,"jetIDLoose/I");
-	tree->Branch("jetIDMed",&jetIDMed_,"jetIDMed/I");
-	tree->Branch("jetIDTight",&jetIDTight_,"jetIDTight/I");
-	tree->Branch("jetIDTight",&jetIDTight_,"jetIDTight/I");
-	tree->Branch("genMatchedTau",&genMatchedTau_,"genMatchedTau/I");
-	tree->Branch("dmf",&dmf_,"dmf/I");
-	tree->Branch("isFake",&isFake_,"isFake/I");
-	tree->Branch("tauIndex",&tauIndex_,"tauIndex/I");
-	tree->Branch("passDiscr",&passDiscr_,"passDiscr/I");
+	treeEF = fs->make<TTree>("Ntuple", "Ntuple");
+	treeEF->Branch("tauPt", &tauPt_,"tauPt_/F");
+	treeEF->Branch("tauEta", &tauEta_,"tauEta_/F");
+	treeEF->Branch("tauIndex", &tauIndex_,"tauIndex_/i");
+	treeEF->Branch("dmf", &dmf_,"dmf_/i");
+	treeEF->Branch("passDiscr", &passDiscr_,"passDiscr_/i");
+	treeEF->Branch("genMatchedTau", &genMatchedTau_,"genMatchedTau_/i");
+	treeEF->Branch("genMatchedPt", &genMatchedPt_,"genMatchedPt_/F");
+	treeEF->Branch("jetRefPt", &jetRefPts_,"jetRefPts_/F");
+	treeEF->Branch("jetRefEta", &jetRefEtas_,"jetRefEtas_/F");
 	maxDR_ = 0.3;
 }
 
 
-fakeRate::~fakeRate()
+effi::~effi()
 {
 	// do anything here that needs to be done at desctruction time
 	// (e.g. close files, deallocate resources etc.)
@@ -135,46 +123,8 @@ fakeRate::~fakeRate()
 //
 // member functions
 //
-bool isLooseJet1(const reco::PFJet jet){
-	bool loose = true;
-	if (jet.neutralHadronEnergyFraction() >= 0.99) loose = false;
-	if (jet.neutralEmEnergyFraction() >= 0.99) loose = false;
-	if (jet.numberOfDaughters() <= 1) loose = false; //getPFConstitutents broken in miniAOD
-	if (std::abs(jet.eta()) < 2.4) {
-		if (jet.chargedHadronEnergyFraction() == 0) loose = false;
-		if (jet.chargedHadronMultiplicity() == 0) loose = false;
-		if (jet.chargedEmEnergyFraction() >= 0.99) loose = false;
-	}
-	return loose;
-}
-bool isMediumJet1(const reco::PFJet jet){
-	bool medium = true;
-	if (jet.neutralHadronEnergyFraction() >= 0.95) medium = false;
-	if (jet.neutralEmEnergyFraction() >= 0.95) medium = false;
-	if (jet.numberOfDaughters() <= 1) medium = false; //getPFConstitutents broken in miniAOD
-	if (std::abs(jet.eta()) < 2.4) {
-		if (jet.chargedHadronEnergyFraction() == 0) medium = false;
-		if (jet.chargedHadronMultiplicity() == 0) medium = false;
-		if (jet.chargedEmEnergyFraction() >= 0.99) medium = false;
-	}
-	return medium;
-}
 
-bool isTightJet1(const reco::PFJet jet){
-	bool tight = true;
-	if (jet.neutralHadronEnergyFraction() >= 0.90) tight = false;
-	if (jet.neutralEmEnergyFraction() >= 0.90) tight = false;
-	if (jet.numberOfDaughters() <= 1) tight = false; //getPFConstitutents broken in miniAOD
-	if (std::abs(jet.eta()) < 2.4) {
-		if (jet.chargedHadronEnergyFraction() == 0) tight = false;
-		if (jet.chargedHadronMultiplicity() == 0) tight = false;
-		if (jet.chargedEmEnergyFraction() >= 0.99) tight = false;
-	}
-	return tight;
-}
-
-
-reco::PFJetRef getJetRef3(const reco::PFTau& tau) {
+reco::PFJetRef getJetRef1(const reco::PFTau& tau) {
 	if (tau.jetRef().isNonnull())
 		return tau.jetRef();
 	else if (tau.pfTauTagInfoRef()->pfjetRef().isNonnull())
@@ -184,7 +134,7 @@ reco::PFJetRef getJetRef3(const reco::PFTau& tau) {
 
 
 // Get collection of generator particles with status 2
-std::vector<const reco::GenParticle*> getGenParticleCollection3(const edm::Event& evt) {
+std::vector<const reco::GenParticle*> getGenParticleCollection1(const edm::Event& evt) {
 	std::vector<const reco::GenParticle*> output;
 	edm::Handle< std::vector<reco::GenParticle> > handle;
 	evt.getByLabel("genParticles", handle);
@@ -200,7 +150,7 @@ std::vector<const reco::GenParticle*> getGenParticleCollection3(const edm::Event
 
 // Method to find the best match between tag tau and gen object. The best matched gen tau object will be returned. If there is no match within a DR < 0.5, a null pointer is returned
 //const reco::GenParticle* findBestGenMatch1(const reco::PFTau TagTauObj,
-const reco::GenParticle* findBestGenMatch3(const reco::PFTau& TagTauObj,
+const reco::GenParticle* findBestGenMatch1(const reco::PFTau& TagTauObj,
 		std::vector<const reco::GenParticle*>& GenPart, double maxDR) {
 	const reco::GenParticle* output = NULL;
 	double bestDeltaR = -1;
@@ -218,7 +168,7 @@ const reco::GenParticle* findBestGenMatch3(const reco::PFTau& TagTauObj,
 
 // ------------ method called for each event  ------------
 	void
-fakeRate::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
+effi::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 {
 	using namespace edm;
 	Handle<reco::PFTauCollection> tauObjects;
@@ -233,79 +183,63 @@ fakeRate::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 	edm::Handle<reco::PFTauDiscriminator> DMF; 
 	evt.getByLabel("hpsPFTauDiscriminationByDecayModeFinding",DMF);
 
-	std::vector<const reco::GenParticle*> GenObjects = getGenParticleCollection3(evt);
-	for(unsigned int iJet = 0; iJet<jetObjects->size(); iJet++){
-		const reco::PFJet jetCand=jetObjects->at(iJet);
-		if (std::abs(jetCand.eta())<2.3&&jetCand.pt()>20){
-			jetPt_=jetCand.pt();
-			jetEta_=jetCand.eta();
-			jetIDLoose_=isLooseJet1(jetCand);
-			jetIDMed_=isMediumJet1(jetCand);
-			jetIDTight_=isTightJet1(jetCand);
+	int tau_position=0;
+	std::vector<const reco::GenParticle*> GenObjects = getGenParticleCollection1(evt);
+	for (unsigned int iTau = 0; iTau<tauObjects->size() ; ++iTau){
+		reco::PFTauRef tauCandidate(tauObjects, iTau);
+		const reco::PFTau tauCand=tauObjects->at(iTau);
+		tauPt_=tauCandidate->pt();
+		tauEta_=tauCandidate->eta();
 
-			//initialize
-			int bestDR=999;//right placement?
-			int tau_position=-1;
-			genMatchedTau_=0;
-			isFake_=0;
-			dmf_=0;
-			passDiscr_=0;
-			tauPt_=-999;
-			tauEta_=-999;
-			tauIndex_=-1;
-			jetRefPt_=-999;
-			jetRefEta_=-999;
+		// check if tau candidate has passed discriminator
+		if( (*DMF)[tauCandidate] > 0.5 ) dmf_=1;
+		else dmf_=0;
+		// check if tau candidate has passed discriminator
+		if( (*discriminator)[tauCandidate] > 0.5 ){passDiscr_=1;}
+		else{passDiscr_=0;}
 
-			for (unsigned int iTau = 0; iTau<tauObjects->size() ; ++iTau){
-				reco::PFTauRef tauCandidate(tauObjects, iTau);
-				const reco::Candidate* bestGenMatch = findBestGenMatch3(*tauCandidate,GenObjects, maxDR_) ;
-				genMatchedTau_=0;
-				tau_position++;
-				if(bestGenMatch) {
-					if (abs(bestGenMatch->pdgId())==15){genMatchedTau_=1;}
-					else {
-						genMatchedTau_=0;
-						double deltaR = reco::deltaR(*tauCandidate,jetCand);
-						if (deltaR<maxDR_&&deltaR<bestDR){
-							bestDR=deltaR;
-							if( (*DMF)[tauCandidate] > 0.5 ) dmf_=1;
-							else dmf_=0;
-							if( (*discriminator)[tauCandidate] > 0.5 ){passDiscr_=1;}
-							else{passDiscr_=0;}
-							tauPt_=tauCandidate->pt();
-							tauEta_=tauCandidate->eta();
-							reco::PFJetRef jet = getJetRef3(*tauCandidate);
-							jetRefPt_= jet->pt();
-							jetRefEta_=jet->eta();
-							tauIndex_=tau_position;
-							isFake_=1;
-						}//end deltaR
-					}//end not genTau
-				}//end if best gen match
-			}//end tau
-			tree->Fill();
-		}//end if
-	}//end Jet
+		const reco::Candidate* bestGenMatch = findBestGenMatch1(*tauCandidate,GenObjects, maxDR_) ;
+		if(bestGenMatch) {
+			genMatchedPt_=bestGenMatch->pt();
+			if (abs(bestGenMatch->pdgId())==15){
+				genMatchedTau_=1;
+			}
+			else{
+				genMatchedTau_=0;//Not Necessarily a jet, but certainly not a tau
+			}
+		}
+		else {
+			genMatchedPt_=-1;//No Gen Match
+			genMatchedTau_=-1; //No Gen Match
+		}
+		reco::PFJetRef jet = getJetRef1(*tauCandidate);
+		jetRefPts_= jet->pt();
+		jetRefEtas_=jet->eta();
+
+		tauIndex_=tau_position;
+		treeEF->Fill();
+		tau_position++;
+	}//end tau loop (efficiency loop)
+
 }
-
 
 
 // ------------ method called once each job just before starting event loop  ------------
 	void 
-fakeRate::beginJob()
+effi::beginJob()
 {
 }
 
 // ------------ method called once each job just after ending the event loop  ------------
 	void 
-fakeRate::endJob() 
+effi::endJob() 
 {
 }
 
 // ------------ method called when starting to processes a run  ------------
 /*
    void 
-   fakeRate::beginRun(edm::Run const&, edm::EventSetup const&)
+   effi::beginRun(edm::Run const&, edm::EventSetup const&)
    {
    }
    */
@@ -313,7 +247,7 @@ fakeRate::endJob()
 // ------------ method called when ending the processing of a run  ------------
 /*
    void 
-   fakeRate::endRun(edm::Run const&, edm::EventSetup const&)
+   effi::endRun(edm::Run const&, edm::EventSetup const&)
    {
    }
    */
@@ -321,7 +255,7 @@ fakeRate::endJob()
 // ------------ method called when starting to processes a luminosity block  ------------
 /*
    void 
-   fakeRate::beginLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
+   effi::beginLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
    {
    }
    */
@@ -329,14 +263,14 @@ fakeRate::endJob()
 // ------------ method called when ending the processing of a luminosity block  ------------
 /*
    void 
-   fakeRate::endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
+   effi::endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
    {
    }
    */
 
 // ------------ method fills 'descriptions' with the allowed parameters for the module  ------------
 void
-fakeRate::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
+effi::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
 	//The following says we do not know what parameters are allowed so do no validation
 	// Please change this to state exactly what you do use, even if it is no parameters
 	//  edm::ParameterSetDescription desc;
@@ -346,4 +280,4 @@ fakeRate::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
 
 //define this as a plug-in
 #include "FWCore/Framework/interface/MakerMacros.h"
-DEFINE_FWK_MODULE(fakeRate);
+DEFINE_FWK_MODULE(effi);
