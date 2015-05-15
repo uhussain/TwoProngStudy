@@ -32,9 +32,10 @@ python plotFR.py [fakeRate].root label[optional]
 ```
 
 
-For MiniAOD- the efficiency script in production  in plugins/MiniAODtester.cc can be run
-Gen Level matching needs to be implemented here!!!
+For MiniAOD- the efficiency script in productioni(getGenMatchedPt) in plugins/MiniAODeffi.cc, can be run
 ```
 cd test
 cmsRun runMiniAOD.py
 ```
+
+ToDo tasks, clean up all scripts some more, add MiniAOD fake rate.
