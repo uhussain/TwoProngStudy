@@ -3,7 +3,7 @@ import os
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('analysis')
 options.inputFiles = 'file:/hdfs/store/mc/Phys14DR/WJetsToLNu_13TeV-madgraph-pythia8-tauola/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/28C4E0C1-7F6F-E411-AE20-0025905B85EE.root'
-options.outputFile = "testTau_goddamit.root"
+options.outputFile = "testTau_fakeRate.root"
 options.parseArguments()
 
 process = cms.Process("TreeProducerFromAOD")
@@ -123,44 +123,44 @@ process.selectPrimaryVertex = cms.Sequence(
 ##################################################
 # Main
 
-process.byLooseIsolation = cms.EDAnalyzer('goddamit',
+process.byLooseIsolation = cms.EDAnalyzer('fakeRate',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByLooseIsolation")
 )
 
-process.byVLooseIsolation = cms.EDAnalyzer('goddamit',
+process.byVLooseIsolation = cms.EDAnalyzer('fakeRate',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByVLooseIsolation")
 )
 
 
-process.byVLooseCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('goddamit',
+process.byVLooseCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('fakeRate',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByVLooseCombinedIsolationDBSumPtCorr")
 )
 
-process.byLooseCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('goddamit',
+process.byLooseCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('fakeRate',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr")
 )
 
-process.byLooseCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('goddamit',
+process.byLooseCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('fakeRate',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr3Hits")
 )
 
-process.byMediumCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('goddamit',
+process.byMediumCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('fakeRate',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr3Hits")
 )
 
-process.byTightCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('goddamit',
+process.byTightCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('fakeRate',
                                      recoTau              = cms.InputTag("hpsPFTauProducer"),
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr3Hits")
