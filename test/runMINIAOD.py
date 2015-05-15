@@ -20,7 +20,7 @@ process.source = cms.Source("PoolSource",
 
 ##################################################
 # Main
-process.demo = cms.EDAnalyzer("MiniAODtester",
+process.byLooseCombinedIsolationDeltaBetaCorr3Hits = cms.EDAnalyzer("MiniAODeffi",
     vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
     taus = cms.InputTag("slimmedTaus"),
     jets = cms.InputTag("slimmedJets"),
@@ -31,7 +31,7 @@ process.demo = cms.EDAnalyzer("MiniAODtester",
 #Global sequence
 
 process.p = cms.Path(
-                     process.demo
+                     process.byLooseCombinedIsolationDeltaBetaCorr3Hits
                      )
 
 process.TFileService = cms.Service("TFileService",

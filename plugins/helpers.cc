@@ -20,7 +20,6 @@
 #include "DataFormats/TauReco/interface/PFTau.h"
 #include "DataFormats/TauReco/interface/PFTauDiscriminator.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
-#include "TauTrigMatch.h"
 #include "helpers.h"
 
 reco::PFJetRef getJetRef(const reco::PFTau& tau) {
@@ -30,6 +29,35 @@ reco::PFJetRef getJetRef(const reco::PFTau& tau) {
 		return tau.pfTauTagInfoRef()->pfjetRef();
 	else throw cms::Exception("cant find jet ref");
 }
+
+
+bool genMatchingMiniAOD(const pat::Tau tau, std::vector<const reco::GenParticle*>& GenPart, double maxDR) {
+	bool tau_match=false;
+	for (size_t i = 0; i < GenPart.size(); ++i) {
+		if (GenPart[i]->pdgId()==15){
+			double deltaR = reco::deltaR(tau, *GenPart[i]);
+			if (deltaR < maxDR) {
+				tau_match=true;
+			}
+		}
+	}
+	return tau_match;
+}
+
+std::vector<const reco::GenParticle*> getGenParticleCollectionMiniAOD(const edm::Event& evt) {
+	std::vector<const reco::GenParticle*> output;
+	edm::Handle< std::vector<reco::GenParticle> > handle;
+	evt.getByLabel("prunedGenParticles", handle);
+	// Loop over objects in current collection
+	for (size_t j = 0; j < handle->size(); ++j) {
+		const reco::GenParticle& object = handle->at(j);
+		//if(fabs(object.pdgId())==15 && object.status() == 2) output.push_back(&object);
+		if(object.pdgId() == 15) output.push_back(&object);
+	}
+	return output;
+}
+
+
 
 
 // Get collection of generator particles with status 2
@@ -49,12 +77,12 @@ std::vector<const reco::GenParticle*> getGenParticleCollection(const edm::Event&
 
 // Method to find the best match between tag tau and gen object. The best matched gen tau object will be returned. If there is no match within a DR < 0.5, a null pointer is returned
 //const reco::GenParticle* findBestGenMatch1(const reco::PFTau TagTauObj,
-const reco::GenParticle* findBestGenMatch(const reco::PFTau& TagTauObj,
+const reco::GenParticle* findBestGenMatch(const reco::PFTau& tauObj,
 		std::vector<const reco::GenParticle*>& GenPart, double maxDR) {
 	const reco::GenParticle* output = NULL;
 	double bestDeltaR = -1;
 	for (size_t i = 0; i < GenPart.size(); ++i) {
-		double deltaR = reco::deltaR(TagTauObj, *GenPart[i]);
+		double deltaR = reco::deltaR(tauObj, *GenPart[i]);
 		if (deltaR < maxDR) {
 			if (!output || deltaR < bestDeltaR) {
 				output = GenPart[i];

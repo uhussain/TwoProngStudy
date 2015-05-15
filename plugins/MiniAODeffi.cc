@@ -23,36 +23,40 @@
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "TTree.h"
+#include "helpers.h"
+
+#include "DataFormats/Math/interface/deltaR.h"
 
 //
 // class declaration
 //
 
-class MiniAODtester : public edm::EDAnalyzer {
-   public:
-      explicit MiniAODtester(const edm::ParameterSet&);
-      ~MiniAODtester();
+class MiniAODeffi : public edm::EDAnalyzer {
+	public:
+		explicit MiniAODeffi(const edm::ParameterSet&);
+		~MiniAODeffi();
 
-   private:
-      virtual void analyze(const edm::Event&, const edm::EventSetup&) override;
+	private:
+		virtual void analyze(const edm::Event&, const edm::EventSetup&) override;
 
-      // ----------member data ---------------------------
-      edm::EDGetTokenT<reco::VertexCollection> vtxToken_;
-      edm::EDGetTokenT<pat::TauCollection> tauToken_;
-      edm::EDGetTokenT<pat::JetCollection> jetToken_;
+		// ----------member data ---------------------------
+		edm::EDGetTokenT<reco::VertexCollection> vtxToken_;
+		edm::EDGetTokenT<pat::TauCollection> tauToken_;
+		edm::EDGetTokenT<pat::JetCollection> jetToken_;
 
-      std::string tauID_;
+		std::string tauID_;
 
-      TTree* tree;
-      Float_t tauPt_;
-      Float_t tauEta_;
-      Int_t dmf_;
-      Int_t tauIndex_;
-      Int_t passDiscr_;
-      double maxDR_;
+		TTree* tree;
+		Float_t tauPt_;
+		Float_t tauEta_;
+		Int_t dmf_;
+		Int_t tauIndex_;
+		Int_t passDiscr_;
+		Int_t genMatchedTau_;
+		double maxDR_;
 };
 
-MiniAODtester::MiniAODtester(const edm::ParameterSet& iConfig):
+MiniAODeffi::MiniAODeffi(const edm::ParameterSet& iConfig):
 	vtxToken_(consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertices"))),
 	tauToken_(consumes<pat::TauCollection>(iConfig.getParameter<edm::InputTag>("taus"))),
 	jetToken_(consumes<pat::JetCollection>(iConfig.getParameter<edm::InputTag>("jets")))
@@ -68,16 +72,18 @@ MiniAODtester::MiniAODtester(const edm::ParameterSet& iConfig):
 	tree->Branch("tauIndex", &tauIndex_,"tauIndex_/I");
 	tree->Branch("passDiscr", &passDiscr_,"passDiscr_/I");
 	tree->Branch("dmf", &dmf_,"dmf_/I");
+	tree->Branch("genMatchedTau", &genMatchedTau_,"genMatchedTau_/I");
+	maxDR_ = 0.3;
+
 
 }
 
-MiniAODtester::~MiniAODtester()
+MiniAODeffi::~MiniAODeffi()
 {
 }
 
-
 	void
-MiniAODtester::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
 	edm::Handle<reco::VertexCollection> vertices;
 	iEvent.getByToken(vtxToken_, vertices);
@@ -86,7 +92,10 @@ MiniAODtester::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 	edm::Handle<pat::TauCollection> taus;
 	iEvent.getByToken(tauToken_, taus);
-        int tau_position=-1;
+
+	std::vector<const reco::GenParticle*> GenObjects = getGenParticleCollectionMiniAOD(iEvent);
+
+	int tau_position=-1;
 	for (const pat::Tau &tau : *taus) {
 		tau_position++;
 		if (tau.pt() < 20 ) continue;
@@ -96,13 +105,14 @@ MiniAODtester::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		tauIndex_=tau_position;
 		if (tau.tauID(tauID_)) passDiscr_ = 1;
 		else passDiscr_=0;
-//		printf("tau  with pt %4.1f, dxy signif %.1f, ID(byMediumCombinedIsolationDeltaBetaCorr3Hits) %.1f, lead candidate pt %.1f, pdgId %d \n",
-//				tau.pt(), tau.dxy_Sig(), tau.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits"), tau.leadCand()->pt(), tau.leadCand()->pdgId());
+
+		if (genMatchingMiniAOD(tau,GenObjects,maxDR_)) {genMatchedTau_=1;}
+		else genMatchedTau_ = 0;	
+
 		tree->Fill();//produce flat ntuple
 	}
-
 
 }
 
 //define this as a plug-in
-DEFINE_FWK_MODULE(MiniAODtester);
+DEFINE_FWK_MODULE(MiniAODeffi);

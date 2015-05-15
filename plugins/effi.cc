@@ -36,7 +36,6 @@ Implementation:
 #include "DataFormats/TauReco/interface/PFTauDiscriminator.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "TTree.h"
-#include "TauTrigMatch.h"
 #include "helpers.h"
 
 #include "FWCore/Framework/interface/EventSetup.h"
@@ -60,7 +59,7 @@ class effi : public edm::EDAnalyzer {
 		edm::InputTag tauSrc_;
 		edm::InputTag jetSrc_;
 		edm::InputTag discriminatorSrc_;
-		TTree* treeEF;
+		TTree* tree;
 		Float_t tauPt_;
 		Float_t tauEta_;
 		Int_t tauIndex_;
@@ -100,16 +99,16 @@ effi::effi(const edm::ParameterSet& cfg)
 
 	edm::Service<TFileService> fs;
 	//ntuple additions
-	treeEF = fs->make<TTree>("Ntuple", "Ntuple");
-	treeEF->Branch("tauPt", &tauPt_,"tauPt_/F");
-	treeEF->Branch("tauEta", &tauEta_,"tauEta_/F");
-	treeEF->Branch("tauIndex", &tauIndex_,"tauIndex_/i");
-	treeEF->Branch("dmf", &dmf_,"dmf_/i");
-	treeEF->Branch("passDiscr", &passDiscr_,"passDiscr_/i");
-	treeEF->Branch("genMatchedTau", &genMatchedTau_,"genMatchedTau_/i");
-	treeEF->Branch("genMatchedPt", &genMatchedPt_,"genMatchedPt_/F");
-	treeEF->Branch("jetRefPt", &jetRefPts_,"jetRefPts_/F");
-	treeEF->Branch("jetRefEta", &jetRefEtas_,"jetRefEtas_/F");
+	tree = fs->make<TTree>("Ntuple", "Ntuple");
+	tree->Branch("tauPt", &tauPt_,"tauPt_/F");
+	tree->Branch("tauEta", &tauEta_,"tauEta_/F");
+	tree->Branch("tauIndex", &tauIndex_,"tauIndex_/i");
+	tree->Branch("dmf", &dmf_,"dmf_/i");
+	tree->Branch("passDiscr", &passDiscr_,"passDiscr_/i");
+	tree->Branch("genMatchedTau", &genMatchedTau_,"genMatchedTau_/i");
+	tree->Branch("genMatchedPt", &genMatchedPt_,"genMatchedPt_/F");
+	tree->Branch("jetRefPt", &jetRefPts_,"jetRefPts_/F");
+	tree->Branch("jetRefEta", &jetRefEtas_,"jetRefEtas_/F");
 	maxDR_ = 0.3;
 }
 
@@ -175,7 +174,7 @@ effi::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 		jetRefEtas_=jet->eta();
 
 		tauIndex_=tau_position;
-		treeEF->Fill();
+		tree->Fill();
 		tau_position++;
 	}//end tau loop (efficiency loop)
 

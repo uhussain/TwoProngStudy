@@ -36,7 +36,6 @@ Implementation:
 #include "DataFormats/TauReco/interface/PFTauDiscriminator.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "TTree.h"
-#include "TauTrigMatch.h"
 #include "helpers.h"
 
 #include "FWCore/Framework/interface/EventSetup.h"
