@@ -30,3 +30,11 @@ source farmout_iso.sh [JOB_NAME] #Change Iso cone size in the file before submit
 python plot.py [effi].root label[optional]
 python plotFR.py [fakeRate].root label[optional]
 ```
+
+
+For MiniAOD- the efficiency script in production  in plugins/MiniAODtester.cc can be run
+Gen Level matching needs to be implemented here!!!
+```
+cd test
+cmsRun runMiniAOD.py
+```
