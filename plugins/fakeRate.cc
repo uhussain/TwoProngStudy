@@ -74,6 +74,7 @@ class fakeRate : public edm::EDAnalyzer {
 		Float_t tauEta_;
 		Float_t jetRefEta_;
 		Float_t jetRefPt_;
+		Int_t nvtx_;
 
 		double maxDR_;
 
@@ -121,6 +122,7 @@ fakeRate::fakeRate(const edm::ParameterSet& cfg)
 	tree->Branch("isFake",&isFake_,"isFake/I");
 	tree->Branch("tauIndex",&tauIndex_,"tauIndex/I");
 	tree->Branch("passDiscr",&passDiscr_,"passDiscr/I");
+	tree->Branch("nvtx",&nvtx_,"nvtx/I");
 	maxDR_ = 0.3;
 }
 
@@ -141,6 +143,13 @@ fakeRate::~fakeRate()
 fakeRate::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 {
 	using namespace edm;
+
+	Handle<reco::VertexCollection> vertices;
+	evt.getByLabel("offlinePrimaryVertices", vertices);
+	if(vertices->size()>0)
+		nvtx_=vertices->size();	
+	else return;	
+
 	Handle<reco::PFTauCollection> tauObjects;
 	evt.getByLabel(tauSrc_, tauObjects);
 

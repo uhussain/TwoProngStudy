@@ -26,10 +26,15 @@ At Wisconsin for farmout- the files submitted are in WJets.txt and HTauTau.txt
 ```
 cd test
 source farmout.sh [JOB_NAME] #for standard isolation cones
-source farmout_iso.sh [JOB_NAME] #Change Iso cone size in the file before submitting
+source farmout_iso.sh [JOB_NAME] [ISO_CONE_SIZE] #Change Iso cone size in the file before submitting
 python plot.py [effi].root label[optional]
 python plotFR.py [fakeRate].root label[optional]
 ```
+To submit various isocones you can use
+```
+source submitAll.sh
+```
+
 
 
 For MiniAOD- the efficiency script in productioni(getGenMatchedPt) in plugins/MiniAODeffi.cc, can be run

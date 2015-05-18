@@ -66,6 +66,7 @@ class effi : public edm::EDAnalyzer {
 		Int_t dmf_;
 		Int_t passDiscr_;
 		Int_t genMatchedTau_;
+		Int_t nvtx_;
 		Float_t genMatchedPt_;
 		Float_t jetRefPts_;
 		Float_t jetRefEtas_;
@@ -105,6 +106,7 @@ effi::effi(const edm::ParameterSet& cfg)
 	tree->Branch("tauIndex", &tauIndex_,"tauIndex_/i");
 	tree->Branch("dmf", &dmf_,"dmf_/i");
 	tree->Branch("passDiscr", &passDiscr_,"passDiscr_/i");
+	tree->Branch("nvtx", &nvtx_,"nvtx_/i");
 	tree->Branch("genMatchedTau", &genMatchedTau_,"genMatchedTau_/i");
 	tree->Branch("genMatchedPt", &genMatchedPt_,"genMatchedPt_/F");
 	tree->Branch("jetRefPt", &jetRefPts_,"jetRefPts_/F");
@@ -128,6 +130,14 @@ effi::~effi()
 effi::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 {
 	using namespace edm;
+
+        Handle<reco::VertexCollection> vertices;
+        evt.getByLabel("offlinePrimaryVertices", vertices);
+        if(vertices->size()>0)
+                nvtx_=vertices->size();
+        else return;
+
+
 	Handle<reco::PFTauCollection> tauObjects;
 	evt.getByLabel(tauSrc_, tauObjects);
 
