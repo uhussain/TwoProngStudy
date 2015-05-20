@@ -68,14 +68,14 @@ def make_efficiency(denom, num):
 def make_num(ntuple, variable,PtCut,binning):
     num = make_plot(
         ntuple, 'tauPt',
-        "tauPt>%0.2f && fabs(tauEta)<2.3&&dmf>0&&passDiscr>0" % (PtCut),
+        "tauPt>%0.2f && fabs(tauEta)<2.3" % (PtCut),
         binning
     )
     return num
 def make_denom(ntuple, variable,PtCut,binning):
     denom = make_plot(
-        ntuple, variable,
-        "jetIDLoose&&jetPt>%0.2f"%(PtCut), #
+        ntuple, 'jetPt',
+        "jetPt>%0.2f"%(PtCut), #
         binning
     )
     return denom

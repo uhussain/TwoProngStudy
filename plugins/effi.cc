@@ -111,7 +111,7 @@ effi::effi(const edm::ParameterSet& cfg)
 	tree->Branch("genMatchedPt", &genMatchedPt_,"genMatchedPt_/F");
 	tree->Branch("jetRefPt", &jetRefPts_,"jetRefPts_/F");
 	tree->Branch("jetRefEta", &jetRefEtas_,"jetRefEtas_/F");
-	maxDR_ = 0.3;
+	maxDR_ = 0.2;
 }
 
 
