@@ -1,16 +1,16 @@
 // -*- C++ -*-
+// //
+// // Package:    RecoTauTag/fakeRate
+// // Class:      fakeRate
+// // 
+// /**\class fakeRate fakeRate.cc RecoTauTag/fakeRate/plugins/fakeRate.cc
 //
-// Package:    RecoTauTag/fakeRate
-// Class:      fakeRate
-// 
-/**\class fakeRate fakeRate.cc RecoTauTag/fakeRate/plugins/fakeRate.cc
-
-Description: [one line class summary]
-
-Implementation:
-[Notes on implementation]
-*/
-
+// Description: [one line class summary]
+//
+// Implementation:
+// [Notes on implementation]
+// */
+//
 
 // system include files
 #include <memory>
@@ -43,10 +43,10 @@ Implementation:
 // class declaration
 //
 
-class fakeRate : public edm::EDAnalyzer {
+class fakeRate18 : public edm::EDAnalyzer {
 	public:
-		explicit fakeRate(const edm::ParameterSet&);
-		~fakeRate();
+		explicit fakeRate18(const edm::ParameterSet&);
+		~fakeRate18();
 
 		static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
 
@@ -97,7 +97,7 @@ class fakeRate : public edm::EDAnalyzer {
 //
 // constructors and destructor
 //
-fakeRate::fakeRate(const edm::ParameterSet& cfg)
+fakeRate18::fakeRate18(const edm::ParameterSet& cfg)
 {
 	//now do what ever initialization is needed
 	tauSrc_              = cfg.getParameter<edm::InputTag>("recoTau");
@@ -116,6 +116,7 @@ fakeRate::fakeRate(const edm::ParameterSet& cfg)
 	tree->Branch("jetIDLoose",&jetIDLoose_,"jetIDLoose/I");
 	tree->Branch("jetIDMed",&jetIDMed_,"jetIDMed/I");
 	tree->Branch("jetIDTight",&jetIDTight_,"jetIDTight/I");
+	tree->Branch("jetIDTight",&jetIDTight_,"jetIDTight/I");
 	tree->Branch("genMatchedTau",&genMatchedTau_,"genMatchedTau/I");
 	tree->Branch("dmf",&dmf_,"dmf/I");
 	tree->Branch("isFake",&isFake_,"isFake/I");
@@ -126,7 +127,7 @@ fakeRate::fakeRate(const edm::ParameterSet& cfg)
 }
 
 
-fakeRate::~fakeRate()
+fakeRate18::~fakeRate18()
 {
 	// do anything here that needs to be done at desctruction time
 	// (e.g. close files, deallocate resources etc.)
@@ -139,7 +140,7 @@ fakeRate::~fakeRate()
 
 // ------------ method called for each event  ------------
 	void
-fakeRate::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
+fakeRate18::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 {
 	using namespace edm;
 
@@ -160,34 +161,20 @@ fakeRate::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 
 	edm::Handle<reco::PFTauDiscriminator> DMF; 
 	evt.getByLabel("hpsPFTauDiscriminationByDecayModeFinding",DMF);
-	int tau_position=-1;
-	genMatchedTau_=0;
-	isFake_=0;
-	dmf_=0;
-	passDiscr_=0;
-	tauPt_=-999;
-	tauEta_=-999;
-	tauIndex_=-1;
-	jetRefPt_=-999;
-	jetPt_=-999;
-	jetEta_=-999;
-	jetRefEta_=-999;
-	jetIDLoose_=0;
-	jetIDMed_=0;
-	jetIDTight_=0;
-
 
 	std::vector<const reco::GenParticle*> GenObjects = getGenParticleCollection(evt);
 	for(unsigned int iJet = 0; iJet<jetObjects->size(); iJet++){
 		const reco::PFJet jetCand=jetObjects->at(iJet);
-		jetIDLoose_=isLooseJet(jetCand);
-		jetIDMed_=isMediumJet(jetCand);
-		jetIDTight_=isTightJet(jetCand);
-		if (fabs(jetCand.eta())<2.3&&jetCand.pt()>20&&jetIDLoose_>0){
+		if (std::abs(jetCand.eta())<2.3&&jetCand.pt()>20){
 			jetPt_=jetCand.pt();
 			jetEta_=jetCand.eta();
+			jetIDLoose_=isLooseJet(jetCand);
+			jetIDMed_=isMediumJet(jetCand);
+			jetIDTight_=isTightJet(jetCand);
+
 			//initialize
-			tau_position=-1;
+			int bestDR=999;//right placement?
+			int tau_position=-1;
 			genMatchedTau_=0;
 			isFake_=0;
 			dmf_=0;
@@ -200,16 +187,20 @@ fakeRate::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 
 			for (unsigned int iTau = 0; iTau<tauObjects->size() ; ++iTau){
 				reco::PFTauRef tauCandidate(tauObjects, iTau);
-				//				const reco::Candidate* bestGenMatch = findBestGenMatch(*tauCandidate,GenObjects, maxDR_) ;
+				const reco::Candidate* bestGenMatch = findBestGenMatch(*tauCandidate,GenObjects, maxDR_) ;
 				genMatchedTau_=0;
 				tau_position++;
-				if (tauCandidate->pt()>20&&fabs(tauCandidate->eta())<2.3&&(*DMF)[tauCandidate] > 0.5&&(*discriminator)[tauCandidate] > 0.5 ){
-					if (genMatchingMiniAOD(*tauCandidate,GenObjects,maxDR_)) {genMatchedTau_=1;}//if tau within dr 
+				if(bestGenMatch) {
+					if (abs(bestGenMatch->pdgId())==15){genMatchedTau_=1;}
 					else {
+						genMatchedTau_=0;
 						double deltaR = reco::deltaR(*tauCandidate,jetCand);
-						if (deltaR<maxDR_){
-							dmf_=1;
-							passDiscr_=1;
+						if (deltaR<maxDR_&&deltaR<bestDR){
+							bestDR=deltaR;
+							if( (*DMF)[tauCandidate] > 0.5 ) dmf_=1;
+							else dmf_=0;
+							if( (*discriminator)[tauCandidate] > 0.5 ){passDiscr_=1;}
+							else{passDiscr_=0;}
 							tauPt_=tauCandidate->pt();
 							tauEta_=tauCandidate->eta();
 							reco::PFJetRef jet = getJetRef(*tauCandidate);
@@ -217,10 +208,9 @@ fakeRate::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 							jetRefEta_=jet->eta();
 							tauIndex_=tau_position;
 							isFake_=1;
-							break; //leaves tau loop
 						}//end deltaR
 					}//end not genTau
-				}//end pt
+				}//end if best gen match
 			}//end tau
 			tree->Fill();
 		}//end if
@@ -228,22 +218,23 @@ fakeRate::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 }
 
 
+
 // ------------ method called once each job just before starting event loop  ------------
 	void 
-fakeRate::beginJob()
+fakeRate18::beginJob()
 {
 }
 
 // ------------ method called once each job just after ending the event loop  ------------
 	void 
-fakeRate::endJob() 
+fakeRate18::endJob() 
 {
 }
 
 // ------------ method called when starting to processes a run  ------------
 /*
    void 
-   fakeRate::beginRun(edm::Run const&, edm::EventSetup const&)
+   fakeRate18::beginRun(edm::Run const&, edm::EventSetup const&)
    {
    }
    */
@@ -251,7 +242,7 @@ fakeRate::endJob()
 // ------------ method called when ending the processing of a run  ------------
 /*
    void 
-   fakeRate::endRun(edm::Run const&, edm::EventSetup const&)
+   fakeRate18::endRun(edm::Run const&, edm::EventSetup const&)
    {
    }
    */
@@ -259,7 +250,7 @@ fakeRate::endJob()
 // ------------ method called when starting to processes a luminosity block  ------------
 /*
    void 
-   fakeRate::beginLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
+   fakeRate18::beginLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
    {
    }
    */
@@ -267,14 +258,14 @@ fakeRate::endJob()
 // ------------ method called when ending the processing of a luminosity block  ------------
 /*
    void 
-   fakeRate::endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
+   fakeRate18::endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
    {
    }
    */
 
 // ------------ method fills 'descriptions' with the allowed parameters for the module  ------------
 void
-fakeRate::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
+fakeRate18::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
 	//The following says we do not know what parameters are allowed so do no validation
 	// Please change this to state exactly what you do use, even if it is no parameters
 	//  edm::ParameterSetDescription desc;
@@ -284,4 +275,4 @@ fakeRate::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
 
 //define this as a plug-in
 #include "FWCore/Framework/interface/MakerMacros.h"
-DEFINE_FWK_MODULE(fakeRate);
+DEFINE_FWK_MODULE(fakeRate18);
