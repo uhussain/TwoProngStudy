@@ -34,7 +34,7 @@ reco::PFJetRef getJetRef(const reco::PFTau& tau) {
 bool genMatchingMiniAOD(const pat::Tau tau, std::vector<const reco::GenParticle*>& GenPart, double maxDR) {
 	bool tau_match=false;
 	for (size_t i = 0; i < GenPart.size(); ++i) {
-		if (GenPart[i]->pdgId()==15){
+		if (abs(GenPart[i]->pdgId())==15){
 			double deltaR = reco::deltaR(tau, *GenPart[i]);
 			if (deltaR < maxDR) {
 				tau_match=true;
@@ -52,7 +52,7 @@ std::vector<const reco::GenParticle*> getGenParticleCollectionMiniAOD(const edm:
 	for (size_t j = 0; j < handle->size(); ++j) {
 		const reco::GenParticle& object = handle->at(j);
 		//if(fabs(object.pdgId())==15 && object.status() == 2) output.push_back(&object);
-		if(object.pdgId() == 15) output.push_back(&object);
+		if(abs(object.pdgId()) == 15) output.push_back(&object);
 	}
 	return output;
 }
@@ -69,7 +69,7 @@ std::vector<const reco::GenParticle*> getGenParticleCollection(const edm::Event&
 	for (size_t j = 0; j < handle->size(); ++j) {
 		const reco::GenParticle& object = handle->at(j);
 		//if(fabs(object.pdgId())==15 && object.status() == 2) output.push_back(&object);
-		if(object.pdgId() == 15) output.push_back(&object);
+		if(abs(object.pdgId()) == 15) output.push_back(&object);
 	}
 	return output;
 }
