@@ -69,7 +69,7 @@ std::vector<const reco::GenParticle*> getGenParticleCollection(const edm::Event&
 	for (size_t j = 0; j < handle->size(); ++j) {
 		const reco::GenParticle& object = handle->at(j);
 		//if(fabs(object.pdgId())==15 && object.status() == 2) output.push_back(&object);
-		if(object.status() == 2) output.push_back(&object);
+		if(object.pdgId() == 15) output.push_back(&object);
 	}
 	return output;
 }

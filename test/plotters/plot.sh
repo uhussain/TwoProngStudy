@@ -1,0 +1,4 @@
+#python plotEff.py /nfs_scratch/laura/May18-iso03-eff.root /nfs_scratch/laura/May18-iso05-eff.root /nfs_scratch/laura/May18-iso08-eff.root /nfs_scratch/laura/May18-iso1-eff.root /nfs_scratch/laura/May18-iso5-eff.root 
+#python plotFR.py /nfs_scratch/laura/May18-iso03-FR.root /nfs_scratch/laura/May18-iso05-FR.root /nfs_scratch/laura/May18-iso08-FR.root /nfs_scratch/laura/May18-iso1-FR.root /nfs_scratch/laura/May18-iso5-FR.root 
+python plotFR.py /nfs_scratch/laura/May26-iso02-FR.root /nfs_scratch/laura/May26-iso03-FR.root /nfs_scratch/laura/May26-iso035-FR.root /nfs_scratch/laura/May26-iso04-FR.root /nfs_scratch/laura/May26-iso05-FR.root 
+python plotEff.py /nfs_scratch/laura/May26-iso02-EFF.root /nfs_scratch/laura/May26-iso03-EFF.root /nfs_scratch/laura/May26-iso035-EFF.root /nfs_scratch/laura/May26-iso04-EFF.root /nfs_scratch/laura/May26-iso05-EFF.root 

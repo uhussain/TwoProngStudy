@@ -45,6 +45,8 @@ VLooseIso = ntuple_file.Get("byVLooseIsolation/Ntuple")
 byLooseCmbIso = ntuple_file.Get("byLooseCombinedIsolationDBSumPtCorr/Ntuple")
 byVLooseCmbIso = ntuple_file.Get("byVLooseCombinedIsolationDBSumPtCorr/Ntuple")
 byLooseCmbIso3 = ntuple_file.Get("byLooseCombinedIsolationDBSumPtCorr3Hits/Ntuple")
+byMedCmbIso3 = ntuple_file.Get("byMediumCombinedIsolationDBSumPtCorr3Hits/Ntuple")
+byTightCmbIso3 = ntuple_file.Get("byTightCombinedIsolationDBSumPtCorr3Hits/Ntuple")
 
 canvas = ROOT.TCanvas("asdf", "adsf", 800, 800)
 
@@ -68,14 +70,14 @@ def make_efficiency(denom, num):
 def make_num(ntuple, variable,PtCut,binning):
     num = make_plot(
         ntuple, 'tauPt',
-        "tauPt>%0.2f && fabs(tauEta)<2.3" % (PtCut),
+        "jetIDLoose>0&&tauPt > %0.2f&&fabs(tauEta)<2.3&& dmf>0&&passDiscr>0" % (PtCut),
         binning
     )
     return num
 def make_denom(ntuple, variable,PtCut,binning):
     denom = make_plot(
         ntuple, 'jetPt',
-        "jetPt>%0.2f"%(PtCut), #
+        "jetPt> %0.2f&&jetIDLoose"%(PtCut), #
         binning
     )
     return denom
@@ -93,13 +95,13 @@ def compare_efficiencies(ntuple1,legend1,ntuple2, legend2, variable, PtCut, binn
     l1 = produce_efficiency(ntuple1,variable, PtCut,binning, filename,ROOT.kMagenta-3)
     l2 = produce_efficiency(ntuple2,variable, PtCut,binning, filename,ROOT.kBlue-9)
     frame.SetMaximum(1.2)
-    canvas.SetLogy()
     frame.SetTitle(title)
     frame.GetXaxis().SetTitle(xaxis)
     frame.GetYaxis().SetTitle(yaxis)
     frame.Draw()
     l1.Draw('pe')
     l2.Draw('pesame')
+    canvas.SetLogy()
     legend = ROOT.TLegend(0.5, 0.7, 0.95, 0.9, "", "brNDC")
     legend.SetFillColor(ROOT.kWhite)
     legend.SetBorderSize(1)
@@ -144,6 +146,13 @@ compare_efficiencies(byLooseCmbIso, 'byLooseCombIsoDBSumPtCorr', byLooseCmbIso3,
 
 compare_efficiencies(byVLooseCmbIso, 'byVLooseCombIsoDBSumPtCorr', VLooseIso,'VLooseIsolation','jetPt', 20, [20, 0, 120],#variable, ptcut, binning
                     'tauPtvloose_FR',#filename
+                    "Jet#rightarrow#tau Fake rate",#title
+                    "pf Jet p_{T} (GeV)",#xaxis
+                    "Fake Rate" #yaxis             
+)
+
+compare_efficiencies(byMedCmbIso3, 'byMediumCombIsoDBSumPtCorr3', byTightCmbIso3,'ByTightCmbIsoDBSumPtCorr3','jetPt', 20, [20, 0, 120],#variable, ptcut, binning
+                    'tauPtmt3_FR',#filename
                     "Jet#rightarrow#tau Fake rate",#title
                     "pf Jet p_{T} (GeV)",#xaxis
                     "Fake Rate" #yaxis             

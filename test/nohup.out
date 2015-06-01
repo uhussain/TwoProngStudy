@@ -1,0 +1,1334 @@
+========Tau Isolation Cone Configuration=======
+isoConeSizeForDeltaBeta =    0.8 
+isolationConeSize =    0.05 
+# Conditions read from  CMS_CONDITIONS  via FrontierProd 
+In File RecoTauPiZeroProducer_cfi.py
+ switching PAT Tau input to:  cms.InputTag("hpsPFTauProducer")
+========Tau Isolation Cone Configuration=======
+isoConeSizeForDeltaBeta =    0.8 
+isolationConeSize =    5.0 
+# Conditions read from  CMS_CONDITIONS  via FrontierProd 
+In File RecoTauPiZeroProducer_cfi.py
+ switching PAT Tau input to:  cms.InputTag("hpsPFTauProducer")
+25-May-2015 06:23:15 CDT  Initiating request to open file file:/hdfs/store/mc/Phys14DR/WJetsToLNu_13TeV-madgraph-pythia8-tauola/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/28C4E0C1-7F6F-E411-AE20-0025905B85EE.root
+25-May-2015 06:23:20 CDT  Successfully opened file file:/hdfs/store/mc/Phys14DR/WJetsToLNu_13TeV-madgraph-pythia8-tauola/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/28C4E0C1-7F6F-E411-AE20-0025905B85EE.root
+25-May-2015 06:23:28 CDT  Initiating request to open file file:/hdfs/store/mc/Phys14DR/WJetsToLNu_13TeV-madgraph-pythia8-tauola/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/28C4E0C1-7F6F-E411-AE20-0025905B85EE.root
+25-May-2015 06:23:32 CDT  Successfully opened file file:/hdfs/store/mc/Phys14DR/WJetsToLNu_13TeV-madgraph-pythia8-tauola/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/28C4E0C1-7F6F-E411-AE20-0025905B85EE.root
+ In RecoTauPiZeroProducer plugin
+ In RecoTauPiZeroProducer plugin
+Begin processing the 1st record. Run 1, Event 1312207Begin processing the , LumiSection 113123st at  record. Run 25-May-2015 06:23:53.907 CDT1
+, Event 1312207, LumiSection 13123 at 25-May-2015 06:23:53.907 CDT
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:24:11 CDT Run: 1 Event: 1312218
+Computation HelixHelix::CAIR failed.
+%MSG
+Begin processing the 101st record. Run 1, Event 1312496, LumiSection 13125 at 25-May-2015 06:25:16.739 CDT
+Begin processing the 101st record. Run 1, Event 1312496, LumiSection 13125 at 25-May-2015 06:25:18.777 CDT
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:25:54 CDT Run: 1 Event: 1312625
+Computation HelixHelix::CAIR failed.
+%MSG
+Begin processing the 201st record. Run 1, Event 1323607, LumiSection 13237 at 25-May-2015 06:26:25.677 CDT
+Begin processing the 201st record. Run 1, Event 1323607, LumiSection 13237 at 25-May-2015 06:26:26.565 CDT
+Begin processing the 301st record. Run 1, Event 1323908, LumiSection 13240 at 25-May-2015 06:27:31.603 CDT
+Begin processing the 301st record. Run 1, Event 1323908, LumiSection 13240 at 25-May-2015 06:27:33.210 CDT
+Begin processing the 401st record. Run 1, Event 1342219, LumiSection 13423 at 25-May-2015 06:28:43.109 CDT
+Begin processing the 401st record. Run 1, Event 1342219, LumiSection 13423 at 25-May-2015 06:28:45.254 CDT
+Begin processing the 501st record. Run 1, Event 9245914, LumiSection 92460 at 25-May-2015 06:29:47.059 CDT
+Begin processing the 501st record. Run 1, Event 9245914, LumiSection 92460 at 25-May-2015 06:29:50.194 CDT
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:02 CDT Run: 1 Event: 9245997
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:02 CDT Run: 1 Event: 9245997
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:06 CDT Run: 1 Event: 9245997
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:06 CDT Run: 1 Event: 9245997
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:11 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:30:14 CDT Run: 1 Event: 9246031
+Computation HelixHelix::CAIR failed.
+%MSG
+Begin processing the 601st record. Run 1, Event 9340438, LumiSection 93405 at 25-May-2015 06:30:48.208 CDT
+Begin processing the 601st record. Run 1, Event 9340438, LumiSection 93405 at 25-May-2015 06:30:52.376 CDT
+Begin processing the 701st record. Run 1, Event 9340789, LumiSection 93408 at 25-May-2015 06:31:53.203 CDT
+Begin processing the 701st record. Run 1, Event 9340789, LumiSection 93408 at 25-May-2015 06:31:58.275 CDT
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:25 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:32:31 CDT Run: 1 Event: 9340946
+Computation HelixHelix::CAIR failed.
+%MSG
+Begin processing the 801st record. Run 1, Event 22879496, LumiSection 228795 at 25-May-2015 06:32:58.348 CDT
+Begin processing the 801st record. Run 1, Event 22879496, LumiSection 228795 at 25-May-2015 06:33:04.357 CDT
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:33:58 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:01 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:05 CDT Run: 1 Event: 22879743
+Computation HelixHelix::CAIR failed.
+%MSG
+Begin processing the 901st record. Run 1, Event 22879787, LumiSection 228798 at 25-May-2015 06:34:08.681 CDT
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:34:08 CDT Run: 1 Event: 22879761
+Computation HelixHelix::CAIR failed.
+%MSG
+Begin processing the 901st record. Run 1, Event 22879787, LumiSection 228798 at 25-May-2015 06:34:16.132 CDT
+Begin processing the 1001st record. Run 1, Event 50409689, LumiSection 504097 at 25-May-2015 06:35:20.858 CDT
+Begin processing the 1001st record. Run 1, Event 50409689, LumiSection 504097 at 25-May-2015 06:35:29.621 CDT
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:01 CDT Run: 1 Event: 50409852
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:01 CDT Run: 1 Event: 50409852
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:01 CDT Run: 1 Event: 50409852
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:01 CDT Run: 1 Event: 50409852
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:01 CDT Run: 1 Event: 50409852
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:01 CDT Run: 1 Event: 50409852
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:01 CDT Run: 1 Event: 50409852
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:01 CDT Run: 1 Event: 50409852
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:01 CDT Run: 1 Event: 50409852
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:01 CDT Run: 1 Event: 50409852
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:01 CDT Run: 1 Event: 50409852
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:01 CDT Run: 1 Event: 50409852
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:01 CDT Run: 1 Event: 50409852
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:01 CDT Run: 1 Event: 50409852
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:10 CDT Run: 1 Event: 50409852
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:10 CDT Run: 1 Event: 50409852
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:10 CDT Run: 1 Event: 50409852
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:10 CDT Run: 1 Event: 50409852
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:10 CDT Run: 1 Event: 50409852
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:10 CDT Run: 1 Event: 50409852
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:10 CDT Run: 1 Event: 50409852
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:10 CDT Run: 1 Event: 50409852
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:10 CDT Run: 1 Event: 50409852
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:10 CDT Run: 1 Event: 50409852
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:10 CDT Run: 1 Event: 50409852
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:10 CDT Run: 1 Event: 50409852
+Computation HelixHelix::CAIR failed.
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:10 CDT Run: 1 Event: 50409852
+comparing track with itself!
+%MSG
+%MSG-w TwoTrackMinimumDistance:   PFTauPrimaryVertexProducer:hpsPFTauPrimaryVertexProducer  25-May-2015 06:36:10 CDT Run: 1 Event: 50409852
+Computation HelixHelix::CAIR failed.
+%MSG
+Begin processing the 1101st record. Run 1, Event 35126475, LumiSection 351265 at 25-May-2015 06:36:35.728 CDT
+Begin processing the 1101st record. Run 1, Event 35126475, LumiSection 351265 at 25-May-2015 06:36:44.754 CDT
+25-May-2015 06:37:42 CDT  Closed file file:/hdfs/store/mc/Phys14DR/WJetsToLNu_13TeV-madgraph-pythia8-tauola/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/28C4E0C1-7F6F-E411-AE20-0025905B85EE.root
+
+=============================================
+
+MessageLogger Summary
+
+ type     category        sev    module        subroutine        count    total
+ ---- -------------------- -- ---------------- ----------------  -----    -----
+    1 TwoTrackMinimumDista -w PFTauPrimaryVert                     208      208
+    2 fileAction           -s file_close                             1        1
+    3 fileAction           -s file_open                              2        2
+
+ type    category    Examples: run/evt        run/evt          run/evt
+ ---- -------------------- ---------------- ---------------- ----------------
+    1 TwoTrackMinimumDistance 1/1312218        1/1312218        1/50409852
+    2 fileAction           PostEndRun                        
+    3 fileAction           pre-events       pre-events       
+
+Severity    # Occurrences   Total Occurrences
+--------    -------------   -----------------
+Warning               208                 208
+System                  3                   3
+25-May-2015 06:37:53 CDT  Closed file file:/hdfs/store/mc/Phys14DR/WJetsToLNu_13TeV-madgraph-pythia8-tauola/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/28C4E0C1-7F6F-E411-AE20-0025905B85EE.root
+
+=============================================
+
+MessageLogger Summary
+
+ type     category        sev    module        subroutine        count    total
+ ---- -------------------- -- ---------------- ----------------  -----    -----
+    1 TwoTrackMinimumDista -w PFTauPrimaryVert                     208      208
+    2 fileAction           -s file_close                             1        1
+    3 fileAction           -s file_open                              2        2
+
+ type    category    Examples: run/evt        run/evt          run/evt
+ ---- -------------------- ---------------- ---------------- ----------------
+    1 TwoTrackMinimumDistance 1/1312218        1/1312218        1/50409852
+    2 fileAction           PostEndRun                        
+    3 fileAction           pre-events       pre-events       
+
+Severity    # Occurrences   Total Occurrences
+--------    -------------   -----------------
+Warning               208                 208
+System                  3                   3

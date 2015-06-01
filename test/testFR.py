@@ -1,19 +1,23 @@
 import FWCore.ParameterSet.Config as cms
 import os
+#########Var Parsin##########
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('analysis')
 options.inputFiles = 'file:/hdfs/store/mc/Phys14DR/WJetsToLNu_13TeV-madgraph-pythia8-tauola/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/28C4E0C1-7F6F-E411-AE20-0025905B85EE.root'
-options.outputFile = "testTau_fakeRate.root"
+#options.inputFiles = 'file:/hdfs/store/mc/Phys14DR/QCD_Pt-170to300_Tune4C_13TeV_pythia8/AODSIM/AVE30BX50_tsg_castor_PHYS14_ST_V1-v1/00000/FCEDE7D8-1DAB-E411-8513-00266CFFA120.root'
+options.outputFile = "testTau_fakeRate_isoCone5.root"
+
+options.register ('isoDBFactor',  .4579, VarParsing.multiplicity.singleton, VarParsing.varType.float,
+                  "isoConeSizeForDeltaBeta")
+options.register ('isoConeSize',  0.5, VarParsing.multiplicity.singleton, VarParsing.varType.float,
+                  "customConeSize")
 options.parseArguments()
+print '========Tau Isolation Cone Configuration======='
+print 'isoConeSizeForDeltaBeta =   ',options.isoDBFactor,''
+print 'customConeSize =   ',options.isoConeSize,''
+
 
 process = cms.Process("TreeProducerFromAOD")
-#from FWCore.ParameterSet.VarParsing import VarParsing
-#options = VarParsing ('analysis')
-
-#options.inputFiles ='file:/hdfs/store/mc/Phys14DR/WJetsToLNu_13TeV-madgraph-pythia8-tauola/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/28C4E0C1-7F6F-E411-AE20-0025905B85EE.root'
-#options.outputFiles ='outputReRunNonStdStrip.root'
-
-
 
 process.load('FWCore/MessageService/MessageLogger_cfi')
 process.MessageLogger.cerr.FwkReport.reportEvery = 100
@@ -29,7 +33,7 @@ process.GlobalTag = customiseGlobalTag(process.GlobalTag, globaltag = 'PHYS14_25
 #process.GlobalTag.globaltag = cms.string('PHYS14_25_V2::All')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(1000)
+    input = cms.untracked.int32(-1)
 )
 
 process.source = cms.Source("PoolSource",
@@ -85,7 +89,27 @@ process.load("RecoTauTag.Configuration.RecoPFTauTag_cff") #loading the configura
 from PhysicsTools.PatAlgos.tools.tauTools import *
 switchToPFTauHPS(process)
 
-#process.ak4PFJetsLegacyHPSPiZeros.stripPhiAssociationDistance = cms.double(0.9)
+process.hpsPFTauDiscriminationByVLooseCombinedIsolationDBSumPtCorr.deltaBetafactor = cms.double(options.isoDBFactor)
+process.hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr.deltaBetafactor = cms.double(options.isoDBFactor)
+process.hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr.deltaBetafactor = cms.double(options.isoDBFactor)
+process.hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr.deltaBetafactor = cms.double(options.isoDBFactor)
+process.hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr3Hits.deltaBetafactor = cms.double(options.isoDBFactor)
+process.hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr3Hits.deltaBetafactor = cms.double(options.isoDBFactor)
+process.hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr3Hits.deltaBetafactor = cms.double(options.isoDBFactor)
+
+process.hpsPFTauDiscriminationByVLooseCombinedIsolationDBSumPtCorr.customOuterCone = cms.double(options.isoConeSize)
+process.hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr.customOuterCone = cms.double(options.isoConeSize)
+process.hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr.customOuterCone = cms.double(options.isoConeSize)
+process.hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr.customOuterCone = cms.double(options.isoConeSize)
+process.hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr3Hits.customOuterCone = cms.double(options.isoConeSize)
+process.hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr3Hits.customOuterCone = cms.double(options.isoConeSize)
+process.hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr3Hits.customOuterCone = cms.double(options.isoConeSize)
+
+
+#process.combinatoricRecoTaus.isolationConeSize = cms.double(options.isoConeSize)
+
+
+
 
 # switch on PAT trigger                                                                                                                      
 from PhysicsTools.PatAlgos.tools.trigTools import switchOnTrigger
@@ -96,30 +120,17 @@ process.makePatTrigger = cms.Sequence(process.patTrigger*process.patTriggerEvent
 #--------------------------------------------------------------------------------
 # select "good" reconstructed vertices
 #process.load("TauAnalysis/RecoTools/recoVertexSelection_cff")
-process.selectedPrimaryVertexQuality = cms.EDFilter("VertexSelector",
-    src = cms.InputTag('offlinePrimaryVertices'),
-    cut = cms.string("isValid & ndof >= 4 & chi2 > 0 & tracksSize > 0"), # CV: cut >= 4 if using 'offlinePrimaryVertices',
-                                                                         #         >= 7 if using 'offlinePrimaryVerticesWithBS' as input
-    filter = cms.bool(False)                                          
+process.goodOfflinePrimaryVertices = cms.EDFilter(
+    "PrimaryVertexObjectFilter",
+    filterParams = cms.PSet(
+        minNdof = cms.double(4.0),
+        maxZ = cms.double(24.0),
+        maxRho = cms.double(2.0)
+    ),
+    filter = cms.bool(True),
+    src = cms.InputTag("offlinePrimaryVertices")
 )
 
-process.selectedPrimaryVertexPosition = cms.EDFilter("VertexSelector",
-    src = cms.InputTag('selectedPrimaryVertexQuality'),
-    cut = cms.string("abs(z) < 24 & abs(position.Rho) < 2."),
-    filter = cms.bool(False)                                           
-)
-
-process.selectedPrimaryVertexHighestPtTrackSum = cms.EDFilter("PATSingleVertexSelector",
-    mode = cms.string('firstVertex'),
-    vertices = cms.InputTag('selectedPrimaryVertexPosition'),
-    filter = cms.bool(False)                                                    
-)
-
-process.selectPrimaryVertex = cms.Sequence(
-    process.selectedPrimaryVertexQuality
-   * process.selectedPrimaryVertexPosition
-   * process.selectedPrimaryVertexHighestPtTrackSum
-)
 ##################################################
 # Main
 
@@ -134,7 +145,6 @@ process.byLooseIsolation = cms.EDAnalyzer('fakeRate',
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByLooseIsolation")
 )
-
 
 #dB
 process.byVLooseCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('fakeRate',
@@ -181,7 +191,7 @@ process.byTightCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('fakeRate',
 ###################################################
 #Global sequence
 
-process.p = cms.Path(process.selectPrimaryVertex *
+process.p = cms.Path(process.goodOfflinePrimaryVertices *
                      process.makePatMuons*
                      process.makePatElectrons*
                      process.makePatTaus*

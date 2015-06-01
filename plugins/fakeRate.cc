@@ -122,7 +122,7 @@ fakeRate::fakeRate(const edm::ParameterSet& cfg)
 	tree->Branch("tauIndex",&tauIndex_,"tauIndex/I");
 	tree->Branch("passDiscr",&passDiscr_,"passDiscr/I");
 	tree->Branch("nvtx",&nvtx_,"nvtx/I");
-	maxDR_ = 0.3;
+	maxDR_ = 0.2;
 }
 
 
@@ -160,6 +160,7 @@ fakeRate::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 
 	edm::Handle<reco::PFTauDiscriminator> DMF; 
 	evt.getByLabel("hpsPFTauDiscriminationByDecayModeFinding",DMF);
+
 	int tau_position=-1;
 	genMatchedTau_=0;
 	isFake_=0;
@@ -178,16 +179,39 @@ fakeRate::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 
 
 	std::vector<const reco::GenParticle*> GenObjects = getGenParticleCollection(evt);
+	if (GenObjects.size()!=0) return;
+
 	for(unsigned int iJet = 0; iJet<jetObjects->size(); iJet++){
 		const reco::PFJet jetCand=jetObjects->at(iJet);
-		jetIDLoose_=isLooseJet(jetCand);
-		jetIDMed_=isMediumJet(jetCand);
-		jetIDTight_=isTightJet(jetCand);
-		if (fabs(jetCand.eta())<2.3&&jetCand.pt()>20&&jetIDLoose_>0){
+		jetIDLoose_=0;
+		jetIDMed_=0;
+		jetIDTight_=0;
+		tau_position=-1;
+		genMatchedTau_=0;
+		isFake_=0;
+		dmf_=0;
+		passDiscr_=0;
+		tauPt_=-999;
+		tauEta_=-999;
+		tauIndex_=-1;
+		jetRefPt_=-999;
+		jetPt_=-999;
+		jetEta_=-999;
+		jetRefEta_=-999;
+
+
+		if (std::abs(jetCand.eta())<2.3&&jetCand.pt()>20&&isLooseJet(jetCand)){
+			//add to numerator
 			jetPt_=jetCand.pt();
 			jetEta_=jetCand.eta();
+			jetIDLoose_=isLooseJet(jetCand);
+			jetIDMed_=isMediumJet(jetCand);
+			jetIDTight_=isTightJet(jetCand);
+
+
 			//initialize
 			tau_position=-1;
+
 			genMatchedTau_=0;
 			isFake_=0;
 			dmf_=0;
@@ -200,32 +224,41 @@ fakeRate::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 
 			for (unsigned int iTau = 0; iTau<tauObjects->size() ; ++iTau){
 				reco::PFTauRef tauCandidate(tauObjects, iTau);
-				//				const reco::Candidate* bestGenMatch = findBestGenMatch(*tauCandidate,GenObjects, maxDR_) ;
 				genMatchedTau_=0;
+				isFake_=0;
+				dmf_=0;
+				passDiscr_=0;
+				tauPt_=-999;
+				tauEta_=-999;
+				tauIndex_=-1;
+				jetRefPt_=-999;
+				jetRefEta_=-999;
+
+
 				tau_position++;
-				if (tauCandidate->pt()>20&&fabs(tauCandidate->eta())<2.3&&(*DMF)[tauCandidate] > 0.5&&(*discriminator)[tauCandidate] > 0.5 ){
-					if (genMatchingMiniAOD(*tauCandidate,GenObjects,maxDR_)) {genMatchedTau_=1;}//if tau within dr 
-					else {
-						double deltaR = reco::deltaR(*tauCandidate,jetCand);
-						if (deltaR<maxDR_){
-							dmf_=1;
-							passDiscr_=1;
-							tauPt_=tauCandidate->pt();
-							tauEta_=tauCandidate->eta();
-							reco::PFJetRef jet = getJetRef(*tauCandidate);
-							jetRefPt_= jet->pt();
-							jetRefEta_=jet->eta();
-							tauIndex_=tau_position;
-							isFake_=1;
-							break; //leaves tau loop
-						}//end deltaR
-					}//end not genTau
-				}//end pt
+				double deltaR = reco::deltaR(*tauCandidate,jetCand);
+				if (deltaR>maxDR_){continue;} //different candidate... jet far away form tau
+
+				else if(deltaR<maxDR_&&(tauCandidate->pt())>20&&std::abs(tauCandidate->eta())<2.3&&(*DMF)[tauCandidate] > 0.5&&(*discriminator)[tauCandidate] > 0.5 ){
+
+					tauPt_=tauCandidate->pt();
+					tauEta_=tauCandidate->eta();
+					isFake_=1;
+					dmf_=1;
+					passDiscr_=1;
+					reco::PFJetRef jet = getJetRef(*tauCandidate);
+					jetRefPt_= jet->pt();
+					jetRefEta_=jet->eta();
+					tauIndex_=tau_position;
+					break;
+				}//end else if
+				else {continue;}
 			}//end tau
 			tree->Fill();
 		}//end if
 	}//end Jet
 }
+
 
 
 // ------------ method called once each job just before starting event loop  ------------

@@ -1,19 +1,23 @@
 import FWCore.ParameterSet.Config as cms
 import os
+#########Var Parsin##########
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('analysis')
 options.inputFiles = 'file:/hdfs/store/mc/Phys14DR/WJetsToLNu_13TeV-madgraph-pythia8-tauola/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/28C4E0C1-7F6F-E411-AE20-0025905B85EE.root'
 options.outputFile = "testTau_fakeRate.root"
+
+options.register ('isoDBCone',  0.8, VarParsing.multiplicity.singleton, VarParsing.varType.float,
+                  "isoConeSizeForDeltaBeta")
+options.register ('isoConeSize',  0.5, VarParsing.multiplicity.singleton, VarParsing.varType.float,
+                  "isolationConeSize")
+isolationConeSize
 options.parseArguments()
+print '========Tau Isolation Cone Configuration======='
+print 'isoConeSizeForDeltaBeta =   ',options.isoDBCone,''
+print 'isolationConeSize =   ',options.isoConeSize,''
+
 
 process = cms.Process("TreeProducerFromAOD")
-#from FWCore.ParameterSet.VarParsing import VarParsing
-#options = VarParsing ('analysis')
-
-#options.inputFiles ='file:/hdfs/store/mc/Phys14DR/WJetsToLNu_13TeV-madgraph-pythia8-tauola/AODSIM/PU20bx25_PHYS14_25_V1-v1/00000/28C4E0C1-7F6F-E411-AE20-0025905B85EE.root'
-#options.outputFiles ='outputReRunNonStdStrip.root'
-
-
 
 process.load('FWCore/MessageService/MessageLogger_cfi')
 process.MessageLogger.cerr.FwkReport.reportEvery = 100
@@ -29,7 +33,7 @@ process.GlobalTag = customiseGlobalTag(process.GlobalTag, globaltag = 'PHYS14_25
 #process.GlobalTag.globaltag = cms.string('PHYS14_25_V2::All')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(1000)
+    input = cms.untracked.int32(-1)
 )
 
 process.source = cms.Source("PoolSource",
@@ -85,7 +89,18 @@ process.load("RecoTauTag.Configuration.RecoPFTauTag_cff") #loading the configura
 from PhysicsTools.PatAlgos.tools.tauTools import *
 switchToPFTauHPS(process)
 
-#process.ak4PFJetsLegacyHPSPiZeros.stripPhiAssociationDistance = cms.double(0.9)
+#process.hpsPFTauDiscriminationByVLooseCombinedIsolationDBSumPtCorr.isoConeSizeForDeltaBeta = cms.double(options.isoDBCone)
+#process.hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr.isoConeSizeForDeltaBeta = cms.double(options.isoDBCone)
+#process.hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr.isoConeSizeForDeltaBeta = cms.double(options.isoDBCone)
+#process.hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr.isoConeSizeForDeltaBeta = cms.double(options.isoDBCone)
+#process.hpsPFTauDiscriminationByLooseCombinedIsolationDBSumPtCorr3Hits.isoConeSizeForDeltaBeta = cms.double(options.isoDBCone)
+#process.hpsPFTauDiscriminationByMediumCombinedIsolationDBSumPtCorr3Hits.isoConeSizeForDeltaBeta = cms.double(options.isoDBCone)
+#process.hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr3Hits.isoConeSizeForDeltaBeta = cms.double(options.isoDBCone)
+
+process.combinatoricRecoTaus.isolationConeSize = cms.double(options.isoConeSize)
+
+
+
 
 # switch on PAT trigger                                                                                                                      
 from PhysicsTools.PatAlgos.tools.trigTools import switchOnTrigger
@@ -134,7 +149,6 @@ process.byLooseIsolation = cms.EDAnalyzer('fakeRate',
 			      	     recoJet              = cms.InputTag("ak4PFJetsCHS"),
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByLooseIsolation")
 )
-
 
 #dB
 process.byVLooseCombinedIsolationDBSumPtCorr = cms.EDAnalyzer('fakeRate',
@@ -209,8 +223,8 @@ process.out.outputCommands = cms.untracked.vstring('keep *')
 
 process.schedule = cms.Schedule(process.p)
 
-dump_file = open('dump.py','w')
-dump_file.write(process.dumpPython())
+#dump_file = open('dump.py','w')
+#dump_file.write(process.dumpPython())
 
 
 

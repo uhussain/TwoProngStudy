@@ -13,7 +13,7 @@ farmoutAnalysisJobs $1-iso$2-FR \
   --input-file-list=WJets.txt \
   --input-dir=root://cmsxrootd.fnal.gov/ \
   --assume-input-files-exist \
-  ./runAODSIM_fakeRate_iso.py isoConeSize=$2 \
+  ./testFR.py isoConeSize=$2 isoDBFactor=$3\
   'inputFiles=$inputFileNames' 'outputFile=$outputFileName'
 
 farmoutAnalysisJobs $1-iso$2-EFF \
@@ -21,5 +21,5 @@ farmoutAnalysisJobs $1-iso$2-EFF \
   --input-file-list=HTauTau.txt \
   --input-dir=root://cmsxrootd.fnal.gov/ \
   --assume-input-files-exist \
-  ./runAODSIM_effi_iso.py isoConeSize=$2 \
+  ./testEFF.py isoConeSize=$2 isoDBFactor=$3\
   'inputFiles=$inputFileNames' 'outputFile=$outputFileName'
