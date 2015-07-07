@@ -5,10 +5,9 @@ if [ $# -ne $EXPECTED_ARGS ]
 then
   echo "Usage: $0 JOB_NAME"
 fi
-
 farmoutAnalysisJobs $1-WJets \
+  --input-files-per-job=100 \
   --job-generates-output-name \
-  --input-files-per-job=50 \
   --infer-cmssw-path \
   --input-file-list=WJets.txt \
   --input-dir=root://cmsxrootd.fnal.gov/ \
@@ -17,8 +16,8 @@ farmoutAnalysisJobs $1-WJets \
   'inputFiles=$inputFileNames' 'outputFile=$outputFileName'
 
 farmoutAnalysisJobs $1-ggHtautau \
+  --input-files-per-job=100 \
   --job-generates-output-name \
-  --input-files-per-job=50 \
   --infer-cmssw-path \
   --input-file-list=HTauTau.txt \
   --input-dir=root://cmsxrootd.fnal.gov/ \
@@ -27,8 +26,8 @@ farmoutAnalysisJobs $1-ggHtautau \
   'inputFiles=$inputFileNames' 'outputFile=$outputFileName'
 
 farmoutAnalysisJobs $1-QCD \
+  --input-files-per-job=100 \
   --job-generates-output-name \
-  --input-files-per-job=50 \
   --infer-cmssw-path \
   --input-file-list=QCD_multijet.txt \
   --input-dir=root://cmsxrootd.fnal.gov/ \

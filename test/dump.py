@@ -3,8 +3,7 @@ import FWCore.ParameterSet.Config as cms
 process = cms.Process("TreeProducerFromMiniAOD")
 
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring('/store/mc/RunIISpring15DR74/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/Asympt50ns_MCRUN2_74_V9A-v1/70000/04DBAEFA-91FE-E411-8A61-0025904AC2C4.root', 
-        '/store/mc/RunIISpring15DR74/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/Asympt50ns_MCRUN2_74_V9A-v1/70000/DE0E643B-B2FD-E411-AEE9-00238BBD7588.root')
+    fileNames = cms.untracked.vstring('/store/mc/RunIISpring15DR74/QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8/MINIAODSIM/Asympt50nsRaw_MCRUN2_74_V9A-v3/70000/44B5E6C2-3B08-E511-A88B-0025907253D2.root')
 )
 process.againstElectronLooseMVA5 = cms.EDAnalyzer("MiniAODfakeRate_alt",
     jets = cms.InputTag("slimmedJets"),
@@ -177,7 +176,7 @@ process.MessageLogger = cms.Service("MessageLogger",
 
 
 process.TFileService = cms.Service("TFileService",
-    fileName = cms.string('MiniAOD_FR.root')
+    fileName = cms.string('MiniAOD_FR_QCD.root')
 )
 
 
