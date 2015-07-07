@@ -175,9 +175,6 @@ process.byTightCombinedIsolationDBSumPtCorr3Hits = cms.EDAnalyzer('fakeRate',
                                      recoTauDiscriminator = cms.InputTag("hpsPFTauDiscriminationByTightCombinedIsolationDBSumPtCorr3Hits")
 )
 
-
-
-
 ###################################################
 #Global sequence
 
@@ -197,7 +194,7 @@ process.p = cms.Path(process.selectPrimaryVertex *
                      process.byTightCombinedIsolationDBSumPtCorr*
                      process.byLooseCombinedIsolationDBSumPtCorr3Hits*
                      process.byMediumCombinedIsolationDBSumPtCorr3Hits*
-                     process.byTightCombinedIsolationDBSumPtCorr3Hits
+                     process.byTightCombinedIsolationDBSumPtCorr3Hits*
                      )
 
 # Let it run

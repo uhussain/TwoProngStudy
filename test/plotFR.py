@@ -29,9 +29,9 @@ ntuple_file = ROOT.TFile(infile)
 ######## LABEL & SAVE WHERE #########
 
 if len(argv)>2:
-   saveWhere='~/www/Research/'+argv[2]+'_'
+   saveWhere='~/myAnalysis/CMSSW_7_4_0/src/RecoTauTag/tauAnalysis/outputs/'+argv[2]+'_'
 else:
-   saveWhere='~/www/Research/'
+   saveWhere='~/myAnalysis/CMSSW_7_4_0/src/RecoTauTag/tauAnalysis/outputs/'
 
 
 

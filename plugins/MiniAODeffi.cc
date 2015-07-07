@@ -53,6 +53,8 @@ class MiniAODeffi : public edm::EDAnalyzer {
 		Int_t tauIndex_;
 		Int_t passDiscr_;
 		Int_t genMatchedTau_;
+		Int_t nvtx_;
+		Int_t goodReco_;
 		double maxDR_;
 };
 
@@ -73,6 +75,8 @@ MiniAODeffi::MiniAODeffi(const edm::ParameterSet& iConfig):
 	tree->Branch("passDiscr", &passDiscr_,"passDiscr_/I");
 	tree->Branch("dmf", &dmf_,"dmf_/I");
 	tree->Branch("genMatchedTau", &genMatchedTau_,"genMatchedTau_/I");
+	tree->Branch("nvtx",&nvtx_,"nvtx_/I");
+	tree->Branch("goodReco",&goodReco_,"goodReco_/I");
 	maxDR_ = 0.3;
 
 
@@ -87,31 +91,37 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
 	edm::Handle<reco::VertexCollection> vertices;
 	iEvent.getByToken(vtxToken_, vertices);
-	if (vertices->empty()) return; // skip the event if no PV found
 	const reco::Vertex &PV = vertices->front();
-
+	nvtx_=vertices->size();
 	edm::Handle<pat::TauCollection> taus;
 	iEvent.getByToken(tauToken_, taus);
 
 	std::vector<const reco::GenParticle*> GenObjects = getGenParticleCollectionMiniAOD(iEvent);
-
+	genMatchedTau_=0;
+	tauPt_=-999;
+	tauEta_=-999;
+	tauIndex_=-1;
+	passDiscr_=0;
+	goodReco_=0;
 	int tau_position=-1;
-	for (const pat::Tau &tau : *taus) {
+	for (size_t i = 0; i < GenObjects.size(); ++i) {
 		tau_position++;
-		if (tau.pt() < 20 ) continue;
-		tauPt_=tau.pt();
-		tauEta_=tau.eta();
-		dmf_=tau.tauID("decayModeFinding");//dmf always==1 in miniaod
-		tauIndex_=tau_position;
-		if (tau.tauID(tauID_)) passDiscr_ = 1;
-		else passDiscr_=0;
-
-		if (genMatchingMiniAOD(tau,GenObjects,maxDR_)) {genMatchedTau_=1;}
-		else genMatchedTau_ = 0;	
-
-		tree->Fill();//produce flat ntuple
+		if (GenObjects[i]->pt() > 20 && GenObjects[i]->eta()<2.3) {
+			genMatchedTau_=1;
+			tauPt_=GenObjects[i]->pt();
+			tauEta_=GenObjects[i]->eta();
+			tauIndex_=tau_position;
+			for (const pat::Tau &tau : *taus) {
+				passDiscr_=tau.tauID(tauID_);
+				dmf_=tau.tauID("decayModeFinding"); // this is the old DMF; strictly tighter than new DMF
+				double deltaR = reco::deltaR(tau, *GenObjects[i]);
+				if (tau.pt() > 20 && tau.eta()<2.3 && tau.tauID(tauID_)>.5 && abs(tau.vertex().z() - PV.z())<.2 && deltaR<maxDR_) {
+					goodReco_=1;
+				}
+			}
+			tree->Fill();
+		}
 	}
-
 }
 
 //define this as a plug-in

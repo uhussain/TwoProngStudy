@@ -36,6 +36,7 @@ Implementation:
 #include "DataFormats/TauReco/interface/PFTauDiscriminator.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "TTree.h"
+#include "DataFormats/PatCandidates/interface/Jet.h"
 #include "helpers.h"
 
 #include "FWCore/Framework/interface/EventSetup.h"
@@ -159,7 +160,7 @@ fakeRate::analyze(const edm::Event& evt, const edm::EventSetup& iSetup)
 	evt.getByLabel(discriminatorSrc_, discriminator);
 
 	edm::Handle<reco::PFTauDiscriminator> DMF; 
-	evt.getByLabel("hpsPFTauDiscriminationByDecayModeFinding",DMF);
+	evt.getByLabel("hpsPFTauDiscriminationByDecayModeFindingNewDMs",DMF);
 
 	int tau_position=-1;
 	genMatchedTau_=0;

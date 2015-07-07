@@ -29,9 +29,9 @@ ntuple_file = ROOT.TFile(infile)
 ######## LABEL & SAVE WHERE #########
 
 if len(argv)>2:
-   saveWhere='~/www/Research/'+argv[2]+'_'
+   saveWhere='~/myAnalysis/CMSSW_7_4_0/src/RecoTauTag/tauAnalysis/outputs/'+argv[2]+'_'
 else:
-   saveWhere='~/www/Research/'
+   saveWhere='~/myAnalysis/CMSSW_7_4_0/src/RecoTauTag/tauAnalysis/outputs/'
 
 
 
@@ -139,3 +139,70 @@ compare_efficiencies(byVLooseCmbIso, 'byVLooseCombIsoDBSumPtCorr', VLooseIso,'VL
                     "pf Tau p_{T} (GeV)",#xaxis
                     "efficiency" #yaxis             
 )
+
+#####################################################
+  
+#--------------------------------------------------------------------------------
+# produce PAT-tuple
+process.load("PhysicsTools/PatAlgos/patSequences_cff")
+# configure pat::Jet production
+# (enable L2L3Residual corrections in case running on Data)
+jetCorrections = ( 'L1FastJet', 'L2Relative', 'L3Absolute')
+from PhysicsTools.PatAlgos.tools.jetTools import switchJetCollection
+switchJetCollection(
+    process,
+    jetSource = cms.InputTag('ak4PFJetsCHS'),
+    jetCorrections = ( 'AK4PFchs', jetCorrections, "" ),
+    outputModules = []
+)
+
+
+#process.patJets.addTagInfos = cms.bool(True)
+#process.patJets.addBTagInfo = cms.bool(True)
+
+
+#--------------------------------------------------------------------------------
+
+#--------------------------------------------------------------------------------
+process.load("RecoTauTag.Configuration.RecoPFTauTag_cff") #loading the configuration
+# switch to HPS PFTaus (and disable all "cleaning" cuts)
+from PhysicsTools.PatAlgos.tools.tauTools import *
+switchToPFTauHPS(process)
+
+#process.ak4PFJetsLegacyHPSPiZeros.stripPhiAssociationDistance = cms.double(0.9)
+
+# switch on PAT trigger                                                                                                                      
+from PhysicsTools.PatAlgos.tools.trigTools import switchOnTrigger
+switchOnTrigger( process )
+
+process.makePatTrigger = cms.Sequence(process.patTrigger*process.patTriggerEvent)
+
+#--------------------------------------------------------------------------------
+# select "good" reconstructed vertices
+#process.load("TauAnalysis/RecoTools/recoVertexSelection_cff")
+process.selectedPrimaryVertexQuality = cms.EDFilter("VertexSelector",
+    src = cms.InputTag('offlinePrimaryVertices'),
+    cut = cms.string("isValid & ndof >= 4 & chi2 > 0 & tracksSize > 0"), # CV: cut >= 4 if using 'offlinePrimaryVertices',
+                                                                         #         >= 7 if using 'offlinePrimaryVerticesWithBS' as input
+    filter = cms.bool(False)                                          
+)
+
+process.selectedPrimaryVertexPosition = cms.EDFilter("VertexSelector",
+    src = cms.InputTag('selectedPrimaryVertexQuality'),
+    cut = cms.string("abs(z) < 24 & abs(position.Rho) < 2."),
+    filter = cms.bool(False)                                           
+)
+
+process.selectedPrimaryVertexHighestPtTrackSum = cms.EDFilter("PATSingleVertexSelector",
+    mode = cms.string('firstVertex'),
+    vertices = cms.InputTag('selectedPrimaryVertexPosition'),
+    filter = cms.bool(False)                                                    
+)
+
+process.selectPrimaryVertex = cms.Sequence(
+    process.selectedPrimaryVertexQuality
+   * process.selectedPrimaryVertexPosition
+   * process.selectedPrimaryVertexHighestPtTrackSum
+)
+
+
