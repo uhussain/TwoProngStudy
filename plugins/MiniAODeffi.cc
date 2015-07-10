@@ -121,7 +121,7 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 			} // end tau for loop
 			tree->Fill();
 		} //end if gen tau matches critera
-	} //end gen tau for loop
+	} //end gen tau for loop   
 }
 
 //define this as a plug-in
