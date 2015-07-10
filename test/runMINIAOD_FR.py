@@ -1,30 +1,38 @@
 import FWCore.ParameterSet.Config as cms
+import os
+
+
 from FWCore.ParameterSet.VarParsing import VarParsing
+
+#input cmsRun options
 options = VarParsing ('analysis')
 options.inputFiles = '/store/mc/RunIISpring15DR74/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/Asympt50ns_MCRUN2_74_V9A-v1/80000/06293CB4-CEFD-E411-8BE4-0CC47A13D16A.root'
 options.outputFile = "MiniAOD_FR_WJets.root"
 options.parseArguments()
+
+#name the process
 process = cms.Process("TreeProducerFromMiniAOD")
 
+#Make the framework shutup
 process.load('FWCore/MessageService/MessageLogger_cfi')
 process.MessageLogger.cerr.FwkReport.reportEvery = 100;
 process.MessageLogger.cerr.threshold = cms.untracked.string('INFO')
-#process.GlobalTag.globaltag = cms.string('PHYS14_25_V2::All')
 
+#50 ns global tag for MC replace with 'GR_P_V56' for prompt reco. https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideFrontierConditions#Prompt_reconstruction_Global_Tag 
+process.GlobalTag.globaltag = 'MCRUN2_74_V9A'
+
+#how many events to run over
 process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(-1)
 )
-
+#input files
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(options.inputFiles),
 )
+#output file
 process.TFileService = cms.Service("TFileService",
     fileName = cms.string(options.outputFile)
 )
- #   fileNames = cms.untracked.vstring('/store/mc/RunIISpring15DR74/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/Asympt50ns_MCRUN2_74_V9A-v1/70000/04DBAEFA-91FE-E411-8A61-0025904AC2C4.root'
-#	)
-#)
-# cms.untracked.vstring('/store/mc/RunIISpring15DR74/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/Asympt50ns_MCRUN2_74_V9A-v1/70000/04DBAEFA-91FE-E411-8A61-0025904AC2C4.root'
 
 ##################################################
 # Main
