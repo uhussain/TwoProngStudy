@@ -108,7 +108,7 @@ process.p = cms.Path(
                      process.byLooseCombinedIsolationDeltaBetaCorr3Hits*
 		     process.byMediumCombinedIsolationDeltaBetaCorr3Hits*
 		     process.byTightCombinedIsolationDeltaBetaCorr3Hits*
- 		    #process.byCombinedIsolationDeltaBetaCorrRaw3Hits*
+ 		     #process.byCombinedIsolationDeltaBetaCorrRaw3Hits*
 		     #process.chargedIsoPtSum*
 		     process.neutralIsoPtSum*
 	 	     process.puCorrPtSum*
