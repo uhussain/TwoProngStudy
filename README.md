@@ -1,3 +1,17 @@
+This package can be installed in a recent CMSSW area e.g. CMSSW_7_4_5. inside RecoTagTools 
+
+Example installation:
+```
+cmsrel CMSSW_7_4_5
+cd CMSSW_7_4_5/src
+cmsenv
+git cms-init
+git cms-addpkg RecoTauTag/RecoTau
+git clone https://github.com/lmdodd/tauAnalysis.git RecoTauTag/tauAnalysis
+scram b -j8
+```
+
+
 ```
 cd test 
 cmsRun runMINIAOD_FR.py
