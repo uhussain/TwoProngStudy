@@ -29,10 +29,6 @@ process.maxEvents = cms.untracked.PSet(
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(options.inputFiles),
 )
-#output file
-process.TFileService = cms.Service("TFileService",
-    fileName = cms.string(options.outputFile)
-)
 
 ##################################################
 # Main
@@ -128,5 +124,12 @@ process.p = cms.Path(
 		     process.againstElectronMediumMVA5
                      )
 
-dump_file = open('dump.py','w')
-dump_file.write(process.dumpPython())
+#output file
+process.TFileService = cms.Service("TFileService",
+    fileName = cms.string(options.outputFile)
+)
+
+#print out all processes used when running- useful check to see if module ran
+#UNCOMMENT BELOW
+#dump_file = open('dump.py','w')
+#dump_file.write(process.dumpPython())

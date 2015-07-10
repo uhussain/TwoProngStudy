@@ -117,11 +117,11 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 				double deltaR = reco::deltaR(tau, *GenObjects[i]);
 				if (tau.pt() > 20 && tau.eta()<2.3 && tau.tauID(tauID_)>.5 && abs(tau.vertex().z() - PV.z())<.2 && deltaR<maxDR_) {
 					goodReco_=1;
-				}
-			}
+				} // end if tau passes criteria
+			} // end tau for loop
 			tree->Fill();
-		}
-	}
+		} //end if gen tau matches critera
+	} //end gen tau for loop   
 }
 
 //define this as a plug-in
