@@ -18,7 +18,9 @@ process.maxEvents = cms.untracked.PSet(
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(options.inputFiles),
 )
-
+process.TFileService = cms.Service("TFileService",
+    fileName = cms.string(options.outputFile)
+)
  #   fileNames = cms.untracked.vstring('/store/mc/RunIISpring15DR74/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/Asympt50ns_MCRUN2_74_V9A-v1/70000/04DBAEFA-91FE-E411-8A61-0025904AC2C4.root'
 #	)
 #)
@@ -107,7 +109,7 @@ process.p = cms.Path(
                      process.byLooseCombinedIsolationDeltaBetaCorr3Hits*
 		     process.byMediumCombinedIsolationDeltaBetaCorr3Hits*
 		     process.byTightCombinedIsolationDeltaBetaCorr3Hits*
- 		    #process.byCombinedIsolationDeltaBetaCorrRaw3Hits*
+ 	             #process.byCombinedIsolationDeltaBetaCorrRaw3Hits*
 		     #process.chargedIsoPtSum*
 		     process.neutralIsoPtSum*
 	 	     process.puCorrPtSum*
@@ -117,10 +119,6 @@ process.p = cms.Path(
 		     process.againstElectronLooseMVA5*
 		     process.againstElectronMediumMVA5
                      )
-
-process.TFileService = cms.Service("TFileService",
-    fileName = cms.string(options.outputFile)
-)
 
 dump_file = open('dump.py','w')
 dump_file.write(process.dumpPython())

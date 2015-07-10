@@ -104,8 +104,8 @@ MiniAODfakeRate_alt::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 {
 	edm::Handle<reco::VertexCollection> vertices;
 	iEvent.getByToken(vtxToken_, vertices);
-	//if (vertices->empty()) return; // skip the event if no PV found
-	//const reco::Vertex &PV = vertices->front();
+	if (vertices->empty()) return; // skip the event if no PV found
+	const reco::Vertex &PV = vertices->front();
 
 	edm::Handle<pat::TauCollection> taus;
 	iEvent.getByToken(tauToken_, taus);
@@ -135,23 +135,7 @@ MiniAODfakeRate_alt::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 	std::vector <int> tau_position_vec;
 	std::vector <const pat::Jet*> jet_denom_vec;
 	std::vector <const reco::GenParticle*> used_GenTau_vec;
-/*
-	if (GenObjects.size()!=0) {
-		//std::cout << "Found " << GenObjects.size() << " Gen Taus!\n"; //output to be deleted later!!!
-		return;
-	}
-*/
-/*
-	if (GenEles.size()!=0) {
-                std::cout << "Found " << GenEles.size() << " Gen Eles!\n"; //output to be deleted later!!!
-                //return;
-        }
 
-        if (GenMus.size()!=0) {
-                std::cout << "Found " << GenMus.size() << " Gen Mus!\n"; //output to be deleted later!!!
-                //return;
-        }
-*/	
 	int iJet = -1;
 	jetIDLoose_=0;
         jetIDMed_=0;
@@ -176,6 +160,7 @@ MiniAODfakeRate_alt::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 jetIDMed_=0;
                 jetIDTight_=0;
                 iJet++;
+		//	pass_vert = (jet.vertex().z() - PV.z()) < .2 && tau.dxy() < .045
 		if (jet.pt() > 20&&jet.eta()<2.3&&(isLooseJet(jet))) {
                 //std::cout << "The Jet PT is >20, jetEta<2.3, it is loose \n";
         	        jetPt_=jet.pt();
@@ -215,9 +200,10 @@ MiniAODfakeRate_alt::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 		isFake_=0;
 		genMatchedTau_=0;
 		if (vertices->empty()) continue; // skip the tau if no PV found
-		const reco::Vertex &PV = vertices->front();
 		//std::cout << "Analyzing Tau number " << tau_position << "\n";
-                if (tau.pt() > 20&&tau.eta()<2.3&&tau.tauID(tauID_)>.5 && abs(tau.vertex().z() - PV.z()) < 0.2) { // if the tau passes the critera
+		bool pass_discr = tau.tauID(tauID_)>.5 && tau.tauID("againstElectronVLooseMVA5")>.5 && tau.tauID("againstMuonTight3");
+		bool pass_vert = (tau.vertex().z() - PV.z()) < .2; // && tau.dxy() < .045
+                if (tau.pt() > 20&&tau.eta()<2.3&& pass_discr && pass_vert) { // if the tau passes the critera
 			passDiscr_=1;
 			const reco::GenParticle* bestGenTau = findBestGenMatch(tau,GenTaus,maxDR_);
 			const reco::GenParticle* bestGenEle = findBestGenMatch(tau,GenEles,maxDR_);
