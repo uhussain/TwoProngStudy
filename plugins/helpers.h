@@ -13,6 +13,7 @@
 
 #ifndef HELPERS_W9QK6HND
 #define HELPERS_W9QK6HND
+#include "DataFormats/PatCandidates/interface/Jet.h"
 //MINIAOD
 std::vector<const reco::GenParticle*> getGenParticleCollectionMiniAOD(const edm::Event& evt);
 std::vector<const reco::GenParticle*> getGenEleCollectionMiniAOD(const edm::Event& evt);
