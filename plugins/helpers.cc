@@ -228,6 +228,7 @@ bool isTightJet(const reco::PFJet jet){
 	}
 	return tight;
 }
+
 bool isLooseJet(const pat::Jet jet){
         bool loose = true;
         if (jet.neutralHadronEnergyFraction() >= 0.99) loose = false;
@@ -265,3 +266,4 @@ bool isTightJet(const pat::Jet jet){
         }
         return tight;
 }
+
