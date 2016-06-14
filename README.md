@@ -2,8 +2,8 @@ This package can be installed in a recent CMSSW area e.g. CMSSW_7_4_5. inside Re
 
 Example installation:
 ```
-cmsrel CMSSW_7_4_5
-cd CMSSW_7_4_5/src
+cmsrel CMSSW_8_0_10
+cd CMSSW_8_0_10/src
 cmsenv
 git cms-init
 git cms-addpkg RecoTauTag/RecoTau
@@ -13,7 +13,7 @@ scram b -j8
 
 
 ```
-cd test 
+cd RecoTauTag/tauAnalysis/test 
 cmsRun runMINIAOD_FR.py
 cmsRun runMINIAOD_FR_QCD.py
 cmsRun runAODSIM_effi.py
