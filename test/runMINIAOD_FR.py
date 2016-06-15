@@ -6,7 +6,7 @@ from FWCore.ParameterSet.VarParsing import VarParsing
 
 #input cmsRun options
 options = VarParsing ('analysis')
-options.inputFiles = "/store/mc/RunIIFall15DR76/GluGluHToTauTau_M125_13TeV_powheg_pythia8/MINIAODSIM/25nsFlat10to25TSG_76X_mcRun2_asymptotic_v12-v1/50000/04CBAD42-759D-E511-943C-0025905A60F8.root"
+options.inputFiles = "/store/mc/RunIISpring15DR74/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/Asympt50ns_MCRUN2_74_V9A-v1/70000/04DBAEFA-91FE-E411-8A61-0025904AC2C4.root"
 options.outputFile = "MiniAOD_FR_WJets.root"
 options.parseArguments()
 

@@ -19,6 +19,11 @@
 #include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/PatCandidates/interface/MET.h"
 #include "DataFormats/PatCandidates/interface/PackedCandidate.h"
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "DataFormats/PatCandidates/interface/PackedGenParticle.h"
+#include "DataFormats/Candidate/interface/Candidate.h"
+#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
+
 
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
@@ -43,8 +48,9 @@ class MiniAODeffi : public edm::EDAnalyzer {
 		edm::EDGetTokenT<reco::VertexCollection> vtxToken_;
 		edm::EDGetTokenT<pat::TauCollection> tauToken_;
 		edm::EDGetTokenT<pat::JetCollection> jetToken_;
-
 		std::string tauID_;
+		edm::EDGetTokenT<std::vector <reco::GenParticle> > prunedGenToken_;
+                edm::EDGetTokenT<std::vector < pat::PackedGenParticle> >packedGenToken_;
 
 		TTree* tree;
 		Float_t tauPt_;
@@ -61,7 +67,9 @@ class MiniAODeffi : public edm::EDAnalyzer {
 MiniAODeffi::MiniAODeffi(const edm::ParameterSet& iConfig):
 	vtxToken_(consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertices"))),
 	tauToken_(consumes<pat::TauCollection>(iConfig.getParameter<edm::InputTag>("taus"))),
-	jetToken_(consumes<pat::JetCollection>(iConfig.getParameter<edm::InputTag>("jets")))
+	jetToken_(consumes<pat::JetCollection>(iConfig.getParameter<edm::InputTag>("jets"))),
+	prunedGenToken_(consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("pruned"))),
+	packedGenToken_(consumes<std::vector<pat::PackedGenParticle> >(iConfig.getParameter<edm::InputTag>("packed")))
 {
 
 	tauID_    = iConfig.getParameter<std::string>("tauID");
@@ -95,7 +103,23 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	nvtx_=vertices->size();
 	edm::Handle<pat::TauCollection> taus;
 	iEvent.getByToken(tauToken_, taus);
+ 	edm::Handle<std::vector<reco::GenParticle> > genParticles;
+ 	iEvent.getByToken(prunedGenToken_, genParticles);
 
+ 	std::vector<const reco::GenParticle*> GenTaus;
+ 	std::vector<const reco::GenParticle*> GenEles;
+ 	std::vector<const reco::GenParticle*> GenMus;
+ 	//add code to make this into GenTaus/GenEles/GenMus
+ 
+ 	for(std::vector<reco::GenParticle>::const_iterator genParticle = genParticles->begin(); genParticle != genParticles->end(); genParticle++ ){
+ 	  GenTaus.push_back(&(*genParticle));
+ 	}
+ 	for(std::vector<reco::GenParticle>::const_iterator genParticle = genParticles->begin(); genParticle != genParticles->end(); genParticle++ ){
+ 	  GenEles.push_back(&(*genParticle));
+ 	}
+ 	for(std::vector<reco::GenParticle>::const_iterator genParticle = genParticles->begin(); genParticle != genParticles->end(); genParticle++ ){
+ 	  GenMus.push_back(&(*genParticle));
+ 	}
 	std::vector<const reco::GenParticle*> GenObjects = getGenParticleCollectionMiniAOD(iEvent);
 	genMatchedTau_=0;
 	tauPt_=-999;
