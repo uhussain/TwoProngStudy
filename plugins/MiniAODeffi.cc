@@ -130,7 +130,7 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	int tau_position=-1;
 	for (size_t i = 0; i < GenObjects.size(); ++i) {
 		tau_position++;
-		if (GenObjects[i]->pt() > 20 && GenObjects[i]->eta()<2.3) {
+		if (GenObjects[i]->pt() > 20 && abs(GenObjects[i]->eta())<2.3) {
 			genMatchedTau_=1;
 			tauPt_=GenObjects[i]->pt();
 			tauEta_=GenObjects[i]->eta();
@@ -139,7 +139,7 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 				passDiscr_=tau.tauID(tauID_);
 				dmf_=tau.tauID("decayModeFinding"); // this is the old DMF; strictly tighter than new DMF
 				double deltaR = reco::deltaR(tau, *GenObjects[i]);
-				if (tau.pt() > 20 && tau.eta()<2.3 && tau.tauID(tauID_)>.5 && abs(tau.vertex().z() - PV.z())<.2 && deltaR<maxDR_) {
+				if (tau.pt() > 20 && abs(tau.eta())<2.3 && tau.tauID(tauID_)>.5 && abs(tau.vertex().z() - PV.z())<.2 && deltaR<maxDR_) {
 					goodReco_=1;
 				} // end if tau passes criteria
 			} // end tau for loop

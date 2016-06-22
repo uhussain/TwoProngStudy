@@ -77,7 +77,9 @@ def make_num(ntuple, variable,PtCut,binning):
         binning
     )
     return num
+
 def make_denom(ntuple, variable,PtCut,binning):
+
     denom = make_plot(
         ntuple, variable,
         "genMatchedTau==1", #
