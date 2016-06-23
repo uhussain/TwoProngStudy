@@ -31,6 +31,7 @@
 #include "helpers.h"
 
 #include "DataFormats/Math/interface/deltaR.h"
+#include "iostream"
 
 //
 // class declaration
@@ -115,6 +116,11 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	}	
 	
 	for (size_t i = 0; i < GenTaus.size(); i++) { //Loop through all generated taus
+		for(size_t j = 0; j < GenTaus[i]->numberOfDaughters(); ++j){ //Loop through daughters of gen. tau
+			if (abs(GenTaus[i]->daughter(j)->pdgId()) == 11 || abs(GenTaus[i]->daughter(j)->pdgId()) == 13){ //Check if the daughter is another lepton
+				goto nothadronictau;                           //Skip over non-hadronic tau decays
+			}
+		}
 		if (GenTaus[i]->pt() > 20 && abs(GenTaus[i]->eta())<2.3) {
 			tauPt_= GenTaus[i]->pt();
 			tauEta_= GenTaus[i]->eta();
@@ -130,6 +136,7 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 				tauIndex_++;
 			} // end tau for loop
 			tree->Fill();
+			nothadronictau:;
 		} //end if gen tau matches critera
 	} //end gen tau for loop   
 }
