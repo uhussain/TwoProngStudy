@@ -235,9 +235,14 @@ compare_3efficiencies(byLooseCmbIso3, 'byLooseCombIsoDBCorr3Hits', byMedCmbIso3,
                     "Electron Eta",#xaxis
                     "Fake Efficiency" #yaxis             
 )
-
 compare_efficiencies(ntrlIsoPtSum,'neutralIsoPtSum',puCorrPtSum,'puCorrPtSum','eleEta',20,[20,-2.4,2.4],
-                    'tau_Mu_fakeRate_eta_Electrons',1e-1,1,
+                    'tau_PtSum_fakeRate_eta_Electrons',1e-1,1,
+                    "Tau Fake Efficiency (Electrons)",
+                    "Electron Eta",
+                    "Fake Efficiency"
+)
+compare_efficiencies(MuLoose3,'againstMuonLoose3',MuTight3,'againstMuonTight3','eleEta',20,[20,-2.4,2.4],
+                    'tau_Mu_fakeRate_eta_Electrons',6e-1,1,
                     "Tau Fake Efficiency (Electrons)",
                     "Electron Eta",
                     "Fake Efficiency"

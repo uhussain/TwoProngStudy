@@ -48,6 +48,7 @@ class MiniAODeffi : public edm::EDAnalyzer {
 		edm::EDGetTokenT<reco::VertexCollection> vtxToken_;
 		edm::EDGetTokenT<pat::TauCollection> tauToken_;
 		edm::EDGetTokenT<pat::JetCollection> jetToken_;
+		edm::EDGetTokenT<pat::ElectronCollection> electronToken_;
 		std::string tauID_;
 		edm::EDGetTokenT<std::vector <reco::GenParticle> > prunedGenToken_;
                 edm::EDGetTokenT<std::vector < pat::PackedGenParticle> >packedGenToken_;
@@ -55,11 +56,9 @@ class MiniAODeffi : public edm::EDAnalyzer {
 		TTree* tree;
 		Float_t tauPt_;
 		Float_t tauEta_;
-		Int_t dmf_;
 		Int_t tauIndex_;
-		Int_t passDiscr_;
-		Int_t genMatchedTau_;
 		Int_t nvtx_;
+		Int_t dmf_;
 		Int_t goodReco_;
 		double maxDR_;
 };
@@ -68,6 +67,7 @@ MiniAODeffi::MiniAODeffi(const edm::ParameterSet& iConfig):
 	vtxToken_(consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertices"))),
 	tauToken_(consumes<pat::TauCollection>(iConfig.getParameter<edm::InputTag>("taus"))),
 	jetToken_(consumes<pat::JetCollection>(iConfig.getParameter<edm::InputTag>("jets"))),
+        electronToken_(consumes<pat::ElectronCollection>(iConfig.getParameter<edm::InputTag>("electrons"))),
 	prunedGenToken_(consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("pruned"))),
 	packedGenToken_(consumes<std::vector<pat::PackedGenParticle> >(iConfig.getParameter<edm::InputTag>("packed")))
 {
@@ -80,10 +80,8 @@ MiniAODeffi::MiniAODeffi(const edm::ParameterSet& iConfig):
 	tree->Branch("tauPt", &tauPt_,"tauPt_/F");
 	tree->Branch("tauEta", &tauEta_,"tauEta_/F");
 	tree->Branch("tauIndex", &tauIndex_,"tauIndex_/I");
-	tree->Branch("passDiscr", &passDiscr_,"passDiscr_/I");
-	tree->Branch("dmf", &dmf_,"dmf_/I");
-	tree->Branch("genMatchedTau", &genMatchedTau_,"genMatchedTau_/I");
 	tree->Branch("nvtx",&nvtx_,"nvtx_/I");
+	tree->Branch("dmf",&dmf_,"dmf_/I");
 	tree->Branch("goodReco",&goodReco_,"goodReco_/I");
 	maxDR_ = 0.3;
 
@@ -99,8 +97,8 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
 	edm::Handle<reco::VertexCollection> vertices;
 	iEvent.getByToken(vtxToken_, vertices);
-	const reco::Vertex &PV = vertices->front();
 	nvtx_=vertices->size();
+	const reco::Vertex &PV = vertices->front();
 	edm::Handle<pat::TauCollection> taus;
 	iEvent.getByToken(tauToken_, taus);
  	edm::Handle<std::vector<reco::GenParticle> > genParticles;
@@ -110,38 +108,26 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
  	std::vector<const reco::GenParticle*> GenEles;
  	std::vector<const reco::GenParticle*> GenMus;
  	//add code to make this into GenTaus/GenEles/GenMus
- 
- 	for(std::vector<reco::GenParticle>::const_iterator genParticle = genParticles->begin(); genParticle != genParticles->end(); genParticle++ ){
- 	  GenTaus.push_back(&(*genParticle));
- 	}
- 	for(std::vector<reco::GenParticle>::const_iterator genParticle = genParticles->begin(); genParticle != genParticles->end(); genParticle++ ){
- 	  GenEles.push_back(&(*genParticle));
- 	}
- 	for(std::vector<reco::GenParticle>::const_iterator genParticle = genParticles->begin(); genParticle != genParticles->end(); genParticle++ ){
- 	  GenMus.push_back(&(*genParticle));
- 	}
-	std::vector<const reco::GenParticle*> GenObjects = getGenParticleCollectionMiniAOD(iEvent);
-	genMatchedTau_=0;
-	tauPt_=-999;
-	tauEta_=-999;
-	tauIndex_=-1;
-	passDiscr_=0;
-	goodReco_=0;
-	int tau_position=-1;
-	for (size_t i = 0; i < GenObjects.size(); ++i) {
-		tau_position++;
-		if (GenObjects[i]->pt() > 20 && abs(GenObjects[i]->eta())<2.3) {
-			genMatchedTau_=1;
-			tauPt_=GenObjects[i]->pt();
-			tauEta_=GenObjects[i]->eta();
-			tauIndex_=tau_position;
+	for(std::vector<reco::GenParticle>::const_iterator genParticle = genParticles->begin(); genParticle != genParticles->end(); genParticle++ ){
+	  if(abs(genParticle->pdgId()) == 15) GenTaus.push_back(&(*genParticle));
+	  if(abs(genParticle->pdgId()) == 11) GenEles.push_back(&(*genParticle));
+	  if(abs(genParticle->pdgId()) == 13) GenMus.push_back(&(*genParticle));
+	}	
+	
+	for (size_t i = 0; i < GenTaus.size(); i++) { //Loop through all generated taus
+		if (GenTaus[i]->pt() > 20 && abs(GenTaus[i]->eta())<2.3) {
+			tauPt_= GenTaus[i]->pt();
+			tauEta_= GenTaus[i]->eta();
+			tauIndex_ = 0;
 			for (const pat::Tau &tau : *taus) {
-				passDiscr_=tau.tauID(tauID_);
+				goodReco_=0; //Assume each tau is not reconstructed from the generated tau
 				dmf_=tau.tauID("decayModeFinding"); // this is the old DMF; strictly tighter than new DMF
-				double deltaR = reco::deltaR(tau, *GenObjects[i]);
-				if (tau.pt() > 20 && abs(tau.eta())<2.3 && tau.tauID(tauID_)>.5 && abs(tau.vertex().z() - PV.z())<.2 && deltaR<maxDR_) {
+				double deltaR = reco::deltaR(tau, *GenTaus[i]);
+				if (tau.pt() > 20 && abs(tau.eta())<2.3 && tau.tauID(tauID_)>.5 && dmf_ > 0.5 && abs(tau.vertex().z() - PV.z())<.2 && deltaR<maxDR_) {
 					goodReco_=1;
+					break; //Break the tau loop once we find a correctly reconstructed tau
 				} // end if tau passes criteria
+				tauIndex_++;
 			} // end tau for loop
 			tree->Fill();
 		} //end if gen tau matches critera
