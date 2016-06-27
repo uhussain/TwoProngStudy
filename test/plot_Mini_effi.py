@@ -18,9 +18,11 @@ ROOT.gROOT.SetStyle("Plain")
 ROOT.gROOT.SetBatch(True)
 ROOT.gStyle.SetOptStat(0)
 ROOT.gStyle.SetPadTopMargin(0.1)
-ROOT.gStyle.SetGridStyle(0)
+ROOT.gStyle.SetPadGridY(1) 
 ROOT.gStyle.SetTitleX(0.2)
 ROOT.gStyle.SetTitleW(0.6)
+colors=[ROOT.kCyan,ROOT.kGreen,ROOT.kOrange,ROOT.kRed,ROOT.kBlue]  #Add more colors for >5 sets of points in a single plot
+
 ######## File #########
 if len(argv) < 2:
    print 'Usage:python plot.py RootFile.root label[optional]'
@@ -30,22 +32,17 @@ infile = argv[1]
 ntuple_file = ROOT.TFile(infile)
 
 ######## LABEL & SAVE WHERE #########
-
 if len(argv)>2:
    saveWhere='~/private/output/tauAnalysis/7_6_5/'+argv[2]+'_'
 else:
    saveWhere='~/private/output/tauAnalysis/7_6_5/'
 
-
-
 #####################################
 #Get Effi NTUPLE                 #
 #####################################
-
 byLooseCmbIso3 = ntuple_file.Get("byLooseCombinedIsolationDeltaBetaCorr3Hits/Ntuple")
 byMedCmbIso3 = ntuple_file.Get("byMediumCombinedIsolationDeltaBetaCorr3Hits/Ntuple")
 byTightCmbIso3 = ntuple_file.Get("byTightCombinedIsolationDeltaBetaCorr3Hits/Ntuple")
-
 ntrlIsoPtSum = ntuple_file.Get("neutralIsoPtSum/Ntuple")
 puCorrPtSum = ntuple_file.Get("puCorrPtSum/Ntuple")
 MuLoose3 = ntuple_file.Get("againstMuonLoose3/Ntuple")
@@ -97,129 +94,64 @@ def produce_efficiency(ntuple, variable, PtCut,binning, filename,color):
     l1.SetMarkerColor(color)
     return l1
 
-def compare_efficiencies(ntuple1,legend1,ntuple2, legend2, variable, PtCut, binning, filename,framemin,framemax,
-                         title='', xaxis='',yaxis=''):
-    frame = ROOT.TH1F("frame", "frame", *binning)
-    l1 = produce_efficiency(ntuple1,variable, PtCut,binning, filename,ROOT.kMagenta-3)
-    l2 = produce_efficiency(ntuple2,variable, PtCut,binning, filename,ROOT.kBlue-9)
-    frame.SetMaximum(framemax)
-    frame.SetMinimum(framemin)
-    frame.SetTitle(title)
-    frame.UseCurrentStyle()
-    frame.GetXaxis().SetTitle(xaxis)
-    frame.GetYaxis().SetTitle(yaxis)
-    frame.GetYaxis().SetTitleOffset(1.2)
-    frame.GetYaxis().CenterTitle()
-    frame.GetXaxis().CenterTitle()
-    frame.UseCurrentStyle()
-    frame.Draw()
-    l1.Draw('pe')
-    l2.Draw('pesame')
-    legend = ROOT.TLegend(0.6, 0.75, 0.9, 0.9, "", "brNDC")
-    legend.SetFillColor(ROOT.kWhite)
-    legend.SetBorderSize(1)
-    legend.AddEntry(l1,legend1, "pe")
-    legend.AddEntry(l2,legend2, "pe")
-    legend.Draw()
-    saveas = saveWhere+filename+'.png'
-    print saveas
-    canvas.SaveAs(saveas)
-
-def compare_3efficiencies(ntuple1,legend1,ntuple2, legend2,ntuple3, legend3, variable, PtCut, binning, filename,framemin,framemax,
-                         title='', xaxis='',yaxis=''):
-    frame = ROOT.TH1F("frame", "frame", *binning)
-    l1 = produce_efficiency(ntuple1,variable, PtCut,binning, filename,ROOT.kMagenta-3)
-    l2 = produce_efficiency(ntuple2,variable, PtCut,binning, filename,ROOT.kBlue-9)
-    l3 = produce_efficiency(ntuple3,variable, PtCut,binning, filename,ROOT.kRed+3)
-    frame.SetMinimum(framemin)
-    frame.SetMaximum(framemax)
-    frame.SetTitle(title)
-    frame.UseCurrentStyle()
-    frame.GetXaxis().SetTitle(xaxis)
-    frame.GetYaxis().SetTitle(yaxis)
-    frame.GetYaxis().SetTitleOffset(1.2)
-    frame.GetYaxis().CenterTitle()
-    frame.GetXaxis().CenterTitle()
-    frame.Draw()
-    l1.Draw('pe')
-    l2.Draw('pesame')
-    l3.Draw('pesame')
-    
-    legend = ROOT.TLegend(0.6, 0.7, 0.9, 0.9, "", "brNDC")
-    legend.SetFillColor(ROOT.kWhite)
-    legend.SetBorderSize(1)
-    legend.AddEntry(l1,legend1, "pe")
-    legend.AddEntry(l2,legend2, "pe")
-    legend.AddEntry(l3,legend3, "pe")
-    legend.Draw()
-    saveas = saveWhere+filename+'.png'
-    print saveas
-    canvas.SaveAs(saveas)
-
-def compare_5efficiencies(ntuple1,legend1,ntuple2, legend2,ntuple3, legend3,ntuple4,legend4,ntuple5,legend5, variable, PtCut, binning, filename,framemin,framemax,
-                         title='', xaxis='',yaxis=''):
-    frame = ROOT.TH1F("frame", "frame", *binning)
-    l1 = produce_efficiency(ntuple1,variable, PtCut,binning, filename,ROOT.kRed-3)
-    l2 = produce_efficiency(ntuple2,variable, PtCut,binning, filename,ROOT.kRed+3)
-    l3 = produce_efficiency(ntuple3,variable, PtCut,binning, filename,ROOT.kBlue+3)
-    l4 = produce_efficiency(ntuple4,variable, PtCut,binning, filename,ROOT.kGreen-3)
-    l5 = produce_efficiency(ntuple5,variable, PtCut,binning, filename,ROOT.kGreen+3)
-    frame.SetMinimum(framemin)
-    frame.SetMaximum(framemax)
-    frame.SetTitle(title)
-    frame.UseCurrentStyle()
-    frame.GetXaxis().SetTitle(xaxis)
-    frame.GetYaxis().SetTitle(yaxis)
-    frame.GetYaxis().SetTitleOffset(1.2)
-    frame.GetYaxis().CenterTitle()
-    frame.GetXaxis().CenterTitle()
-    frame.Draw()
-    l1.Draw('pe')
-    l2.Draw('pesame')
-    l3.Draw('pesame')
-    l4.Draw('pesame')
-    l5.Draw('pesame')
-    
-    legend = ROOT.TLegend(0.6, 0.65, 0.9, 0.9, "", "brNDC")
-    legend.SetFillColor(ROOT.kWhite)
-    legend.SetBorderSize(1)
-    legend.AddEntry(l1,legend1, "pe")
-    legend.AddEntry(l2,legend2, "pe")
-    legend.AddEntry(l3,legend3, "pe")
-    legend.AddEntry(l4,legend4, "pe")
-    legend.AddEntry(l5,legend5, "pe")
-    legend.Draw()
-    saveas = saveWhere+filename+'.png'
-    print saveas
-    canvas.SaveAs(saveas)
+#Accepts any number of ntuples and plots them for comparison; works well up to at least 5
+def NewCompareEfficiencies(ntuples, legends, variable, PtCut, binning, filename, framemin, framemax, title='', xaxis='',yaxis=''):
+	frame = ROOT.TH1F("frame", "frame", *binning)
+	histlist = []
+	for i in range(len(ntuples)):
+		histlist.append(produce_efficiency(ntuples[i],variable, PtCut,binning, filename,colors[i]))
+    	frame.SetMaximum(framemax)
+    	frame.SetMinimum(framemin)
+    	frame.SetTitle(title)
+    	frame.UseCurrentStyle()
+    	frame.GetXaxis().SetTitle(xaxis)
+    	frame.GetYaxis().SetTitle(yaxis)
+    	frame.GetYaxis().SetTitleOffset(1.2)
+    	frame.GetYaxis().CenterTitle()
+    	frame.GetXaxis().CenterTitle()
+    	frame.UseCurrentStyle()
+    	frame.Draw()
+	for i in range(len(histlist)):
+		if i == 0:
+			histlist[i].Draw('pe')
+		else:
+			histlist[i].Draw('pesame')
+    	legend = ROOT.TLegend(0.6,0.8-0.03*len(legends) ,0.9,0.9, "", "brNDC")
+    	legend.SetFillColor(ROOT.kWhite)
+    	legend.SetBorderSize(1)
+	for i in range(len(legends)):
+		legend.AddEntry(histlist[i],legends[i],'pe')
+    	legend.Draw()
+    	saveas = saveWhere+filename+'.png'
+    	print saveas
+    	canvas.SaveAs(saveas)
 
 ################################################################################
 # Efficiency for a 20 GeV cut on tau Pt 
 ################################################################################
 ## pT plots
-compare_3efficiencies(byLooseCmbIso3, 'byLooseCombIsoDBCorr3Hits', byMedCmbIso3,'byMediumCombIsoDBCorr3Hits', byTightCmbIso3,'byTightCombIsoDBCorr3Hits','tauPt', 20, [20, 0, 120],#variable, ptcut, binning
-                    'tau_iso_effi_pT', 0, 1,#filename
+NewCompareEfficiencies([byLooseCmbIso3,byMedCmbIso3,byTightCmbIso3],['byLooseCombIsoDBCorr3Hits','byMediumCombIsoDBCorr3Hits','byTightCombIsoDBCorr3Hits'],'tauPt', 20, [20, 0, 120],#variable, ptcut, binning
+                    'tau_iso_effi_pT', 0, 1,#filename, lower bound (y), upper bound (y)
                     "Tau Efficiency",#title
                     "Tau p_{T} (GeV)",#xaxis
-                    "Efficiency" #yaxis
-             
+                    "Efficiency" #yaxis            
 )
 
-compare_efficiencies(ntrlIsoPtSum,'neutralIsoPtSum',puCorrPtSum,'puCorrPtSum','tauPt',20,[20,0,120],
+NewCompareEfficiencies([ntrlIsoPtSum,puCorrPtSum],['neutralIsoPtSum','puCorrPtSum'],'tauPt',20,[20,0,120],
                     'tau_PtSum_effi_pT', 0, 1,
                     "Tau Efficiency",
                     "Tau p_{T} (GeV)",
                     "Efficiency"
 )
 
-compare_efficiencies(MuLoose3,'againstMuonLoose3',MuTight3,'againstMuonTight3','tauPt',20,[20,0,120],
+NewCompareEfficiencies([MuLoose3,MuTight3],['againstMuonLoose3','againstMuonTight3'],'tauPt',20,[20,0,120],
                     'tau_Mu_effi_pT', 0, 1,
                     "Tau Efficiency",
                     "Tau p_{T} (GeV)",
                     "Efficiency"
 )
 
-compare_5efficiencies(EleVLooseMVA6,'againstElectronVLooseMVA6',EleLooseMVA6,'againstElectronLooseMVA6',EleMediumMVA6,'againstElectronMediumMVA6',EleTightMVA6,'againstElectronTightMVA6',EleVTightMVA6,'againstElectronVTightMVA6','tauPt',20,[20,0,120],
+NewCompareEfficiencies([EleVLooseMVA6,EleLooseMVA6,EleMediumMVA6,EleTightMVA6,EleVTightMVA6],['againstElectronVLooseMVA6','againstElectronLooseMVA6','againstElectronMediumMVA6','againstElectronTightMVA6','againstElectronVTightMVA6'],'tauPt',20,[20,0,120],
                     'tau_Ele_effi_pT', 0, 1,
                     "Tau Efficiency",
                     "Tau p_{T} (GeV)",
@@ -227,26 +159,26 @@ compare_5efficiencies(EleVLooseMVA6,'againstElectronVLooseMVA6',EleLooseMVA6,'ag
 )
 
 ## eta plots
-compare_3efficiencies(byLooseCmbIso3, 'byLooseCombIsoDBCorr3Hits', byMedCmbIso3,'byMediumCombIsoDBCorr3Hits', byTightCmbIso3,'byTightCombIsoDBCorr3Hits','tauEta', 20, [20,-2.4,2.4],#variable, ptcut, binning
-                    'tau_iso_effi_eta', 0, 1,#filename
+NewCompareEfficiencies([byLooseCmbIso3,byMedCmbIso3,byTightCmbIso3],['byLooseCombIsoDBCorr3Hits','byMediumCombIsoDBCorr3Hits','byTightCombIsoDBCorr3Hits'],'tauEta', 20, [20,-2.4,2.4],#variable, ptcut, binning
+                    'tau_iso_effi_eta', 0, 1,#filename, lower bound (y), upper bound (y)
                     "Tau Efficiency",#title
                     "Tau #eta",#xaxis
                     "Efficiency" #yaxis             
 )
-compare_efficiencies(ntrlIsoPtSum,'neutralIsoPtSum',puCorrPtSum,'puCorrPtSum','tauEta',20,[20,-2.4,2.4],
+NewCompareEfficiencies([ntrlIsoPtSum,puCorrPtSum],['neutralIsoPtSum','puCorrPtSum'],'tauEta',20,[20,-2.4,2.4],
                     'tau_PtSum_effi_eta',0, 1,
                     "Tau Efficiency",
                     "Tau #eta",
                     "Efficiency"
 )
-compare_efficiencies(MuLoose3,'againstMuonLoose3',MuTight3,'againstMuonTight3','tauEta',20,[20,-2.4,2.4],
+NewCompareEfficiencies([MuLoose3,MuTight3],['againstMuonLoose3','againstMuonTight3'],'tauEta',20,[20,-2.4,2.4],
                     'tau_Mu_effi_eta',0, 1,
                     "Tau Efficiency",
                     "Tau #eta",
                     "Efficiency"
 )
 
-compare_5efficiencies(EleVLooseMVA6,'againstElectronVLooseMVA6',EleLooseMVA6,'againstElectronLooseMVA6',EleMediumMVA6,'againstElectronMediumMVA6',EleTightMVA6,'againstElectronTightMVA6',EleVTightMVA6,'againstElectronVTightMVA6','tauEta',20,[20,-2.4,2.4],
+NewCompareEfficiencies([EleVLooseMVA6,EleLooseMVA6,EleMediumMVA6,EleTightMVA6,EleVTightMVA6],['againstElectronVLooseMVA6','againstElectronLooseMVA6','againstElectronMediumMVA6','againstElectronTightMVA6','againstElectronVTightMVA6'],'tauEta',20,[20,-2.4,2.4],
                     'tau_Ele_effi_eta',0, 1,
                     "Tau Efficiency",
                     "Tau #eta",
@@ -254,28 +186,28 @@ compare_5efficiencies(EleVLooseMVA6,'againstElectronVLooseMVA6',EleLooseMVA6,'ag
 )
 
 ## nvtx plots
-compare_3efficiencies(byLooseCmbIso3, 'byLooseCombIsoDBCorr3Hits', byMedCmbIso3,'byMediumCombIsoDBCorr3Hits', byTightCmbIso3,'byTightCombIsoDBCorr3Hits','nvtx', 20, [20,0,35],#variable, ptcut, binning
-                    'tau_iso_effi_nvtx',0, 1,#filename
+NewCompareEfficiencies([byLooseCmbIso3,byMedCmbIso3,byTightCmbIso3],['byLooseCombIsoDBCorr3Hits','byMediumCombIsoDBCorr3Hits','byTightCombIsoDBCorr3Hits'],'nvtx', 20, [20,0,35],#variable, ptcut, binning
+                    'tau_iso_effi_nvtx',0, 1,#filename, lower bound (y), upper bound (y)
                     "Tau Efficiency",#title
                     "N_{vtx}",#xaxis
                     "Efficiency" #yaxis             
 )
 
-compare_efficiencies(ntrlIsoPtSum,'neutralIsoPtSum',puCorrPtSum,'puCorrPtSum','nvtx',20,[20,0,35],
+NewCompareEfficiencies([ntrlIsoPtSum,puCorrPtSum],['neutralIsoPtSum','puCorrPtSum'],'nvtx',20,[20,0,35],
                     'tau_PtSum_effi_nvtx',0, 1,
                     "Tau Efficiency",
                     "N_{vtx}",
                     "Efficiency"
 )
 
-compare_efficiencies(MuLoose3,'againstMuonLoose3',MuTight3,'againstMuonTight3','nvtx',20,[20,0,35],
+NewCompareEfficiencies([MuLoose3,MuTight3],['againstMuonLoose3','againstMuonTight3'],'nvtx',20,[20,0,35],
                     'tau_Mu_effi_nvtx',0, 1,
                     "Tau Efficiency",
                     "N_{vtx}",
                     "Efficiency"
 )
 
-compare_5efficiencies(EleVLooseMVA6,'againstElectronVLooseMVA6',EleLooseMVA6,'againstElectronLooseMVA6',EleMediumMVA6,'againstElectronMediumMVA6',EleTightMVA6,'againstElectronTightMVA6',EleVTightMVA6,'againstElectronVTightMVA6','nvtx',20,[20,0,35],
+NewCompareEfficiencies([EleVLooseMVA6,EleLooseMVA6,EleMediumMVA6,EleTightMVA6,EleVTightMVA6],['againstElectronVLooseMVA6','againstElectronLooseMVA6','againstElectronMediumMVA6','againstElectronTightMVA6','againstElectronVTightMVA6'],'nvtx',20,[20,0,35],
                     'tau_Ele_effi_nvtx',0, 1,
                     "Tau Efficiency",
                     "N_{vtx}",
