@@ -33,9 +33,9 @@ ntuple_file = ROOT.TFile(infile)
 
 ######## LABEL & SAVE WHERE #########
 if len(argv)>2:
-   saveWhere='~/private/output/tauAnalysis/7_6_5/'+argv[2]+'_'
+   saveWhere='~/private/output/tauAnalysis/8_0_10/'+argv[2]+'_'
 else:
-   saveWhere='~/private/output/tauAnalysis/7_6_5/'
+   saveWhere='~/private/output/tauAnalysis/8_0_10/'
 
 #####################################
 #Get Effi NTUPLE                 #

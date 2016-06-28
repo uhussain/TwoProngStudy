@@ -4,12 +4,9 @@
 // user include files
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/EDAnalyzer.h"
-
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
-
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-
 #include "DataFormats/VertexReco/interface/VertexFwd.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
@@ -23,20 +20,28 @@
 #include "DataFormats/PatCandidates/interface/PackedGenParticle.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
-
-
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "TTree.h"
 #include "helpers.h"
-
 #include "DataFormats/Math/interface/deltaR.h"
 #include "iostream"
 
-//
-// class declaration
-//
+// function declaration
+Float_t GetVisiblePt(const reco::GenParticle*);
+//Gets the Visible pT from a generated tau
+Float_t GetVisiblePt(const reco::GenParticle* tau){
+	Float_t vis_pt = 0;	
+	for(size_t j = 0; j < tau->numberOfDaughters(); ++j){
+ 		Int_t pdgid = abs(tau->daughter(j)->pdgId());               
+		if (pdgid!=12 and pdgid!=14 and pdgid!=16 and pdgid!=18){
+			vis_pt += tau->daughter(j)->pt(); 
+		}
+	}
+	return vis_pt;
+}
 
+// class declaration
 class MiniAODeffi : public edm::EDAnalyzer {
 	public:
 		explicit MiniAODeffi(const edm::ParameterSet&);
@@ -94,8 +99,10 @@ MiniAODeffi::~MiniAODeffi()
 }
 
 	void
+
+
 MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
-{
+{	
 	edm::Handle<reco::VertexCollection> vertices;
 	iEvent.getByToken(vtxToken_, vertices);
 	nvtx_=vertices->size();
@@ -108,7 +115,8 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
  	std::vector<const reco::GenParticle*> GenTaus;
  	std::vector<const reco::GenParticle*> GenEles;
  	std::vector<const reco::GenParticle*> GenMus;
- 	//add code to make this into GenTaus/GenEles/GenMus
+
+ 	//Place generated leptons into separate lists
 	for(std::vector<reco::GenParticle>::const_iterator genParticle = genParticles->begin(); genParticle != genParticles->end(); genParticle++ ){
 	  if(abs(genParticle->pdgId()) == 15) GenTaus.push_back(&(*genParticle));
 	  if(abs(genParticle->pdgId()) == 11) GenEles.push_back(&(*genParticle));
@@ -121,15 +129,15 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 				goto nothadronictau;                           //Skip over non-hadronic tau decays
 			}
 		}
-		if (GenTaus[i]->pt() > 20 && abs(GenTaus[i]->eta())<2.3) {
-			tauPt_= GenTaus[i]->pt();
-			tauEta_= GenTaus[i]->eta();
+		tauPt_= GetVisiblePt(GenTaus[i]);
+		tauEta_= GenTaus[i]->eta();
+		if (tauPt_ > 20 and abs(tauEta_)<2.3) {
 			tauIndex_ = 0;
 			for (const pat::Tau &tau : *taus) {
 				goodReco_=0; //Assume each tau is not reconstructed from the generated tau
 				dmf_=tau.tauID("decayModeFinding"); // this is the old DMF; strictly tighter than new DMF
 				double deltaR = reco::deltaR(tau, *GenTaus[i]);
-				if (tau.pt() > 20 && abs(tau.eta())<2.3 && tau.tauID(tauID_)>.5 && dmf_ > 0.5 && abs(tau.vertex().z() - PV.z())<.2 && deltaR<maxDR_) {
+				if (tau.pt() > 20 && abs(tau.eta())<2.3 && tau.tauID(tauID_)>.5 && dmf_ > 0.5 && abs(tau.vertex().z() - PV.z())<0.2 && deltaR<maxDR_) {
 					goodReco_=1;
 					break; //Break the tau loop once we find a correctly reconstructed tau
 				} // end if tau passes criteria
