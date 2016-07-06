@@ -17,10 +17,10 @@ import ROOT
 ROOT.gROOT.SetStyle("Plain")
 ROOT.gROOT.SetBatch(True)
 ROOT.gStyle.SetOptStat(0)
-ROOT.gStyle.SetPadTopMargin(0.15)
-ROOT.gStyle.SetPadGridY(1) 
-ROOT.gStyle.SetTitleX(0.1)
-ROOT.gStyle.SetTitleY(0.95)
+#ROOT.gStyle.SetPadTopMargin(0.15)
+#ROOT.gStyle.SetPadGridY(1) 
+#ROOT.gStyle.SetTitleX(0.1)
+#ROOT.gStyle.SetTitleY(0.95)
 colors=[ROOT.kCyan,ROOT.kGreen,ROOT.kOrange,ROOT.kRed,ROOT.kBlue]  #Add more colors for >5 sets of points in a single plot
 
 ######## File #########
@@ -40,18 +40,18 @@ else:
 #####################################
 #Get fakerate NTUPLE                 #
 #####################################
-byLooseCmbIso3 = ntuple_file.Get("byLooseCombinedIsolationDeltaBetaCorr3Hits/Gen. Ele")
-byMedCmbIso3 = ntuple_file.Get("byMediumCombinedIsolationDeltaBetaCorr3Hits/Gen. Ele")
-byTightCmbIso3 = ntuple_file.Get("byTightCombinedIsolationDeltaBetaCorr3Hits/Gen. Ele")
-ntrlIsoPtSum = ntuple_file.Get("neutralIsoPtSum/Gen. Ele")
-puCorrPtSum = ntuple_file.Get("puCorrPtSum/Gen. Ele")
-MuLoose3 = ntuple_file.Get("againstMuonLoose3/Gen. Ele")
-MuTight3 = ntuple_file.Get("againstMuonTight3/Gen. Ele")
-EleVLooseMVA6 = ntuple_file.Get("againstElectronVLooseMVA6/Gen. Ele")
-EleLooseMVA6 = ntuple_file.Get("againstElectronLooseMVA6/Gen. Ele")
-EleMediumMVA6 = ntuple_file.Get("againstElectronMediumMVA6/Gen. Ele")
-EleTightMVA6 = ntuple_file.Get("againstElectronTightMVA6/Gen. Ele")
-EleVTightMVA6 = ntuple_file.Get("againstElectronVTightMVA6/Gen. Ele")
+byLooseCmbIso3 = ntuple_file.Get("byLooseCombinedIsolationDeltaBetaCorr3Hits/Gen. Mu")
+byMedCmbIso3 = ntuple_file.Get("byMediumCombinedIsolationDeltaBetaCorr3Hits/Gen. Mu")
+byTightCmbIso3 = ntuple_file.Get("byTightCombinedIsolationDeltaBetaCorr3Hits/Gen. Mu")
+ntrlIsoPtSum = ntuple_file.Get("neutralIsoPtSum/Gen. Mu")
+puCorrPtSum = ntuple_file.Get("puCorrPtSum/Gen. Mu")
+MuLoose3 = ntuple_file.Get("againstMuonLoose3/Gen. Mu")
+MuTight3 = ntuple_file.Get("againstMuonTight3/Gen. Mu")
+EleVLooseMVA6 = ntuple_file.Get("againstElectronVLooseMVA6/Gen. Mu")
+EleLooseMVA6 = ntuple_file.Get("againstElectronLooseMVA6/Gen. Mu")
+EleMediumMVA6 = ntuple_file.Get("againstElectronMediumMVA6/Gen. Mu")
+EleTightMVA6 = ntuple_file.Get("againstElectronTightMVA6/Gen. Mu")
+EleVTightMVA6 = ntuple_file.Get("againstElectronVTightMVA6/Gen. Mu")
 print EleVTightMVA6
 canvas = ROOT.TCanvas("asdf", "adsf", 1200, 800)
 
@@ -61,7 +61,7 @@ def make_plot(tree, variable, selection, binning, xaxis='', title=''):
     tree.Draw(draw_string, selection, "goff")
     output_histo = ROOT.gDirectory.Get("htemp").Clone()
     output_histo.GetXaxis().SetTitle(xaxis)
-    output_histo.SetTitle(title)
+    output_histo.SetTitle("")
     return output_histo
 
 def make_fakerate(denom, num):
@@ -75,7 +75,7 @@ def make_fakerate(denom, num):
 def make_num(ntuple, variable,PtCut,binning):
     num = make_plot(
         ntuple, variable,
-	"fakeEle",
+	"fakeMu",
         binning
     )
     return num
@@ -107,23 +107,24 @@ def NewCompareEfficiencies(ntuples, legends, variable, PtCut, binning, filename,
     	frame.UseCurrentStyle()
     	frame.GetXaxis().SetTitle(xaxis)
     	frame.GetYaxis().SetTitle(yaxis)
-    	frame.GetYaxis().SetTitleOffset(1.2)
+    	frame.GetYaxis().SetTitleOffset(1.3)
     	frame.GetYaxis().CenterTitle()
     	frame.GetXaxis().CenterTitle()
     	frame.UseCurrentStyle()
     	frame.Draw()
+	frame.SetTitle("")
 	canvas.SetLogy()
 	for i in range(len(histlist)):
 		if i == 0:
 			histlist[i].Draw('pe')
 		else:
 			histlist[i].Draw('pesame')
-    	legend = ROOT.TLegend(0.65,0.85 ,0.9,1.0, "", "brNDC")
-    	legend.SetFillColor(ROOT.kWhite)
-    	legend.SetBorderSize(1)
-	for i in range(len(legends)):
-		legend.AddEntry(histlist[i],legends[i],'pe')
-    	legend.Draw()
+    	#legend = ROOT.TLegend(0.65,0.85 ,0.9,1.0, "", "brNDC")
+    	#legend.SetFillColor(ROOT.kWhite)
+    	#legend.SetBorderSize(1)
+	#for i in range(len(legends)):
+	#	legend.AddEntry(histlist[i],legends[i],'pe')
+    	#legend.Draw()
     	saveas = saveWhere+filename+'.png'
     	print saveas
     	canvas.SaveAs(saveas)
@@ -132,59 +133,59 @@ def NewCompareEfficiencies(ntuples, legends, variable, PtCut, binning, filename,
 # Fake Efficiency for a 20 GeV cut on tau Pt 
 ################################################################################
 ## pT plots
-NewCompareEfficiencies([byLooseCmbIso3,byMedCmbIso3,byTightCmbIso3],['byLooseCombIsoDBCorr3Hits','byMediumCombIsoDBCorr3Hits','byTightCombIsoDBCorr3Hits'],'elePt', 20, [20, 0, 120],#variable, ptcut, binning
+NewCompareEfficiencies([byLooseCmbIso3,byMedCmbIso3,byTightCmbIso3],['byLooseCombIsoDBCorr3Hits','byMediumCombIsoDBCorr3Hits','byTightCombIsoDBCorr3Hits'],'muPt', 20, [20, 0, 120],#variable, ptcut, binning
                     'tau_iso_fakerate_pT',3e-1,1, #filename, lower bound (y), upper bound (y)
                     "Tau Fake Efficiency (Electrons)",#title
-                    "Tau p_{T} (GeV)",#xaxis
-                    "Fake Efficiency" #yaxis            
+                    "Electron p_{T} (GeV)",#xaxis
+                    "Expected #mu to #tau fake rate" #yaxis            
 )
 
-NewCompareEfficiencies([ntrlIsoPtSum,puCorrPtSum],['neutralIsoPtSum','puCorrPtSum'],'elePt',20,[20,0,120],
+NewCompareEfficiencies([ntrlIsoPtSum,puCorrPtSum],['neutralIsoPtSum','puCorrPtSum'],'muPt',20,[20,0,120],
                     'tau_PtSum_fakerate_pT',1e-1,1,
                     "Tau Fake Efficiency (Electrons)",
-                    "Tau p_{T} (GeV)",
-                    "Fake Efficiency"
+                    "Electron p_{T} (GeV)",
+                    "Expected #mu to #tau fake rate"
 )
 
-NewCompareEfficiencies([MuLoose3,MuTight3],['againstMuonLoose3','againstMuonTight3'],'elePt',20,[20,0,120],
-                    'tau_Mu_fakerate_pT',6e-1,1,
+NewCompareEfficiencies([MuLoose3,MuTight3],['againstMuonLoose3','againstMuonTight3'],'muPt',20,[20,0,120],
+                    'tau_Mu_fakerate_pT',1e-5,1e-1,
                     "Tau Fake Efficiency (Electrons)",
-                    "Tau p_{T} (GeV)",
-                    "Fake Efficiency"
+                    "Muon p_{T} (GeV)",
+                    "Expected #mu to #tau fake rate"
 )
 
-NewCompareEfficiencies([EleVLooseMVA6,EleLooseMVA6,EleMediumMVA6,EleTightMVA6,EleVTightMVA6],['againstElectronVLooseMVA6','againstElectronLooseMVA6','againstElectronMediumMVA6','againstElectronTightMVA6','againstElectronVTightMVA6'],'elePt',20,[20,0,120],
+NewCompareEfficiencies([EleVLooseMVA6,EleLooseMVA6,EleMediumMVA6,EleTightMVA6,EleVTightMVA6],['againstElectronVLooseMVA6','againstElectronLooseMVA6','againstElectronMediumMVA6','againstElectronTightMVA6','againstElectronVTightMVA6'],'muPt',20,[20,0,120],
                     'tau_Ele_fakerate_pT',1e-4,1e-1,
                     "Tau Fake Efficiency (Electrons)",
-                    "Tau p_{T} (GeV)",
-                    "Fake Efficiency"
+                    "Electron p_{T} (GeV)",
+                    "Expected #mu to #tau fake rate"
 )
 
 ## eta plots
-NewCompareEfficiencies([byLooseCmbIso3,byMedCmbIso3,byTightCmbIso3],['byLooseCombIsoDBCorr3Hits','byMediumCombIsoDBCorr3Hits','byTightCombIsoDBCorr3Hits'],'eleEta', 20, [20,-2.4,2.4],#variable, ptcut, binning
+NewCompareEfficiencies([byLooseCmbIso3,byMedCmbIso3,byTightCmbIso3],['byLooseCombIsoDBCorr3Hits','byMediumCombIsoDBCorr3Hits','byTightCombIsoDBCorr3Hits'],'muEta', 20, [20,-2.4,2.4],#variable, ptcut, binning
                     'tau_iso_fakerate_eta', 3e-1, 1,#filename, lower bound (y), upper bound (y)
                     "Tau Fake Efficiency (Electrons)",#title
-                    "Tau #eta",#xaxis
-                    "Fake Efficiency" #yaxis             
+                    "Muon #Eta",#xaxis
+                    "Expected #mu to #tau fake rate" #yaxis             
 )
-NewCompareEfficiencies([ntrlIsoPtSum,puCorrPtSum],['neutralIsoPtSum','puCorrPtSum'],'eleEta',20,[20,-2.4,2.4],
+NewCompareEfficiencies([ntrlIsoPtSum,puCorrPtSum],['neutralIsoPtSum','puCorrPtSum'],'muEta',20,[20,-2.4,2.4],
                     'tau_PtSum_fakerate_eta',1e-1, 1,
                     "Tau Fake Efficiency (Electrons)",
-                    "Tau #eta",
-                    "Fake Efficiency"
+                    "Muon #Eta",
+                    "Expected #mu to #tau fake rate"
 )
-NewCompareEfficiencies([MuLoose3,MuTight3],['againstMuonLoose3','againstMuonTight3'],'eleEta',20,[20,-2.4,2.4],
-                    'tau_Mu_fakerate_eta',6e-1, 1,
+NewCompareEfficiencies([MuLoose3,MuTight3],['againstMuonLoose3','againstMuonTight3'],'muEta',20,[20,-2.4,2.4],
+                    'tau_Mu_fakerate_eta',1e-5, 1e-1,
                     "Tau Fake Efficiency (Electrons)",
-                    "Tau #eta",
-                    "Fake Efficiency"
+                    "Muon #Eta",
+                    "Expected #mu to #tau fake rate"
 )
 
-NewCompareEfficiencies([EleVLooseMVA6,EleLooseMVA6,EleMediumMVA6,EleTightMVA6,EleVTightMVA6],['againstElectronVLooseMVA6','againstElectronLooseMVA6','againstElectronMediumMVA6','againstElectronTightMVA6','againstElectronVTightMVA6'],'eleEta',20,[20,-2.4,2.4],
+NewCompareEfficiencies([EleVLooseMVA6,EleLooseMVA6,EleMediumMVA6,EleTightMVA6,EleVTightMVA6],['againstElectronVLooseMVA6','againstElectronLooseMVA6','againstElectronMediumMVA6','againstElectronTightMVA6','againstElectronVTightMVA6'],'muEta',20,[20,-2.4,2.4],
                     'tau_Ele_fakerate_eta',1e-4, 1e-1,
                     "Tau Fake Efficiency (Electrons)",
-                    "Tau #eta",
-                    "Fake Efficiency"
+                    "Muon #eta",
+                    "Expected #mu to #tau fake rate"
 )
 
 ## nvtx plots
@@ -192,26 +193,26 @@ NewCompareEfficiencies([byLooseCmbIso3,byMedCmbIso3,byTightCmbIso3],['byLooseCom
                     'tau_iso_fakerate_nvtx',3e-1, 1,#filename, lower bound (y), upper bound (y)
                     "Tau Fake Efficiency (Electrons)",#title
                     "N_{vtx}",#xaxis
-                    "Fake Efficiency" #yaxis             
+                    "Expected #mu to #tau fake rate" #yaxis             
 )
 
 NewCompareEfficiencies([ntrlIsoPtSum,puCorrPtSum],['neutralIsoPtSum','puCorrPtSum'],'nvtx',20,[20,0,35],
                     'tau_PtSum_fakerate_nvtx',1e-1, 1,
                     "Tau Fake Efficiency (Electrons)",
                     "N_{vtx}",
-                    "Fake Efficiency"
+                    "Expected #mu to #tau fake rate"
 )
 
 NewCompareEfficiencies([MuLoose3,MuTight3],['againstMuonLoose3','againstMuonTight3'],'nvtx',20,[20,0,35],
-                    'tau_Mu_fakerate_nvtx',6e-1, 1,
+                    'tau_Mu_fakerate_nvtx',1e-5, 1e-1,
                     "Tau Fake Efficiency (Electrons)",
                     "N_{vtx}",
-                    "Fake Efficiency"
+                    "Expected #mu to #tau fake rate"
 )
 
 NewCompareEfficiencies([EleVLooseMVA6,EleLooseMVA6,EleMediumMVA6,EleTightMVA6,EleVTightMVA6],['againstElectronVLooseMVA6','againstElectronLooseMVA6','againstElectronMediumMVA6','againstElectronTightMVA6','againstElectronVTightMVA6'],'nvtx',20,[20,0,35],
                     'tau_Ele_fakerate_nvtx',1e-4, 1e-1,
                     "Tau Fake Efficiency (Electrons)",
                     "N_{vtx}",
-                    "Fake Efficiency"
+                    "Expected #mu to #tau fake rate"
 )
