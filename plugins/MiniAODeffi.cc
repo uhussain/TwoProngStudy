@@ -174,7 +174,7 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 			}
 		}
 		if (genTauMatch_ == 1) { //Tau must meet denominator requirements
-			dmf_ = tau.tauID("hadronicDecayMode");  //switch value from "decayModeFinding" so we can look at the actual decay mode 
+			dmf_ = tau.decayMode();  //switch value from "decayModeFinding" so we can look at the actual decay mode 
 			goodReco_ = tau.tauID(tauID_) >0.5; //Discriminant for numerator
 			tree->Fill(); 
 		}
