@@ -29,12 +29,16 @@
 #include "TMath.h"
 #include "TLorentzVector.h"
 
-// function declaration
+// function declarations
+
+//Checks if the reconstructed particle is a neutrino (returns 1 if it is a neutrino)
 bool isNeutrino(const reco::Candidate* daughter)
 {
   return ( TMath::Abs(daughter->pdgId()) == 12 || TMath::Abs(daughter->pdgId()) == 14 || TMath::Abs(daughter->pdgId()) == 16 || TMath::Abs(daughter->pdgId()) == 18);
 }
 
+//Gets visible 4-momentum of a particle's daughter...recursively calls itself until all decay branches are searched
+//See GetVisibleP4 function for more detail
 reco::Candidate::LorentzVector GetDaughterVisibleP4(const reco::Candidate* daughter){
 	reco::Candidate::LorentzVector p4_vis(0,0,0,0);	
  	for(size_t j = 0; j < daughter->numberOfDaughters(); ++j){
@@ -48,19 +52,21 @@ reco::Candidate::LorentzVector GetDaughterVisibleP4(const reco::Candidate* daugh
 	return p4_vis;
 }
 
+//Gets visible 4-momentum of a particle (tau)
 reco::Candidate::LorentzVector GetVisibleP4(const reco::GenParticle* tau){
 	reco::Candidate::LorentzVector p4_vis(0,0,0,0);	
- 	for(size_t j = 0; j < tau->numberOfDaughters(); ++j){
- 		if (!isNeutrino(tau->daughter(j)) && tau->daughter(j)->status() == 1){
+ 	for(size_t j = 0; j < tau->numberOfDaughters(); ++j){  //looping through first level of decay products 
+ 		if (!isNeutrino(tau->daughter(j)) && tau->daughter(j)->status() == 1){  //status=1 means no further decay for this daughter
  			p4_vis += tau->daughter(j)->p4();
-		}
-		if (tau->daughter(j)->status() == 2){
-			p4_vis += GetDaughterVisibleP4(tau->daughter(j));
+		} 
+		if (tau->daughter(j)->status() == 2){  //status=2 means this daughter decays 
+			p4_vis += GetDaughterVisibleP4(tau->daughter(j)); //we check the daughter for visible decay products
 		}		
  	}
 	return p4_vis;
 }
 
+//Checks if the generator-level particle (tau) decays to hadrons (returns 1 if it decays hadronically)
 bool isHadronic(const reco::GenParticle* tau){
 	bool isHadronic = 1;
 	for(size_t j = 0; j < tau->numberOfDaughters(); ++j){ //Loop through daughters of gen. tau
@@ -167,7 +173,8 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 				break;	
 			}
 		}
-		if (genTauMatch_ == 1) { //Tau must meet denominator requirements 
+		if (genTauMatch_ == 1) { //Tau must meet denominator requirements
+			dmf_ = tau.tauID("hadronicDecayMode");  //switch value from "decayModeFinding" so we can look at the actual decay mode 
 			goodReco_ = tau.tauID(tauID_) >0.5; //Discriminant for numerator
 			tree->Fill(); 
 		}

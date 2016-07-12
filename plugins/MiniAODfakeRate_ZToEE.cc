@@ -25,6 +25,7 @@
 #include "DataFormats/Math/interface/deltaR.h"
 #include "helpers.h"
 #include <iostream>
+#include "TMath.h"
 #include <algorithm>
 //
 // class declaration
@@ -58,6 +59,7 @@ class MiniAODfakeRate_ZToEE : public edm::EDAnalyzer {
 		Int_t nvtx_=-999;
 		Int_t fakeEle_=0;
 		Int_t fakeMu_=0;
+		Int_t dmf_ = -1;
 		double maxDR_;
 };
 
@@ -80,14 +82,17 @@ MiniAODfakeRate_ZToEE::MiniAODfakeRate_ZToEE(const edm::ParameterSet& iConfig):
 	tree->Branch("tauIndex",&tauIndex_,"tauIndex/I");
 	tree->Branch("nvtx",&nvtx_,"nvtx/I");
 	tree->Branch("fakeEle",&fakeEle_,"fakeEle/I");
+	tree->Branch("dmf",&dmf_,"dmf/I");
+
+//Uncomment tree to look at mu->tau fake rate
 	
-	tree2 = fs->make<TTree>("Gen. Mu","Gen. Mu"); //Tree for generated muons
-	tree2->Branch("muPt", &elePt_,"muPt_/F");
-	tree2->Branch("muEta", &eleEta_,"muEta_/F");
-	tree2->Branch("tauEta", &tauEta_,"tauEta_/F");
-	tree2->Branch("tauIndex",&tauIndex_,"tauIndex/I");
-	tree2->Branch("nvtx",&nvtx_,"nvtx/I");
-	tree2->Branch("fakeMu",&fakeMu_,"fakeMu/I");
+//	tree2 = fs->make<TTree>("Gen. Mu","Gen. Mu"); //Tree for generated muons
+//	tree2->Branch("muPt", &elePt_,"muPt_/F");
+//	tree2->Branch("muEta", &eleEta_,"muEta_/F");
+//	tree2->Branch("tauEta", &tauEta_,"tauEta_/F");
+//	tree2->Branch("tauIndex",&tauIndex_,"tauIndex/I");
+//	tree2->Branch("nvtx",&nvtx_,"nvtx/I");
+//	tree2->Branch("fakeMu",&fakeMu_,"fakeMu/I");
 
 	
 }
@@ -115,9 +120,9 @@ MiniAODfakeRate_ZToEE::analyze(const edm::Event& iEvent, const edm::EventSetup& 
 	std::vector<const reco::GenParticle*> GenMus;
 
 	for(std::vector<reco::GenParticle>::const_iterator genParticle = genParticles->begin(); genParticle != genParticles->end(); genParticle++ ){
-	  if(abs(genParticle->pdgId()) == 15) GenTaus.push_back(&(*genParticle));
-	  if(abs(genParticle->pdgId()) == 11) GenEles.push_back(&(*genParticle));
-	  if(abs(genParticle->pdgId()) == 13) GenMus.push_back(&(*genParticle));
+	  if(TMath::Abs(genParticle->pdgId()) == 15) GenTaus.push_back(&(*genParticle));
+	  if(TMath::Abs(genParticle->pdgId()) == 11) GenEles.push_back(&(*genParticle));
+	  if(TMath::Abs(genParticle->pdgId()) == 13) GenMus.push_back(&(*genParticle));
 	}
 
         if (GenTaus.size()>0) return; // skip event if real tau! only look for fake taus 
@@ -126,14 +131,15 @@ MiniAODfakeRate_ZToEE::analyze(const edm::Event& iEvent, const edm::EventSetup& 
 	for (int i = 0;(unsigned)i<GenEles.size(); i++) {  //looping through only generated electrons
 		elePt_ = GenEles[i]->pt();
 		eleEta_ = GenEles[i]->eta(); 
-		if (elePt_ > 20 and abs(eleEta_) < 2.3){  //slimmed Electron collection- should we add passes loose discrimination? 
+		if (elePt_ > 20 && TMath::Abs(eleEta_) < 2.3){  
 			tauIndex_ = 0;
 			for (const pat::Tau &tau : *taus) {
 				tauPt_ = tau.pt();
 				tauEta_ = tau.eta();
 				fakeEle_ = 0;//assume the tau is not faked by an electron
-				bool fake_discr = tau.tauID(tauID_)>.5; //does tau fake additional discriminator?
-				if (tau.tauID("decayModeFinding")>0.5 && tau.pt() > 20 && abs(tau.eta())<2.3 && fake_discr && deltaR(*GenEles[i],tau)<0.3) { // if the tau passes the critera
+				bool fake_discr = tau.tauID(tauID_)>.5 && tau.tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits"); //does tau fake additional discriminator?
+				if (tau.tauID("decayModeFinding")>0.5 && tau.pt() > 20 && TMath::Abs(tau.eta())<2.3 && fake_discr && deltaR(*GenEles[i],tau)<0.3) { // if the tau passes the critera				   
+					dmf_ = tau.decayMode();
 					fakeEle_ = 1; //if tau passes set the electron output to "fake". e.g. this electron faked a tau
 					break;	//end tau matching search once we know a tau was faked by an electron
 				}
@@ -143,26 +149,28 @@ MiniAODfakeRate_ZToEE::analyze(const edm::Event& iEvent, const edm::EventSetup& 
 		}
 	}
 
-        for (size_t i = 0; i < GenMus.size(); i++) {
-		//output all muons to denominator
-		muPt_ = GenMus[i]->pt();
-		muEta_ = GenMus[i]->eta();
-		if (muPt_ > 20 and abs(muEta_) < 2.3){  //slimmed muon collection- should we add passes loose discrimination? 
-			tauIndex_ = 0;
-			for (const pat::Tau &tau : *taus) {
-				tauPt_ = tau.pt();
-				tauEta_ = tau.eta();
-				fakeMu_ = 0;//assume the tau is not faked by a muon
-				bool fake_discr = tau.tauID(tauID_)>.5; //does tau fake additional discriminator?
-				if (tau.tauID("decayModeFinding")>0.5 && tau.pt() > 20 && abs(tau.eta())<2.3 && fake_discr && deltaR(*GenMus[i],tau)<0.3) { // if the tau passes the critera
-					fakeMu_ = 1; //if tau passes set the muon output to "fake". e.g. this muon faked a tau
-					break;	//end tau matching search once we know a tau was faked by a muon
-				}
-				tauIndex_++;//which number tau was faked (good to know if highest pt or second highest pt tau, etc.)
-			}//end matching tau to mu
-			tree2->Fill(); //fill gen. muon tree 
-		}
-	}
+//Uncomment loop below to look at mu->tau fake rate
+
+//        for (size_t i = 0; i < GenMus.size(); i++) {
+//		//output all muons to denominator
+//		muPt_ = GenMus[i]->pt();
+//		muEta_ = GenMus[i]->eta();
+//		if (muPt_ > 20 and abs(muEta_) < 2.3){  //slimmed muon collection- should we add passes loose discrimination? 
+//			tauIndex_ = 0;
+//			for (const pat::Tau &tau : *taus) {
+//				tauPt_ = tau.pt();
+//				tauEta_ = tau.eta();
+//				fakeMu_ = 0;//assume the tau is not faked by a muon
+//				bool fake_discr = tau.tauID(tauID_)>.5; //does tau fake additional discriminator?
+//				if (tau.tauID("decayModeFinding")>0.5 && tau.pt() > 20 && abs(tau.eta())<2.3 && fake_discr && deltaR(*GenMus[i],tau)<0.3) { // if the tau passes the critera
+//					fakeMu_ = 1; //if tau passes set the muon output to "fake". e.g. this muon faked a tau
+//					break;	//end tau matching search once we know a tau was faked by a muon
+//				}
+//				tauIndex_++;//which number tau was faked (good to know if highest pt or second highest pt tau, etc.)
+//			}//end matching tau to mu
+//			tree2->Fill(); //fill gen. muon tree 
+//		}
+//	}
  
 
 } // end analyze
