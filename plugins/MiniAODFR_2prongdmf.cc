@@ -32,10 +32,10 @@
 // function declarations
 
 // class declaration
-class MiniAODeffi : public edm::EDAnalyzer {
+class MiniAODFR_2prongdmf : public edm::EDAnalyzer {
 	public:
-		explicit MiniAODeffi(const edm::ParameterSet&);
-		~MiniAODeffi();
+		explicit MiniAODFR_2prongdmf(const edm::ParameterSet&);
+		~MiniAODFR_2prongdmf();
 
 	private:
 		virtual void analyze(const edm::Event&, const edm::EventSetup&) override;
@@ -44,7 +44,6 @@ class MiniAODeffi : public edm::EDAnalyzer {
 		edm::EDGetTokenT<reco::VertexCollection> vtxToken_;
 		edm::EDGetTokenT<pat::TauCollection> tauToken_;
 		edm::EDGetTokenT<pat::JetCollection> jetToken_;
-		edm::EDGetTokenT<pat::ElectronCollection> electronToken_;
 		std::string tauID_;
 		edm::EDGetTokenT<std::vector <reco::GenParticle> > prunedGenToken_;
                 edm::EDGetTokenT<std::vector < pat::PackedGenParticle> >packedGenToken_;
@@ -52,22 +51,22 @@ class MiniAODeffi : public edm::EDAnalyzer {
 		TTree* tree;
 		Float_t tauPt_;
 		Float_t tauEta_;
-		Float_t tauMass_;
+		Float_t jetPt_;
+		Float_t jetEta_;
 		Int_t tauIndex_;
 		Int_t nvtx_;
-		Int_t dmf_;
-		Int_t goodReco_;
-		Int_t genTauMatch_;
+		bool genTauMatch_;
+		Int_t decayMode_;
 		double maxDR_;
 		bool good_dz_;
 		bool good_dr_;
+		Int_t fakeJet_;
 };
 
-MiniAODeffi::MiniAODeffi(const edm::ParameterSet& iConfig):
+MiniAODFR_2prongdmf::MiniAODFR_2prongdmf(const edm::ParameterSet& iConfig):
 	vtxToken_(consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertices"))),
 	tauToken_(consumes<pat::TauCollection>(iConfig.getParameter<edm::InputTag>("taus"))),
 	jetToken_(consumes<pat::JetCollection>(iConfig.getParameter<edm::InputTag>("jets"))),
-        electronToken_(consumes<pat::ElectronCollection>(iConfig.getParameter<edm::InputTag>("electrons"))),
 	prunedGenToken_(consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("pruned"))),
 	packedGenToken_(consumes<std::vector<pat::PackedGenParticle> >(iConfig.getParameter<edm::InputTag>("packed")))
 {
@@ -75,22 +74,21 @@ MiniAODeffi::MiniAODeffi(const edm::ParameterSet& iConfig):
 	edm::Service<TFileService> fs;
 
 	tree = fs->make<TTree>("Ntuple", "Ntuple");
-	tree->Branch("tauPt", &tauPt_,"tauPt_/F");
-	tree->Branch("tauEta", &tauEta_,"tauEta_/F");
+	tree->Branch("jetPt", &jetPt_,"jetPt_/F");
+	tree->Branch("jetEta", &jetEta_,"jetEta_/F");
 	tree->Branch("tauIndex", &tauIndex_,"tauIndex_/I");
 	tree->Branch("nvtx",&nvtx_,"nvtx_/I");
-	tree->Branch("dmf",&dmf_,"dmf_/I");
-	tree->Branch("goodReco",&goodReco_,"goodReco_/I");
-	tree->Branch("tauMass",&tauMass_,"tauMass_/I");
+	tree->Branch("decayMode",&decayMode_,"decayMode_/I");
+	tree->Branch("fakeJet",&fakeJet_,"fakeJet_/I");
 }
 
-MiniAODeffi::~MiniAODeffi()
+MiniAODFR_2prongdmf::~MiniAODFR_2prongdmf()
 {
 }
 
 	void
 
-MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+MiniAODFR_2prongdmf::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {	
 	edm::Handle<reco::VertexCollection> vertices;
 	iEvent.getByToken(vtxToken_, vertices);
@@ -98,6 +96,8 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 //	const reco::Vertex &PV = vertices->front();
 	edm::Handle<pat::TauCollection> taus;
 	iEvent.getByToken(tauToken_, taus);
+	edm::Handle<pat::JetCollection> jets;
+	iEvent.getByToken(jetToken_, jets);
  	edm::Handle<std::vector<reco::GenParticle> > genParticles;
  	iEvent.getByToken(prunedGenToken_, genParticles);
 
@@ -111,30 +111,42 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		if(TMath::Abs(genParticle->pdgId()) == 13) GenMus.push_back(&(*genParticle));
 	}
 		
-	tauIndex_ = 0;
-	goodReco_ = -1;
-	for(const pat::Tau &tau : *taus){	//Loop through all reconstructed taus
-		genTauMatch_ = 0;	//Assume this tau does not match a generated tau
-		dmf_ = tau.tauID("decayModeFinding");
-		if (!(tau.pt() > 20.0 && TMath::Abs(tau.eta())<2.3 && dmf_>0.5 && tau.tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits"))) continue; 
-		tauPt_ = tau.pt();
-		tauEta_ = tau.eta();
-		tauMass_ = tau.mass();
-		for (size_t i=0; i < GenTaus.size(); i++){	//Loop through all generated taus to check for match
-			reco::Candidate::LorentzVector p4_vis = GetVisibleP4(GenTaus[i]);
-			if (reco::deltaR(tau.eta(),tau.phi(),p4_vis.eta(),p4_vis.phi()) < 0.3 && p4_vis.pt() > 20.0 && TMath::Abs(p4_vis.eta())<2.3 && isHadronic(GenTaus[i])){
-				genTauMatch_ = 1;
-				break;	
+        //if (GenTaus.size()>0) return; // skip event if real tau! only look for fake taus 
+	nvtx_=vertices->size();
+
+	for (const pat::Jet &jet : *jets) {  //looping through jets
+		genTauMatch_ = 0;
+		fakeJet_ = 0;
+		jetPt_ = jet.pt();
+		jetEta_ = jet.eta();
+		decayMode_ = -1; 
+		if (jetPt_ > 20 && TMath::Abs(jetEta_) < 2.3){  //jets must meet these criteria
+			for (size_t i=0; i < GenTaus.size(); i++){	//Loop through all generated taus to check for match
+				reco::Candidate::LorentzVector p4_vis = GetVisibleP4(GenTaus[i]);
+				if (reco::deltaR(jet.eta(),jet.phi(),p4_vis.eta(),p4_vis.phi()) < 0.3 && p4_vis.pt() > 20.0 && TMath::Abs(p4_vis.eta())<2.3 && isHadronic(GenTaus[i])){
+					genTauMatch_ = 1;
+					break;	
+				}
 			}
+			if (genTauMatch_) continue; //Skip this jet if it matches a generator tau
+			tauIndex_ = 0;
+			for (const pat::Tau &tau : *taus) {	//loop through all reco taus
+				tauPt_ = tau.pt();
+				tauEta_ = tau.eta();
+				bool fake_discr = tau.tauID(tauID_)>.5; //does tau fake additional discriminator?
+				//bool istwoprong =(tau.decayMode()== 5 || tau.decayMode()==6);
+				if (tau.tauID("decayModeFindingNewDMs")>0.5  && TMath::Abs(tauEta_)<2.3 && fake_discr && deltaR(jet,tau)<0.3) { // if the tau passes the criteria  tauPt_>20?
+					decayMode_ = tau.decayMode();
+					fakeJet_ = 1; //if tau passes set the jet output to "fake". e.g. this jet faked a tau
+					break;	//end tau matching search once we know a tau was faked by an electron
+				}
+				tauIndex_++;//which number tau was faked (good to know if highest pt or second highest pt tau, etc.)
+			}//end matching tau to ele
+			if (fakeJet_ == 0) tauIndex_ = -1;
+			tree->Fill(); //fill gen. electron tree 
 		}
-		if (genTauMatch_ == 1) { //Tau must meet denominator requirements
-			dmf_ = tau.decayMode();  //switch value from "decayModeFinding" so we can look at the actual decay mode 
-			goodReco_ = tau.tauID(tauID_) >0.5; //Discriminant for numerator
-			tree->Fill(); 
-		}
-		++tauIndex_;
 	}		
 }
 
 //define this as a plug-in
-DEFINE_FWK_MODULE(MiniAODeffi);
+DEFINE_FWK_MODULE(MiniAODFR_2prongdmf);

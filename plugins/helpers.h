@@ -19,6 +19,10 @@ std::vector<const reco::GenParticle*> getGenParticleCollectionMiniAOD(const edm:
 std::vector<const reco::GenParticle*> getGenEleCollectionMiniAOD(const edm::Event& evt);
 std::vector<const reco::GenParticle*> getGenMuCollectionMiniAOD(const edm::Event& evt);
 bool genMatchingMiniAOD(const pat::Tau tau, std::vector<const reco::GenParticle*>& GenPart, double maxDR);
+bool isHadronic(const reco::GenParticle* tau);
+reco::Candidate::LorentzVector GetVisibleP4(const reco::GenParticle* tau);
+reco::Candidate::LorentzVector GetDaughterVisibleP4(const reco::Candidate* daughter);
+bool isNeutrino(const reco::Candidate* daughter);
 //AODSIM
 reco::PFJetRef getJetRef(const reco::PFTau& tau);
 std::vector<const reco::GenParticle*> getGenParticleCollection(const edm::Event& evt);	

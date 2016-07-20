@@ -3,11 +3,11 @@ from FWCore.ParameterSet.VarParsing import VarParsing
 
 #input cmsRun options
 options = VarParsing ('analysis')
-with open('files') as f:
+with open('files_DYtoTauTau.txt') as f:
     options.inputFiles = f.readlines()
 
 #options.inputFiles ="/store/mc/RunIISpring16MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/50000/127657A5-4E1C-E611-A5B2-001E672486B0.root"
-options.outputFile = "MiniAOD_effi_80x_Drell-Yan.root"
+options.outputFile = "MiniAOD_effi_80x_DYtoTauTau.root"
 options.parseArguments()
 
 #name the process
@@ -24,7 +24,7 @@ from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, '80X_mcRun2_asymptotic_v6', '')
 #how many events to run over
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(10000)
+    input = cms.untracked.int32(30000)
 )
 
 process.source = cms.Source("PoolSource",
@@ -34,75 +34,6 @@ process.source = cms.Source("PoolSource",
 
 ##################################################
 # Main
-process.byLooseCombinedIsolationDeltaBetaCorr3Hits = cms.EDAnalyzer("MiniAODeffi",
-    vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
-    taus = cms.InputTag("slimmedTaus"), electrons = cms.InputTag("slimmedElectrons"),
-    jets = cms.InputTag("slimmedJets"),
-    tauID = cms.string("byLooseCombinedIsolationDeltaBetaCorr3Hits"), 
-    packed = cms.InputTag("packedGenParticles"),
-    pruned = cms.InputTag("prunedGenParticles")
-)
-process.byMediumCombinedIsolationDeltaBetaCorr3Hits = cms.EDAnalyzer("MiniAODeffi",
-    vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
-    taus = cms.InputTag("slimmedTaus"), electrons = cms.InputTag("slimmedElectrons"),
-    jets = cms.InputTag("slimmedJets"),
-    tauID = cms.string("byMediumCombinedIsolationDeltaBetaCorr3Hits"),
-    packed = cms.InputTag("packedGenParticles"),
-    pruned = cms.InputTag("prunedGenParticles")
-)
-process.byTightCombinedIsolationDeltaBetaCorr3Hits = cms.EDAnalyzer("MiniAODeffi",
-    vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
-    taus = cms.InputTag("slimmedTaus"), electrons = cms.InputTag("slimmedElectrons"),
-    jets = cms.InputTag("slimmedJets"),
-    tauID = cms.string("byTightCombinedIsolationDeltaBetaCorr3Hits"),
-    packed = cms.InputTag("packedGenParticles"),
-    pruned = cms.InputTag("prunedGenParticles")
-)
-#It tells me that byCombinedIsolationDeltaBetaCorrRaw3Hits is not in the miniAOD
-#process.byCombinedIsolationDeltaBetaCorr3Hits = cms.EDAnalyzer("MiniAODeffi",
- #   vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
-  #  taus = cms.InputTag("slimmedTaus"), electrons = cms.InputTag("slimmedElectrons"),
-   # jets = cms.InputTag("slimmedJets"),
-    #tauID = cms.string("byCombinedIsolationDeltaBetaCorrRaw3Hits")
-#)
-#process.ChargedIsoPtSum = cms.EDAnalyzer("MiniAODeffi",
- #   vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
-  #  taus = cms.InputTag("slimmedTaus"), electrons = cms.InputTag("slimmedElectrons"),
-   # jets = cms.InputTag("slimmedJets"),
-    #tauID = cms.string("chargedIsoPtSum")
-#)
-process.neutralIsoPtSum= cms.EDAnalyzer("MiniAODeffi",
-    vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
-    taus = cms.InputTag("slimmedTaus"), electrons = cms.InputTag("slimmedElectrons"),
-    jets = cms.InputTag("slimmedJets"),
-    tauID = cms.string("neutralIsoPtSum"),
-    packed = cms.InputTag("packedGenParticles"),
-    pruned = cms.InputTag("prunedGenParticles")
-)
-process.puCorrPtSum= cms.EDAnalyzer("MiniAODeffi",
-    vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
-    taus = cms.InputTag("slimmedTaus"), electrons = cms.InputTag("slimmedElectrons"),
-    jets = cms.InputTag("slimmedJets"),
-    tauID = cms.string("puCorrPtSum"),
-    packed = cms.InputTag("packedGenParticles"),
-    pruned = cms.InputTag("prunedGenParticles")
-)
-process.againstMuonLoose3 = cms.EDAnalyzer("MiniAODeffi",
-    vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
-    taus = cms.InputTag("slimmedTaus"), electrons = cms.InputTag("slimmedElectrons"),
-    jets = cms.InputTag("slimmedJets"),
-    tauID = cms.string("againstMuonLoose3"),
-    packed = cms.InputTag("packedGenParticles"),
-    pruned = cms.InputTag("prunedGenParticles")
-)
-process.againstMuonTight3 = cms.EDAnalyzer("MiniAODeffi",
-    vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
-    taus = cms.InputTag("slimmedTaus"), electrons = cms.InputTag("slimmedElectrons"),
-    jets = cms.InputTag("slimmedJets"),
-    tauID = cms.string("againstMuonTight3"),
-    packed = cms.InputTag("packedGenParticles"),
-    pruned = cms.InputTag("prunedGenParticles")
-)
 process.againstElectronVLooseMVA6 = cms.EDAnalyzer("MiniAODeffi",
     vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
     taus = cms.InputTag("slimmedTaus"), electrons = cms.InputTag("slimmedElectrons"),
@@ -147,15 +78,6 @@ process.againstElectronVTightMVA6 = cms.EDAnalyzer("MiniAODeffi",
 #Global sequence
 
 process.p = cms.Path(
-                     process.byLooseCombinedIsolationDeltaBetaCorr3Hits*
-		     process.byMediumCombinedIsolationDeltaBetaCorr3Hits*
-		     process.byTightCombinedIsolationDeltaBetaCorr3Hits*
- 		     #process.byCombinedIsolationDeltaBetaCorrRaw3Hits*
-		     #process.chargedIsoPtSum*
-		     process.neutralIsoPtSum*
-	 	     process.puCorrPtSum*
-		     process.againstMuonLoose3*
-	 	     process.againstMuonTight3*
 		     process.againstElectronVLooseMVA6*
 		     process.againstElectronLooseMVA6*
 		     process.againstElectronMediumMVA6*

@@ -4,8 +4,8 @@ import os
 
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('analysis')
-with open('files') as f:
-    options.inputFiles = f.readlines()
+#with open('files_MVA_DY.txt') as f:
+#    options.inputFiles = f.readlines()
 
 #input cmsRun options
 options.outputFile = "MiniAOD_FR_80x_Drell-Yan.root"
@@ -26,7 +26,7 @@ process.GlobalTag = GlobalTag(process.GlobalTag, '80X_mcRun2_asymptotic_2016_v3'
 
 #how many events to run over
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(-1)
+    input = cms.untracked.int32(100000)
 )
 #input files
 process.source = cms.Source("PoolSource",

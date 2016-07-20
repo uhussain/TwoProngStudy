@@ -32,10 +32,10 @@
 // function declarations
 
 // class declaration
-class MiniAODeffi : public edm::EDAnalyzer {
+class MiniAODeffi_2prong : public edm::EDAnalyzer {
 	public:
-		explicit MiniAODeffi(const edm::ParameterSet&);
-		~MiniAODeffi();
+		explicit MiniAODeffi_2prong(const edm::ParameterSet&);
+		~MiniAODeffi_2prong();
 
 	private:
 		virtual void analyze(const edm::Event&, const edm::EventSetup&) override;
@@ -43,8 +43,6 @@ class MiniAODeffi : public edm::EDAnalyzer {
 		// ----------member data ---------------------------
 		edm::EDGetTokenT<reco::VertexCollection> vtxToken_;
 		edm::EDGetTokenT<pat::TauCollection> tauToken_;
-		edm::EDGetTokenT<pat::JetCollection> jetToken_;
-		edm::EDGetTokenT<pat::ElectronCollection> electronToken_;
 		std::string tauID_;
 		edm::EDGetTokenT<std::vector <reco::GenParticle> > prunedGenToken_;
                 edm::EDGetTokenT<std::vector < pat::PackedGenParticle> >packedGenToken_;
@@ -58,16 +56,15 @@ class MiniAODeffi : public edm::EDAnalyzer {
 		Int_t dmf_;
 		Int_t goodReco_;
 		Int_t genTauMatch_;
+		Int_t decayMode_;
 		double maxDR_;
 		bool good_dz_;
 		bool good_dr_;
 };
 
-MiniAODeffi::MiniAODeffi(const edm::ParameterSet& iConfig):
+MiniAODeffi_2prong::MiniAODeffi_2prong(const edm::ParameterSet& iConfig):
 	vtxToken_(consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertices"))),
 	tauToken_(consumes<pat::TauCollection>(iConfig.getParameter<edm::InputTag>("taus"))),
-	jetToken_(consumes<pat::JetCollection>(iConfig.getParameter<edm::InputTag>("jets"))),
-        electronToken_(consumes<pat::ElectronCollection>(iConfig.getParameter<edm::InputTag>("electrons"))),
 	prunedGenToken_(consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("pruned"))),
 	packedGenToken_(consumes<std::vector<pat::PackedGenParticle> >(iConfig.getParameter<edm::InputTag>("packed")))
 {
@@ -82,15 +79,16 @@ MiniAODeffi::MiniAODeffi(const edm::ParameterSet& iConfig):
 	tree->Branch("dmf",&dmf_,"dmf_/I");
 	tree->Branch("goodReco",&goodReco_,"goodReco_/I");
 	tree->Branch("tauMass",&tauMass_,"tauMass_/I");
+	tree->Branch("decayMode",&decayMode_,"decayMode_/I");
 }
 
-MiniAODeffi::~MiniAODeffi()
+MiniAODeffi_2prong::~MiniAODeffi_2prong()
 {
 }
 
 	void
 
-MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+MiniAODeffi_2prong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {	
 	edm::Handle<reco::VertexCollection> vertices;
 	iEvent.getByToken(vtxToken_, vertices);
@@ -115,8 +113,9 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	goodReco_ = -1;
 	for(const pat::Tau &tau : *taus){	//Loop through all reconstructed taus
 		genTauMatch_ = 0;	//Assume this tau does not match a generated tau
-		dmf_ = tau.tauID("decayModeFinding");
-		if (!(tau.pt() > 20.0 && TMath::Abs(tau.eta())<2.3 && dmf_>0.5 && tau.tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits"))) continue; 
+		dmf_ = tau.tauID("decayModeFindingNewDMs");
+		decayMode_ = tau.decayMode();
+		if (!(tau.pt() > 20.0 && TMath::Abs(tau.eta())<2.3 && dmf_>0.5 && !(decayMode_==5 || decayMode_==6))) continue; 
 		tauPt_ = tau.pt();
 		tauEta_ = tau.eta();
 		tauMass_ = tau.mass();
@@ -127,8 +126,7 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 				break;	
 			}
 		}
-		if (genTauMatch_ == 1) { //Tau must meet denominator requirements
-			dmf_ = tau.decayMode();  //switch value from "decayModeFinding" so we can look at the actual decay mode 
+		if (genTauMatch_ == 1) { //Tau must meet denominator requirements (we are requiring that each reco. tau matches a gen. tau)
 			goodReco_ = tau.tauID(tauID_) >0.5; //Discriminant for numerator
 			tree->Fill(); 
 		}
@@ -137,4 +135,4 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 }
 
 //define this as a plug-in
-DEFINE_FWK_MODULE(MiniAODeffi);
+DEFINE_FWK_MODULE(MiniAODeffi_2prong);
