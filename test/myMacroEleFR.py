@@ -35,7 +35,7 @@ styles=[20,21,22,23,33]  #Add more point styles if needed
 #change the CMS_lumi variables (see CMS_lumi.py)
 CMS_lumi.writeExtraText = 1
 CMS_lumi.extraText = "Simulation Preliminary"
-CMS_lumi.lumiText = "Z/#gamma* #rightarrow LL"
+CMS_lumi.lumiText = "Z/#gamma* #rightarrow ee"
 #CMS_lumi.lumiText = "ggH #rightarrow #tau#tau"
 tdrstyle.logy = 1
 iPos = 11
@@ -120,6 +120,7 @@ def CompareEfficiencies(ntuples,legends,variable,binning,filename,xtitle,ymin,ym
 	xAxis = h.GetXaxis()
 	xAxis.SetNdivisions(6,5,0)
 	xAxis.SetTitleOffset(1.1)
+	xAxis.SetRangeUser(10,130)
 
 	yAxis = h.GetYaxis()
 	yAxis.SetNdivisions(10)
@@ -142,7 +143,7 @@ def CompareEfficiencies(ntuples,legends,variable,binning,filename,xtitle,ymin,ym
 	frame = canvas.GetFrame()
 	frame.Draw()
 
-	legend = rt.TLegend(0.20,0.80 ,0.95,0.90, "MVA antielectron discriminator", "brNDC")
+	legend = rt.TLegend(0.20,0.77,0.95,0.90, "MVA antielectron discriminator", "brNDC")
 	if variable == '':
 		text = rt.TPaveText(0.1,0.3,2,0.4)
 		text.AddText("h^{#pm}")
@@ -164,4 +165,4 @@ def CompareEfficiencies(ntuples,legends,variable,binning,filename,xtitle,ymin,ym
 	canvas.SaveAs(saveas)
 
 #Call function to create/save plots
-CompareEfficiencies([EleVLooseMVA6,EleLooseMVA6,EleMediumMVA6,EleTightMVA6,EleVTightMVA6],['Very Loose','Loose','Medium','Tight','Very Tight'],'elePt',[30,0,120], 'tau_ele_FR_pT',"p^{e}_{T} (GeV)",1e-4,1)
+CompareEfficiencies([EleVTightMVA6,EleTightMVA6,EleMediumMVA6,EleLooseMVA6,EleVLooseMVA6],['Very Tight','Tight','Medium','Loose','Very Loose'],'elePt',[30,0,120], 'tau_DYToTauTau_FR_pT',"p^{e}_{T} (GeV)",1e-5,10)

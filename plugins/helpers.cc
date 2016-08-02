@@ -19,13 +19,83 @@
 #include "DataFormats/TauReco/interface/PFTau.h"
 #include "DataFormats/TauReco/interface/PFTauDiscriminator.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
+#include "DataFormats/PatCandidates/interface/PackedCandidate.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "helpers.h"
+#include <iostream>
+#include "TMath.h"
+#include <vector>
+#include <tgmath.h>
+
+//Finds closest charged pion not already used in 2-prong tau reconstruction
+const pat::PackedCandidate* findThirdHadron(std::vector<const pat::PackedCandidate*> hadronCands, reco::CandidatePtrVector signalCands, const pat::Tau tau){
+    const pat::PackedCandidate* thirdHadron = hadronCands[0];  //initialize to arbitrary candidate; will change in function
+    int usedInReco = 0;
+    Float_t minDR = 100.0;
+    for(size_t iHadr=0; iHadr<hadronCands.size();iHadr++){  //loop through all PF charged pions 
+        usedInReco = 0;
+        for(size_t jHadr=0; jHadr<signalCands.size();jHadr++){
+            if (hadronCands[iHadr]->pt() == signalCands[jHadr]->pt() && TMath::Abs(signalCands[jHadr]->pdgId())== 211){
+                usedInReco = 1; //Use "pT matching" to check whether this pion was already used in tau reconstruction
+            }
+        }
+        if (usedInReco == 0 && reco::deltaR(hadronCands[iHadr]->phi(),hadronCands[iHadr]->eta(),tau.phi(),tau.eta())<minDR){  //Finding unused charged pion with smallest dR relative to reco tau
+            minDR = reco::deltaR(hadronCands[iHadr]->phi(),hadronCands[iHadr]->eta(),tau.phi(),tau.eta());  
+            thirdHadron = hadronCands[iHadr];
+        }
+    }
+    return thirdHadron;
+}
 
 //Checks if the reconstructed particle is a neutrino (returns 1 if it is a neutrino)
 bool isNeutrino(const reco::Candidate* daughter)
 {
   return ( TMath::Abs(daughter->pdgId()) == 12 || TMath::Abs(daughter->pdgId()) == 14 || TMath::Abs(daughter->pdgId()) == 16 || TMath::Abs(daughter->pdgId()) == 18);
+}
+
+void GetDaughterDecayMode(const reco::Candidate* particle, std::vector<int> &counts){
+//	std::cout << " ->";
+	for(size_t j = 0; j < particle->numberOfDaughters(); ++j){  //looping through first level of decay products 
+		int pdg = particle->daughter(j)->pdgId();
+		if (TMath::Abs(pdg)==11) ++counts[0];
+		if (TMath::Abs(pdg)==13) ++counts[1];
+		if (TMath::Abs(pdg)==111) ++counts[2];
+		if (TMath::Abs(pdg)==211 || TMath::Abs(pdg)==321) ++counts[3];
+
+// 		if (particle->daughter(j)->status() == 1){  //status=1 means no further decay for this daughter
+// 			std::cout << " " << pdg;
+//		} 
+		if (particle->daughter(j)->status() == 2){  //status=2 means this daughter decays 
+//			std::cout << " (" << pdg;
+			GetDaughterDecayMode(particle->daughter(j), counts); //we check the daughter for decay products
+//			std::cout << " )";
+		}		
+ 	}
+}
+
+int GetDecayMode(const reco::GenParticle* tau){
+	int decayMode = -1;
+	std::vector<int> counts(4,0);
+//	std::cout << " ->";
+	for(size_t j = 0; j < tau->numberOfDaughters(); ++j){  //looping through first level of decay products 
+		int pdg = tau->daughter(j)->pdgId();
+		if (TMath::Abs(pdg)==11) ++counts[0];
+		if (TMath::Abs(pdg)==13) ++counts[1];
+		if (TMath::Abs(pdg)==111) ++counts[2];
+		if (TMath::Abs(pdg)==211 || TMath::Abs(pdg)==321) ++counts[3];
+// 		if (tau->daughter(j)->status() == 1){  //status=1 means no further decay for this daughter
+// 			std::cout << " " << pdg;
+//		} 
+		if (tau->daughter(j)->status() == 2){  //status=2 means this daughter decays 
+		//	std::cout << " (" << pdg;
+			GetDaughterDecayMode(tau->daughter(j), counts); //we check the daughter for decay products
+		//	std::cout << " )";
+		}		
+ 	}
+	if (counts[0] > 0) decayMode = 3;
+	if (counts[1] > 0) decayMode = 4;
+	if (counts[3] > 0) decayMode = 10*counts[3]+counts[2];
+	return decayMode;
 }
 
 //Gets visible 4-momentum of a particle's daughter...recursively calls itself until all decay branches are searched
@@ -61,7 +131,7 @@ reco::Candidate::LorentzVector GetVisibleP4(const reco::GenParticle* tau){
 bool isHadronic(const reco::GenParticle* tau){
 	bool isHadronic = 1;
 	for(size_t j = 0; j < tau->numberOfDaughters(); ++j){ //Loop through daughters of gen. tau
-		if (TMath::Abs(tau->daughter(j)->pdgId()) == 11 || TMath::Abs(tau->daughter(j)->pdgId()) == 13){ //Check if the daughter is another lepton
+		if (TMath::Abs(tau->daughter(j)->pdgId()) == 11 || TMath::Abs(tau->daughter(j)->pdgId()) == 13 || TMath::Abs(tau->daughter(j)->pdgId()) == 15 || TMath::Abs(tau->daughter(j)->pdgId()) == 321){ //Check if the daughter is another lepton
 			isHadronic = 0;
 		}
 	}

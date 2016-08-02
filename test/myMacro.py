@@ -42,15 +42,26 @@ W_ref = 800;
 W = W_ref
 H  = H_ref
 
+bin_edge = 50
+binning_array = [20,50]
+while bin_edge < 1000:
+    bin_edge += 50
+    binning_array.append(bin_edge)
+while bin_edge < 1600:
+    bin_edge += 75
+    binning_array.append(bin_edge)
+while bin_edge < 2000:
+    bin_edge += 100
+    binning_array.append(bin_edge)
+
 def make_plot(tree, variable, selection, binning, title=''):
     ''' Plot a variable using draw and return the histogram '''
     draw_string = "%s>>htemp(%s)" % (variable, ", ".join(str(x) for x in binning))
     tree.Draw(draw_string, selection, "goff")
     output_histo = rt.gDirectory.Get("htemp").Clone()
-    if variable == '':#tauPt
-	inclusiveBinning = array.array('d', [20,25,30,35,40,45,50,55,60,65,70,80,90,100,120])
-	output_histo = output_histo.Rebin(14,"rebinned",inclusiveBinning)
-
+    #if variable == '':#tauPt
+    inclusiveBinning = array.array('d', binning_array)
+    output_histo = output_histo.Rebin(len(binning_array)-1,"rebinned",inclusiveBinning)
     return output_histo
 
 def make_efficiency(denom, num):
@@ -160,7 +171,7 @@ def CompareEfficiencies(ntuples,legends,variable,binning,filename,xtitle):
 	canvas.SaveAs(saveas)
 
 #Call function to create/save plots
-CompareEfficiencies([byLooseCmbIso3,byMedCmbIso3,byTightCmbIso3],['Loose','Medium','Tight'],'tauPt', [30,0,120], 'tau_iso_effi3_pT',"p^{#tau_{h}}_{T} (GeV)")
-CompareEfficiencies([byLooseCmbIso3,byMedCmbIso3,byTightCmbIso3],['Loose','Medium','Tight'],'tauEta', [24,-2.4,2.4], 'tau_iso_effi3_eta',"#eta^{#tau_{h}}")
-CompareEfficiencies([byLooseCmbIso3,byMedCmbIso3,byTightCmbIso3],['Loose','Medium','Tight'],'nvtx', [20,0,35], 'tau_iso_effi3_nvtx',"N_{vtx}")
-CompareEfficiencies([byLooseCmbIso3,byMedCmbIso3,byTightCmbIso3],['Loose','Medium','Tight'],'decayMode', [11,0,11], 'tau_iso_effi3_dmf',"#tau_{h} decay mode")
+CompareEfficiencies([byLooseCmbIso3,byMedCmbIso3,byTightCmbIso3],['Loose','Medium','Tight'],'tauPt', [100,0,2000], 'tau_iso_effi_ggH_pT',"p^{#tau_{h}}_{T} (GeV)")
+#CompareEfficiencies([byLooseCmbIso3,byMedCmbIso3,byTightCmbIso3],['Loose','Medium','Tight'],'tauEta', [24,-2.4,2.4], 'tau_iso_effi3_eta',"#eta^{#tau_{h}}")
+#CompareEfficiencies([byLooseCmbIso3,byMedCmbIso3,byTightCmbIso3],['Loose','Medium','Tight'],'nvtx', [20,0,35], 'tau_iso_effi3_nvtx',"N_{vtx}")
+#CompareEfficiencies([byLooseCmbIso3,byMedCmbIso3,byTightCmbIso3],['Loose','Medium','Tight'],'decayMode', [11,0,11], 'tau_iso_effi3_dmf',"#tau_{h} decay mode")

@@ -3,16 +3,16 @@ from FWCore.ParameterSet.VarParsing import VarParsing
 
 #input cmsRun options
 options = VarParsing ('analysis')
-with open('files_2prong.txt') as f:
-    options.inputFiles = f.readlines()
-
-options.outputFile = "MiniAODeffi_2prong.root"
+#with open('files_SUSYggH.txt') as f:
+#    options.inputFiles = f.readlines()
+#options.inputFiles = "file:/afs/hep.wisc.edu/home/ncinko/private/CMSSW_8_0_10/src/RecoTauTag/tauAnalysis/test/A689C644-EF42-E611-B1E4-002590200A68.root"
+options.outputFile = "twoprong.root"
 options.parseArguments()
 
 #name the process
 process = cms.Process("TreeProducerFromMiniAOD")
 process.load('FWCore/MessageService/MessageLogger_cfi')
-process.MessageLogger.cerr.FwkReport.reportEvery = 10000;
+process.MessageLogger.cerr.FwkReport.reportEvery = 5000;
 process.MessageLogger.cerr.threshold = cms.untracked.string('INFO')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
@@ -24,7 +24,7 @@ process.GlobalTag = GlobalTag(process.GlobalTag, '80X_mcRun2_asymptotic_v6', '')
 
 #how many events to run over
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(30000)
+    input = cms.untracked.int32(-1)
 )
 
 process.source = cms.Source("PoolSource",
@@ -34,24 +34,37 @@ process.source = cms.Source("PoolSource",
 
 ##################################################
 # Main
-process.byLooseCombinedIsolationDeltaBetaCorr3Hits = cms.EDAnalyzer("MiniAODeffi_2prong",
+process.byLooseCombinedIsolationDeltaBetaCorr3Hits = cms.EDAnalyzer("MiniAODtwoprong",
     vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
     taus = cms.InputTag("slimmedTaus"),    
+    PFCandidates = cms.InputTag("packedPFCandidates"),
     tauID = cms.string("byLooseCombinedIsolationDeltaBetaCorr3Hits"), 
     packed = cms.InputTag("packedGenParticles"),
     pruned = cms.InputTag("prunedGenParticles")
 )
-process.byMediumCombinedIsolationDeltaBetaCorr3Hits = cms.EDAnalyzer("MiniAODeffi_2prong",
+process.byMediumCombinedIsolationDeltaBetaCorr3Hits = cms.EDAnalyzer("MiniAODtwoprong",
     vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
     taus = cms.InputTag("slimmedTaus"),
+    PFCandidates = cms.InputTag("packedPFCandidates"),
     tauID = cms.string("byMediumCombinedIsolationDeltaBetaCorr3Hits"),
     packed = cms.InputTag("packedGenParticles"),
     pruned = cms.InputTag("prunedGenParticles")
 )
-process.byTightCombinedIsolationDeltaBetaCorr3Hits = cms.EDAnalyzer("MiniAODeffi_2prong",
+process.byTightCombinedIsolationDeltaBetaCorr3Hits = cms.EDAnalyzer("MiniAODtwoprong",
     vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
     taus = cms.InputTag("slimmedTaus"),
+    PFCandidates = cms.InputTag("packedPFCandidates"),
+    tracks = cms.InputTag("tracks"),
     tauID = cms.string("byTightCombinedIsolationDeltaBetaCorr3Hits"),
+    packed = cms.InputTag("packedGenParticles"),
+    pruned = cms.InputTag("prunedGenParticles")
+)
+process.byNone = cms.EDAnalyzer("MiniAODtwoprong",
+    vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
+    taus = cms.InputTag("slimmedTaus"),
+    PFCandidates = cms.InputTag("packedPFCandidates"),
+    tracks = cms.InputTag("tracks"),
+    tauID = cms.string("decayModeFindingNewDMs"),
     packed = cms.InputTag("packedGenParticles"),
     pruned = cms.InputTag("prunedGenParticles")
 )
@@ -61,8 +74,9 @@ process.byTightCombinedIsolationDeltaBetaCorr3Hits = cms.EDAnalyzer("MiniAODeffi
 
 process.p = cms.Path(
                      process.byLooseCombinedIsolationDeltaBetaCorr3Hits*
-		     process.byMediumCombinedIsolationDeltaBetaCorr3Hits*
-		     process.byTightCombinedIsolationDeltaBetaCorr3Hits
+             process.byMediumCombinedIsolationDeltaBetaCorr3Hits*
+             process.byTightCombinedIsolationDeltaBetaCorr3Hits*
+             process.byNone
                      )
 
 process.TFileService = cms.Service("TFileService",

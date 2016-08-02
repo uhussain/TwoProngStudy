@@ -3,11 +3,11 @@ from FWCore.ParameterSet.VarParsing import VarParsing
 
 #input cmsRun options
 options = VarParsing ('analysis')
-with open('files_DYtoTauTau.txt') as f:
-    options.inputFiles = f.readlines()
+#with open('files_MVA_DY.txt') as f:
+#    options.inputFiles = f.readlines()
 
 #options.inputFiles ="/store/mc/RunIISpring16MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/50000/127657A5-4E1C-E611-A5B2-001E672486B0.root"
-options.outputFile = "MiniAOD_effi_80x_DYtoTauTau.root"
+options.outputFile = "MiniAOD_effi_80x_DYtoLL.root"
 options.parseArguments()
 
 #name the process
@@ -24,7 +24,7 @@ from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, '80X_mcRun2_asymptotic_v6', '')
 #how many events to run over
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(30000)
+    input = cms.untracked.int32(-1)
 )
 
 process.source = cms.Source("PoolSource",

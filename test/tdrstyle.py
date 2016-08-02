@@ -23,7 +23,7 @@ def setTDRStyle():
   tdrStyle.SetPadBorderMode(0)
   #tdrStyle.SetPadBorderSize(Width_t size = 1)
   tdrStyle.SetPadColor(rt.kWhite)
-  tdrStyle.SetPadGridX(False)
+  tdrStyle.SetPadGridX(True)
   tdrStyle.SetPadGridY(ygrid)
   tdrStyle.SetGridColor(0)
   tdrStyle.SetGridStyle(3)
@@ -129,7 +129,7 @@ def setTDRStyle():
   tdrStyle.SetPadTickY(1)
 
 # Change for log plots:
-  tdrStyle.SetOptLogx(0)
+  tdrStyle.SetOptLogx(logx)
   tdrStyle.SetOptLogy(logy)
   tdrStyle.SetOptLogz(0)
 

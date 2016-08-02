@@ -25,17 +25,17 @@
 #include "TTree.h"
 #include "helpers.h"
 #include "DataFormats/Math/interface/deltaR.h"
-#include "iostream"
+#include <iostream>
 #include "TMath.h"
 #include "TLorentzVector.h"
 
 // function declarations
 
 // class declaration
-class MiniAODeffi_2prong : public edm::EDAnalyzer {
+class MiniAODeffi_dmf : public edm::EDAnalyzer {
 	public:
-		explicit MiniAODeffi_2prong(const edm::ParameterSet&);
-		~MiniAODeffi_2prong();
+		explicit MiniAODeffi_dmf(const edm::ParameterSet&);
+		~MiniAODeffi_dmf();
 
 	private:
 		virtual void analyze(const edm::Event&, const edm::EventSetup&) override;
@@ -50,19 +50,21 @@ class MiniAODeffi_2prong : public edm::EDAnalyzer {
 		TTree* tree;
 		Float_t tauPt_;
 		Float_t tauEta_;
+    	Float_t recoTauPt_;
+		Float_t recoTauEta_;
 		Float_t tauMass_;
 		Int_t tauIndex_;
 		Int_t nvtx_;
-		Int_t dmf_;
 		Int_t goodReco_;
-		Int_t genTauMatch_;
 		Int_t decayMode_;
+        Int_t recoDecayMode_;
+        Float_t recoTauMass_;
 		double maxDR_;
 		bool good_dz_;
 		bool good_dr_;
 };
 
-MiniAODeffi_2prong::MiniAODeffi_2prong(const edm::ParameterSet& iConfig):
+MiniAODeffi_dmf::MiniAODeffi_dmf(const edm::ParameterSet& iConfig):
 	vtxToken_(consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertices"))),
 	tauToken_(consumes<pat::TauCollection>(iConfig.getParameter<edm::InputTag>("taus"))),
 	prunedGenToken_(consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("pruned"))),
@@ -74,21 +76,24 @@ MiniAODeffi_2prong::MiniAODeffi_2prong(const edm::ParameterSet& iConfig):
 	tree = fs->make<TTree>("Ntuple", "Ntuple");
 	tree->Branch("tauPt", &tauPt_,"tauPt_/F");
 	tree->Branch("tauEta", &tauEta_,"tauEta_/F");
+	tree->Branch("recoTauPt", &recoTauPt_,"recoTauPt_/F");
+	tree->Branch("recoTauEta", &recoTauEta_,"recoTauEta_/F");
 	tree->Branch("tauIndex", &tauIndex_,"tauIndex_/I");
 	tree->Branch("nvtx",&nvtx_,"nvtx_/I");
-	tree->Branch("dmf",&dmf_,"dmf_/I");
 	tree->Branch("goodReco",&goodReco_,"goodReco_/I");
-	tree->Branch("tauMass",&tauMass_,"tauMass_/I");
+	tree->Branch("tauMass",&tauMass_,"tauMass_/F");
+    tree->Branch("recoTauMass",&recoTauMass_,"recoTauMass_/F");
 	tree->Branch("decayMode",&decayMode_,"decayMode_/I");
+    tree->Branch("recoDecayMode",&recoDecayMode_,"recoDecayMode_/I");
 }
 
-MiniAODeffi_2prong::~MiniAODeffi_2prong()
+MiniAODeffi_dmf::~MiniAODeffi_dmf()
 {
 }
 
 	void
 
-MiniAODeffi_2prong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+MiniAODeffi_dmf::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {	
 	edm::Handle<reco::VertexCollection> vertices;
 	iEvent.getByToken(vtxToken_, vertices);
@@ -109,30 +114,37 @@ MiniAODeffi_2prong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 		if(TMath::Abs(genParticle->pdgId()) == 13) GenMus.push_back(&(*genParticle));
 	}
 		
-	tauIndex_ = 0;
-	goodReco_ = -1;
-	for(const pat::Tau &tau : *taus){	//Loop through all reconstructed taus
-		genTauMatch_ = 0;	//Assume this tau does not match a generated tau
-		dmf_ = tau.tauID("decayModeFindingNewDMs");
-		decayMode_ = tau.decayMode();
-		if (!(tau.pt() > 20.0 && TMath::Abs(tau.eta())<2.3 && dmf_>0.5 && !(decayMode_==5 || decayMode_==6))) continue; 
-		tauPt_ = tau.pt();
-		tauEta_ = tau.eta();
-		tauMass_ = tau.mass();
-		for (size_t i=0; i < GenTaus.size(); i++){	//Loop through all generated taus to check for match
-			reco::Candidate::LorentzVector p4_vis = GetVisibleP4(GenTaus[i]);
-			if (reco::deltaR(tau.eta(),tau.phi(),p4_vis.eta(),p4_vis.phi()) < 0.3 && p4_vis.pt() > 20.0 && TMath::Abs(p4_vis.eta())<2.3 && isHadronic(GenTaus[i])){
-				genTauMatch_ = 1;
-				break;	
+	goodReco_ = 0;
+	for (size_t i=0;i<GenTaus.size();i++){
+	//	std::cout << "\n New gen. tau";
+		decayMode_ = GetDecayMode(GenTaus[i]);
+        recoDecayMode_ = -1;
+        recoTauMass_ = -1;
+        recoTauPt_ = -1;
+        recoTauEta_ = -4;
+	//	std::cout << " Decay Mode: " << decayMode_;
+		goodReco_ = 0;	//Assume gen. tau is not reconstructed
+		reco::Candidate::LorentzVector p4_vis = GetVisibleP4(GenTaus[i]);	//only look at visible decay products of gen. tau
+		tauMass_ = p4_vis.mass();
+		tauEta_ = p4_vis.eta();
+		tauPt_ = p4_vis.pt();
+		if(p4_vis.pt() > 20 && TMath::Abs(p4_vis.eta()) < 2.3 && isHadronic(GenTaus[i])){ //isHadronic(GenTaus[i])
+			tauIndex_ = 0;	
+			for(const pat::Tau &tau : *taus){
+				if(tau.pt()>20 && TMath::Abs(tau.eta())<2.3 && tau.tauID("decayModeFindingNewDMs")>0.5 && reco::deltaR(tau.eta(),tau.phi(),p4_vis.eta(),p4_vis.phi())<0.3 &&tau.tauID(tauID_)>0.5){
+					goodReco_ = 1;	//reco. tau goes in efficiency numerator
+                    recoDecayMode_= tau.decayMode();
+                    recoTauMass_= tau.mass();
+                    recoTauPt_ = tau.pt();
+                    recoTauEta_ = tau.eta();
+					break;	//end tau loop once we know there is a good reconstruction
+				}
+				++tauIndex_;
 			}
+			if (goodReco_==0) tauIndex_=-1;		
+			tree->Fill();	//gen. tau goes in efficiency denominator
 		}
-		if (genTauMatch_ == 1) { //Tau must meet denominator requirements (we are requiring that each reco. tau matches a gen. tau)
-			goodReco_ = tau.tauID(tauID_) >0.5; //Discriminant for numerator
-			tree->Fill(); 
-		}
-		++tauIndex_;
-	}		
+	}
 }
-
 //define this as a plug-in
-DEFINE_FWK_MODULE(MiniAODeffi_2prong);
+DEFINE_FWK_MODULE(MiniAODeffi_dmf);

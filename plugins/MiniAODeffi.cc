@@ -28,6 +28,7 @@
 #include "iostream"
 #include "TMath.h"
 #include "TLorentzVector.h"
+#include <iostream>
 
 // function declarations
 
@@ -110,7 +111,8 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		if(TMath::Abs(genParticle->pdgId()) == 11) GenEles.push_back(&(*genParticle));
 		if(TMath::Abs(genParticle->pdgId()) == 13) GenMus.push_back(&(*genParticle));
 	}
-		
+	
+	if (GenEles.size() > 0 || GenMus.size() > 0 || GenTaus.size() == 0) return; //only want gen taus
 	tauIndex_ = 0;
 	goodReco_ = -1;
 	for(const pat::Tau &tau : *taus){	//Loop through all reconstructed taus
@@ -129,7 +131,7 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		}
 		if (genTauMatch_ == 1) { //Tau must meet denominator requirements
 			dmf_ = tau.decayMode();  //switch value from "decayModeFinding" so we can look at the actual decay mode 
-			goodReco_ = tau.tauID(tauID_) >0.5; //Discriminant for numerator
+			goodReco_ = tau.tauID(tauID_) >0.5; //Lepton discriminant for numerator
 			tree->Fill(); 
 		}
 		++tauIndex_;

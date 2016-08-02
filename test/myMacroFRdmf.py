@@ -34,7 +34,7 @@ styles=[20,21,22,23,33]  #Add more point styles if needed
 CMS_lumi.writeExtraText = 1
 CMS_lumi.extraText = "Simulation Preliminary"
 #CMS_lumi.lumiText = "Simulation: Z* #rightarrow #tau#tau"
-CMS_lumi.lumiText = "ggH #rightarrow #tau#tau"
+CMS_lumi.lumiText = "W + Jets"
 tdrstyle.logy = 1
 iPos = 11
 
@@ -156,6 +156,6 @@ def CompareEfficiencies(ntuple,dmfs,variable,binning,filename,xtitle,ymin,ymax):
 	canvas.SaveAs(saveas)
 
 #Call function to create/save plots
-CompareEfficiencies(byLooseCmbIso3,[0,1,5,6,10],'jetPt', [16,20,500], 'tau_jetFR_looseIso_highpTns',"p^{jet}_{T} (GeV)",1e-4,10)
-CompareEfficiencies(byMedCmbIso3,[0,1,5,6,10],'jetPt', [16,20,500], 'tau_jetFR_medIso_highpTns',"p^{jet}_{T} (GeV)",1e-4,10)
-CompareEfficiencies(byTightCmbIso3,[0,1,5,6,10],'jetPt', [16,20,500], 'tau_jetFR_tightIso_highpTns',"p^{jet}_{T} (GeV)",1e-4,10)
+CompareEfficiencies(byLooseCmbIso3,[0,1,5,6,10],'jetPt', [15,20,320], 'tau_WJets_looseIso_pT',"p^{jet}_{T} (GeV)",1e-5,1e-1)
+CompareEfficiencies(byMedCmbIso3,[0,1,5,6,10],'jetPt', [15,20,320], 'tau_WJets_medIso_pT',"p^{jet}_{T} (GeV)",1e-5,1e-1)
+CompareEfficiencies(byTightCmbIso3,[0,1,5,6,10],'jetPt', [15,20,320], 'tau_WJets_tightIso_pT',"p^{jet}_{T} (GeV)",1e-5,1e-1)

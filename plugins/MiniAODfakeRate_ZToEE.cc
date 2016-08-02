@@ -125,7 +125,7 @@ MiniAODfakeRate_ZToEE::analyze(const edm::Event& iEvent, const edm::EventSetup& 
 	  if(TMath::Abs(genParticle->pdgId()) == 13) GenMus.push_back(&(*genParticle));
 	}
 
-        if (GenTaus.size()>0) return; // skip event if real tau! only look for fake taus 
+        if (GenTaus.size()>0 || GenMus.size()>0) return; // we want a DY -> ee sample 
 	nvtx_=vertices->size();
 
 	for (int i = 0;(unsigned)i<GenEles.size(); i++) {  //looping through only generated electrons

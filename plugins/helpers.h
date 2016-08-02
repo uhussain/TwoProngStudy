@@ -14,7 +14,11 @@
 #ifndef HELPERS_W9QK6HND
 #define HELPERS_W9QK6HND
 #include "DataFormats/PatCandidates/interface/Jet.h"
+#include "DataFormats/PatCandidates/interface/PackedCandidate.h"
 //MINIAOD
+const pat::PackedCandidate* findThirdHadron(std::vector<const pat::PackedCandidate*> hadronCands, reco::CandidatePtrVector signalCands, const pat::Tau tau);
+void GetDaughterDecayMode(const reco::Candidate* particle, std::vector<int> &counts);
+int GetDecayMode(const reco::GenParticle* tau);
 std::vector<const reco::GenParticle*> getGenParticleCollectionMiniAOD(const edm::Event& evt);
 std::vector<const reco::GenParticle*> getGenEleCollectionMiniAOD(const edm::Event& evt);
 std::vector<const reco::GenParticle*> getGenMuCollectionMiniAOD(const edm::Event& evt);

@@ -8,7 +8,7 @@ options = VarParsing ('analysis')
 #    options.inputFiles = f.readlines()
 
 #input cmsRun options
-options.outputFile = "MiniAOD_FR_80x_Drell-Yan.root"
+options.outputFile = "MiniAOD_FR_80x_DYToLL.root"
 options.parseArguments()
 #name the process
 process = cms.Process("TreeProducerFromMiniAOD")
@@ -22,11 +22,11 @@ from Configuration.AlCa.GlobalTag import GlobalTag
 
 #50 ns global tag for MC replace with 'GR_P_V56' for prompt reco. https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideFrontierConditions#Prompt_reconstruction_Global_Tag 
 #process.GlobalTag = GlobalTag(process.GlobalTag, '76X_mcRun2_asymptotic_RunIIFall15DR76_v1', '')
-process.GlobalTag = GlobalTag(process.GlobalTag, '80X_mcRun2_asymptotic_2016_v3', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, '80X_mcRun2_asymptotic_v6', '')
 
 #how many events to run over
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(100000)
+    input = cms.untracked.int32(-1)
 )
 #input files
 process.source = cms.Source("PoolSource",
@@ -35,62 +35,6 @@ process.source = cms.Source("PoolSource",
 
 ##################################################
 # Main
-process.byLooseCombinedIsolationDeltaBetaCorr3Hits = cms.EDAnalyzer("MiniAODfakeRate_ZToEE",
-    vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
-    taus = cms.InputTag("slimmedTaus"),
-    electrons = cms.InputTag("slimmedElectrons"), muons = cms.InputTag("slimmedMuons"),
-    tauID = cms.string("byLooseCombinedIsolationDeltaBetaCorr3Hits"),
-    packed = cms.InputTag("packedGenParticles"),
-    pruned = cms.InputTag("prunedGenParticles")                                           
-)
-process.byMediumCombinedIsolationDeltaBetaCorr3Hits = cms.EDAnalyzer("MiniAODfakeRate_ZToEE",
-    vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
-    taus = cms.InputTag("slimmedTaus"),
-    electrons = cms.InputTag("slimmedElectrons"), muons = cms.InputTag("slimmedMuons"),
-    tauID = cms.string("byMediumCombinedIsolationDeltaBetaCorr3Hits"),
-    packed = cms.InputTag("packedGenParticles"),
-    pruned = cms.InputTag("prunedGenParticles")
-)
-process.byTightCombinedIsolationDeltaBetaCorr3Hits = cms.EDAnalyzer("MiniAODfakeRate_ZToEE",
-    vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
-    taus = cms.InputTag("slimmedTaus"),
-    electrons = cms.InputTag("slimmedElectrons"), muons = cms.InputTag("slimmedMuons"),
-    tauID = cms.string("byTightCombinedIsolationDeltaBetaCorr3Hits"),
-    packed = cms.InputTag("packedGenParticles"),
-    pruned = cms.InputTag("prunedGenParticles")
-)
-process.neutralIsoPtSum= cms.EDAnalyzer("MiniAODfakeRate_ZToEE",
-    vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
-    taus = cms.InputTag("slimmedTaus"),
-    electrons = cms.InputTag("slimmedElectrons"), muons = cms.InputTag("slimmedMuons"),
-    tauID = cms.string("neutralIsoPtSum"),
-    packed = cms.InputTag("packedGenParticles"),
-    pruned = cms.InputTag("prunedGenParticles")
-)
-process.puCorrPtSum= cms.EDAnalyzer("MiniAODfakeRate_ZToEE",
-    vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
-    taus = cms.InputTag("slimmedTaus"),
-    electrons = cms.InputTag("slimmedElectrons"), muons = cms.InputTag("slimmedMuons"),
-    tauID = cms.string("puCorrPtSum"),
-    packed = cms.InputTag("packedGenParticles"),
-    pruned = cms.InputTag("prunedGenParticles")
-)
-process.againstMuonLoose3 = cms.EDAnalyzer("MiniAODfakeRate_ZToEE",
-    vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
-    taus = cms.InputTag("slimmedTaus"),
-    electrons = cms.InputTag("slimmedElectrons"), muons = cms.InputTag("slimmedMuons"),
-    tauID = cms.string("againstMuonLoose3"),
-    packed = cms.InputTag("packedGenParticles"),
-    pruned = cms.InputTag("prunedGenParticles")
-)
-process.againstMuonTight3 = cms.EDAnalyzer("MiniAODfakeRate_ZToEE",
-    vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
-    taus = cms.InputTag("slimmedTaus"),
-    electrons = cms.InputTag("slimmedElectrons"), muons = cms.InputTag("slimmedMuons"),
-    tauID = cms.string("againstMuonTight3"),
-    packed = cms.InputTag("packedGenParticles"),
-    pruned = cms.InputTag("prunedGenParticles")
-)
 process.againstElectronVLooseMVA6 = cms.EDAnalyzer("MiniAODfakeRate_ZToEE",
     vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
     taus = cms.InputTag("slimmedTaus"),
@@ -136,13 +80,6 @@ process.againstElectronVTightMVA6 = cms.EDAnalyzer("MiniAODfakeRate_ZToEE",
 ##Global sequence
 
 process.p = cms.Path(
-                     process.byLooseCombinedIsolationDeltaBetaCorr3Hits*
-		     process.byMediumCombinedIsolationDeltaBetaCorr3Hits*
-		     process.byTightCombinedIsolationDeltaBetaCorr3Hits*
-		     process.neutralIsoPtSum*
-	 	     process.puCorrPtSum*
-		     process.againstMuonLoose3*
-	 	     process.againstMuonTight3*
 		     process.againstElectronVLooseMVA6*
 		     process.againstElectronLooseMVA6*
 		     process.againstElectronMediumMVA6*
