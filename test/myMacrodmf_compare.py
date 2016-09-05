@@ -4,7 +4,7 @@ import array
 from sys import argv,exit
 
 rt.gROOT.SetBatch(True) #Running in batch mode prevents keeps plots from being drawn; much quicker
-decayModes = ["h^{#pm}","h^{#pm}#pi_{0}","h^{#pm}h^{#mp}","h^{#pm}h^{#mp}#pi_{0}","h^{#pm}h^{#mp}h^{#pm}", "11"]
+decayModes = ["h^{#pm}","h^{#pm}#pi^{0}","h^{#pm}h^{#mp}","h^{#pm}h^{#mp}#pi^{0}","h^{#pm}h^{#mp}h^{#pm}", "11"]
 ######## File #########
 if len(argv) < 2:
    print 'Usage:python plot.py RootFile.root label[optional]'
@@ -27,6 +27,7 @@ else:
 ######## Style Choices ########
 tdrstyle.ygrid = True
 tdrstyle.logy = True
+tdrstyle.logx = False
 tdrstyle.setTDRStyle()
 colors=[1,2,4,6,8,12]  #Add more colors for >5 sets of points in a single plot
 styles=[20,21,22,23,33,34]  #Add more point styles if needed
@@ -76,7 +77,7 @@ def make_efficiency(denom, num):
 def make_num(ntuple, variable,binning,dmf):
     num = make_plot(
         ntuple, variable,
-        "(recoDecayMode==%d)"%dmf,
+        "(recoDecayMode==%d)&&(decayMode==30||decayMode==31||decayMode==32)"%dmf,
         binning
     )
     return num
@@ -84,7 +85,7 @@ def make_num(ntuple, variable,binning,dmf):
 def make_denom(ntuple, variable,binning,dmf):
     denom = make_plot(
         ntuple, variable,
-        "",
+        "decayMode==30||decayMode==31||decayMode==32",
         binning
     )
     return denom
@@ -120,7 +121,7 @@ def CompareEfficiencies(ntuple,dmfs,variable,binning,filename,xtitle,ymin,ymax):
 	for i in range(len(dmfs)):
 		hists.append(produce_efficiency(ntuple, variable,binning,colors[i],styles[i],dmfs[i]))
 
-	titles = "h; " + xtitle +"; Expected reconstruction ratio"
+	titles = "h; " + xtitle +"; Reconstruction ratio"
 	h =  rt.TH1F("h",titles,binning[0],binning[1],binning[2])
 
 	h.SetMaximum(ymax)

@@ -45,7 +45,7 @@ class MiniAODeffi_dmf : public edm::EDAnalyzer {
 		edm::EDGetTokenT<pat::TauCollection> tauToken_;
 		std::string tauID_;
 		edm::EDGetTokenT<std::vector <reco::GenParticle> > prunedGenToken_;
-                edm::EDGetTokenT<std::vector < pat::PackedGenParticle> >packedGenToken_;
+                edm::EDGetTokenT<std::vector < reco::GenParticle> >packedGenToken_;
 
 		TTree* tree;
 		Float_t tauPt_;
@@ -68,7 +68,7 @@ MiniAODeffi_dmf::MiniAODeffi_dmf(const edm::ParameterSet& iConfig):
 	vtxToken_(consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertices"))),
 	tauToken_(consumes<pat::TauCollection>(iConfig.getParameter<edm::InputTag>("taus"))),
 	prunedGenToken_(consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("pruned"))),
-	packedGenToken_(consumes<std::vector<pat::PackedGenParticle> >(iConfig.getParameter<edm::InputTag>("packed")))
+	packedGenToken_(consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("packed")))
 {
 	tauID_    = iConfig.getParameter<std::string>("tauID");
 	edm::Service<TFileService> fs;
@@ -102,7 +102,7 @@ MiniAODeffi_dmf::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 	edm::Handle<pat::TauCollection> taus;
 	iEvent.getByToken(tauToken_, taus);
  	edm::Handle<std::vector<reco::GenParticle> > genParticles;
- 	iEvent.getByToken(prunedGenToken_, genParticles);
+ 	iEvent.getByToken(packedGenToken_, genParticles);
 
  	std::vector<const reco::GenParticle*> GenTaus;
  	std::vector<const reco::GenParticle*> GenEles;
@@ -117,14 +117,17 @@ MiniAODeffi_dmf::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 	goodReco_ = 0;
 	for (size_t i=0;i<GenTaus.size();i++){
 	//	std::cout << "\n New gen. tau";
-		decayMode_ = GetDecayMode(GenTaus[i]);
+
+        std::vector<const reco::GenParticle*> genTauDaughters;
+        findDaughters(GenTaus[i], genTauDaughters);
+        decayMode_ = GetDecayMode(genTauDaughters);
         recoDecayMode_ = -1;
         recoTauMass_ = -1;
         recoTauPt_ = -1;
         recoTauEta_ = -4;
 	//	std::cout << " Decay Mode: " << decayMode_;
 		goodReco_ = 0;	//Assume gen. tau is not reconstructed
-		reco::Candidate::LorentzVector p4_vis = GetVisibleP4(GenTaus[i]);	//only look at visible decay products of gen. tau
+		reco::Candidate::LorentzVector p4_vis = GetVisibleP4(genTauDaughters);	//only look at visible decay products of gen. tau
 		tauMass_ = p4_vis.mass();
 		tauEta_ = p4_vis.eta();
 		tauPt_ = p4_vis.pt();

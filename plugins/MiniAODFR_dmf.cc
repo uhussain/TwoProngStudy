@@ -46,7 +46,7 @@ class MiniAODFR_dmf : public edm::EDAnalyzer {
         edm::EDGetTokenT<pat::JetCollection> jetToken_;
         std::string tauID_;
         edm::EDGetTokenT<std::vector <reco::GenParticle> > prunedGenToken_;
-                edm::EDGetTokenT<std::vector < pat::PackedGenParticle> >packedGenToken_;
+                edm::EDGetTokenT<std::vector < reco::GenParticle> >packedGenToken_;
 
         TTree* tree;
         Float_t tauPt_;
@@ -66,7 +66,7 @@ MiniAODFR_dmf::MiniAODFR_dmf(const edm::ParameterSet& iConfig):
     tauToken_(consumes<pat::TauCollection>(iConfig.getParameter<edm::InputTag>("taus"))),
     jetToken_(consumes<pat::JetCollection>(iConfig.getParameter<edm::InputTag>("jets"))),
     prunedGenToken_(consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("pruned"))),
-    packedGenToken_(consumes<std::vector<pat::PackedGenParticle> >(iConfig.getParameter<edm::InputTag>("packed")))
+    packedGenToken_(consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("packed")))
 {
     tauID_ = iConfig.getParameter<std::string>("tauID");
     edm::Service<TFileService> fs;
@@ -98,7 +98,7 @@ MiniAODFR_dmf::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     edm::Handle<pat::JetCollection> jets;      
     iEvent.getByToken(jetToken_, jets);     
     edm::Handle<std::vector<reco::GenParticle> > genParticles;
-    iEvent.getByToken(prunedGenToken_, genParticles);
+    iEvent.getByToken(packedGenToken_, genParticles);
 
     std::vector<const reco::GenParticle*> GenTaus;
     std::vector<const reco::GenParticle*> GenEles;

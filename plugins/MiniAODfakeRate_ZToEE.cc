@@ -42,7 +42,7 @@ class MiniAODfakeRate_ZToEE : public edm::EDAnalyzer {
 		edm::EDGetTokenT<reco::VertexCollection> vtxToken_;
 		edm::EDGetTokenT<pat::TauCollection> tauToken_;
                 edm::EDGetTokenT<std::vector <reco::GenParticle> > prunedGenToken_;
-                edm::EDGetTokenT<std::vector < pat::PackedGenParticle> >packedGenToken_;
+                edm::EDGetTokenT<std::vector < reco::GenParticle> >packedGenToken_;
 		edm::EDGetTokenT<pat::ElectronCollection> electronToken_;
 		edm::EDGetTokenT<pat::MuonCollection> muonToken_;
 		std::string tauID_;
@@ -67,7 +67,7 @@ MiniAODfakeRate_ZToEE::MiniAODfakeRate_ZToEE(const edm::ParameterSet& iConfig):
 	vtxToken_(consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertices"))),
 	tauToken_(consumes<pat::TauCollection>(iConfig.getParameter<edm::InputTag>("taus"))),
 	prunedGenToken_(consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("pruned"))),
-	packedGenToken_(consumes<std::vector<pat::PackedGenParticle> >(iConfig.getParameter<edm::InputTag>("packed"))),
+	packedGenToken_(consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("packed"))),
 	electronToken_(consumes<pat::ElectronCollection>(iConfig.getParameter<edm::InputTag>("electrons"))),
 	muonToken_(consumes<pat::MuonCollection>(iConfig.getParameter<edm::InputTag>("muons")))
 

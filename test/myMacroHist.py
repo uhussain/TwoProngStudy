@@ -74,10 +74,10 @@ def CompareTracks(ntuple,filename,title,variable,drawMode, maxDigit, limits, axi
         h = rt.TH2F("h","hist", 50,limits[0]*xscale,limits[1]*xscale,50,limits[2]*yscale,limits[3]*yscale)
     else:
         #h = rt.TH2F("h","hist",len(xbins)-1,xbins,len(ybins)-1,ybins)
-        h = rt.TH2F("h","hist", 30,limits[0],limits[1],30,limits[2],limits[3])
+        h = rt.TH1F("h","hist", 30,limits[0],limits[1])
         
     #ntuple.Draw(variable[:-1] + "3:" + variable + ">>h", "recoTrack==1", drawMode)
-    ntuple.Draw(variable[:-1] + "1:" + "tauPt>>h", "recoTrack==1", drawMode)
+    ntuple.Draw("tauEta>>h", "recoTrack==0", drawMode)
     #ntuple.Draw("trackDpT:trackDR>>h", "", drawMode)
     #ntuple.Draw("trackDpt>>h", "recoTrack==1", drawMode)
     h.SetStats(rt.kFALSE)
@@ -93,14 +93,14 @@ def CompareTracks(ntuple,filename,title,variable,drawMode, maxDigit, limits, axi
         xAxis.SetTitle("2^{nd} track " + axisTitle)
         if variable[:-1]=='dR':
             xAxis.SetTitle("dR(2^{nd} track, #tau_{h}^{reco}) (cm)")
-    xAxis.SetTitle("#tau_{h}^{gen} p_{T} (GeV)")
+    xAxis.SetTitle("#tau_{h}^{gen} #eta")
         
         
 
     yAxis = h.GetYaxis()
     yAxis.SetNdivisions(10)
     yAxis.SetTitleOffset(1.12)
-    yAxis.SetTitle("1^{st} track # Hits")
+    #yAxis.SetTitle("1^{st} track # Hits")
     if variable[:-1]=='dR':
         yAxis.SetTitle("dR(3^{rd} track, #tau_{h}^{reco}) (cm)")
     #yAxis.SetTitle("3^{rd} (failed) track " + axisTitle)
@@ -128,11 +128,11 @@ def CompareTracks(ntuple,filename,title,variable,drawMode, maxDigit, limits, axi
     frame.Draw()
 
     #save image of plot
-    saveas = saveWhere + filename + drawMode + 'vsPt1.png'
+    saveas = saveWhere + filename + drawMode + 'tauEta0.png'
     canvas.SaveAs(saveas)
 
 def CompareCuts(ntuple,filename,title,variable,maxDigit,limits, axisTitle):
-    CompareTracks(ntuple,filename+'1',title,variable+'1','colz',maxDigit,limits, axisTitle)
+    #CompareTracks(ntuple,filename+'1',title,variable+'1','colz',maxDigit,limits, axisTitle)
     CompareTracks(ntuple,filename+'1',title,variable+'1','',maxDigit,limits, axisTitle)
     #CompareTracks(ntuple,filename+'2',title,variable+'2','colz',maxDigit,limits, axisTitle)
     #CompareTracks(ntuple,filename+'2',title,variable+'2','',maxDigit,limits, axisTitle)
@@ -173,7 +173,7 @@ def MakePlots(variable, limits, axisTitle):
 #MakePlots('dxyErr', [0,800,1e-4,1], "dxy Err. (cm)")
 #MakePlots('dzErr', [0,800,1e-4,10], "dz Err. (cm)")
 
-MakePlots('numHits', [0,800,0,30], "dxy Err. (cm)")
-MakePlots('numHits', [0,800,0,30], "dxy Err. (cm)")
+MakePlots('numHits', [-2.3,2.3,0,30], "dxy Err. (cm)")
+#MakePlots('numHits', [0,800,0,30], "dxy Err. (cm)")
 #MakePlots('dxy', [1e-5,1,1e-3,1e3], "dxy (mm)")
 #MakePlots('dz', [0,800,-0.05,0.05], "dz (mm)")

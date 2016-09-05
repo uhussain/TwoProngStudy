@@ -7,10 +7,10 @@ then
 fi
 
 farmoutAnalysisJobs $1 \
-  --input-files-per-job=3 \
+  --input-files-per-job=1 \
   --job-generates-output-name \
   --infer-cmssw-path \
-  --input-file-list=/afs/hep.wisc.edu/home/ncinko/private/CMSSW_8_0_10/src/RecoTauTag/tauAnalysis/test/files_2prong.txt\
+  --input-file-list=/afs/hep.wisc.edu/home/ncinko/private/CMSSW_8_0_10/src/RecoTauTag/tauAnalysis/test/files_SUSYggH_hMass.txt\
   --assume-input-files-exist \
-  ./runMINIAODFR_2prong.py  \
+  ./runMINIAODtwoprong.py  \
   'inputFiles=$inputFileNames' 'outputFile=$outputFileName'

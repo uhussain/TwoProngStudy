@@ -30,9 +30,17 @@
 #include "TLorentzVector.h"
 #include <stdio.h>
 #include <fstream>
-// function declarations
-std::ofstream myfile ("myfile.txt");
 
+// function declarations
+void findPackedDaughters(const pat::PackedGenParticle* mother, std::vector<const pat::PackedGenParticle*>& daughters);
+
+void findPackedDaughters(const pat::PackedGenParticle* mother, std::vector<const pat::PackedGenParticle*>& daughters)
+{
+    std::cout << "\nPacked Daughters: ";
+    for(size_t i=0; i<mother->numberOfDaughters(); ++i){
+        std::cout<< "status: " << mother->daughter(i)->status()<< " pdg: " << mother->daughter(i)->pdgId();
+    }
+}
 
 // class declaration
 class MiniAODtwoprong : public edm::EDAnalyzer {
@@ -49,7 +57,7 @@ class MiniAODtwoprong : public edm::EDAnalyzer {
         edm::EDGetTokenT<std::vector <pat::PackedCandidate>> PFCandidateToken;
         std::string tauID;
         edm::EDGetTokenT<std::vector <reco::GenParticle> > prunedGenToken;
-        edm::EDGetTokenT<std::vector < pat::PackedGenParticle> >packedGenToken;
+        edm::EDGetTokenT<std::vector <pat::PackedGenParticle> >packedGenToken;
 
         TTree* tree;
         Int_t nvtx;
@@ -68,6 +76,12 @@ class MiniAODtwoprong : public edm::EDAnalyzer {
         Float_t dR2;
         Float_t pT3;
         Float_t dR3;
+        Float_t dxy1;
+        Float_t dxy2;
+        Float_t dxy3;
+        Float_t dz1;
+        Float_t dz2;
+        Float_t dz3;
         Float_t dxyErr1;
         Float_t dxyErr2;
         Float_t dxyErr3;
@@ -80,6 +94,19 @@ class MiniAODtwoprong : public edm::EDAnalyzer {
         Float_t numPixHits1;
         Float_t numPixHits2;
         Float_t numPixHits3;
+        Int_t   recoTrack;
+        Float_t dxy;
+        Float_t dxy_Sig;
+        Float_t dxy_error;
+        Float_t flightLengthSig;
+        Int_t hasSecondaryVertex;
+        Float_t gendxy3;
+        Float_t gendz3;
+        Float_t trackDR;
+        Float_t trackDpT;
+        Float_t gendxyErr3;
+        Float_t gendzErr3;
+        const reco::GenParticle* genTrack3;
 
 };
 
@@ -110,6 +137,12 @@ MiniAODtwoprong::MiniAODtwoprong(const edm::ParameterSet& iConfig):
     tree->Branch("dR2",&dR2,"dR2/F");
     tree->Branch("pT3",&pT3,"pT3/F");
     tree->Branch("dR3",&dR3,"dR3/F");
+    tree->Branch("dxy1",&dxy1,"dxy1/F");
+    tree->Branch("dxy2",&dxy2,"dxy2/F");
+    tree->Branch("dxy3",&dxy3,"dxy3/F");
+    tree->Branch("dz1",&dz1,"dz1/F");
+    tree->Branch("dz2",&dz2,"dz2/F");
+    tree->Branch("dz3",&dz3,"dz3/F");
     tree->Branch("dxyErr1",&dxyErr1,"dxyErr1/F");
     tree->Branch("dxyErr2",&dxyErr2,"dxyErr2/F");
     tree->Branch("dxyErr3",&dxyErr3,"dxyErr3/F");
@@ -122,7 +155,18 @@ MiniAODtwoprong::MiniAODtwoprong(const edm::ParameterSet& iConfig):
     tree->Branch("numPixHits1",&numPixHits1,"numPixHits1/F");
     tree->Branch("numPixHits2",&numPixHits2,"numPixHits2/F");
     tree->Branch("numPixHits3",&numPixHits3,"numPixHits3/F");
-
+    tree->Branch("recoTrack",&recoTrack,"recoTrack/I");
+    tree->Branch("dxy",&dxy,"dxy/F");
+    tree->Branch("dxy_Sig",&dxy_Sig,"dxy_Sig/F");
+    tree->Branch("dxy_error",&dxy_error,"dxy_error/F");
+    tree->Branch("flightLengthSig",&flightLengthSig,"flightLengthSig/F");
+    tree->Branch("hasSecondaryVertex",&hasSecondaryVertex,"hasSecondaryVertex/I");
+    tree->Branch("gendxy3",&gendxy3,"gendxy3/F");
+    tree->Branch("gendz3",&gendz3,"gendz3/F");
+    tree->Branch("trackDR",&trackDR,"trackDR/F");
+    tree->Branch("trackDpT",&trackDpT,"trackDpT/F");
+    tree->Branch("gendxyErr3",&gendxyErr3,"gendxyErr3/F");
+    tree->Branch("gendzErr3",&gendzErr3,"gendzErr3/F");
 }
 
 MiniAODtwoprong::~MiniAODtwoprong()
@@ -136,32 +180,44 @@ MiniAODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
     edm::Handle<reco::VertexCollection> vertices;
     iEvent.getByToken(vtxToken, vertices);
     nvtx=vertices->size();
-//  const reco::Vertex &PV = vertices->front();
+    const reco::Vertex &PV = vertices->front();
     edm::Handle<pat::TauCollection> taus;
     iEvent.getByToken(tauToken, taus);
     edm::Handle<std::vector<reco::GenParticle> > genParticles;
     iEvent.getByToken(prunedGenToken, genParticles);
+    edm::Handle<std::vector<pat::PackedGenParticle> > packedGenParticles;
+    iEvent.getByToken(packedGenToken, packedGenParticles);
     edm::Handle<std::vector<pat::PackedCandidate>> PFCandidates;
     iEvent.getByToken(PFCandidateToken, PFCandidates);
 
+    //Pruned generator leptons
     std::vector<const reco::GenParticle*> GenTaus;
     std::vector<const reco::GenParticle*> GenEles;
     std::vector<const reco::GenParticle*> GenMus;
     //Place generated leptons into separate lists
     for(std::vector<reco::GenParticle>::const_iterator genParticle = genParticles->begin(); genParticle != genParticles->end(); genParticle++){
-        if(TMath::Abs(genParticle->pdgId()) == 15) GenTaus.push_back(&(*genParticle));
         if(TMath::Abs(genParticle->pdgId()) == 11) GenEles.push_back(&(*genParticle));
         if(TMath::Abs(genParticle->pdgId()) == 13) GenMus.push_back(&(*genParticle));
+        if(TMath::Abs(genParticle->pdgId()) == 15) GenTaus.push_back(&(*genParticle));
     }
-    
+
+    //Packed generator hadrons 
+    std::vector<const pat::PackedGenParticle*> packedHadrons;
+    for(std::vector<pat::PackedGenParticle>::const_iterator genParticle = packedGenParticles->begin(); genParticle != packedGenParticles->end(); genParticle++){
+        if(TMath::Abs(genParticle->pdgId()) == 211) packedHadrons.push_back(&(*genParticle));
+    }
+
     //Make list of possible PF charged pions to be used in tau reconstruction
     std::vector<const pat::PackedCandidate*> hadronCandidates;
     for(std::vector<pat::PackedCandidate>::const_iterator candidate= PFCandidates->begin(); candidate != PFCandidates->end(); candidate++){
         if(TMath::Abs(candidate->pdgId()) == 211) hadronCandidates.push_back(&(*candidate));
     }
+    
     for (size_t i=0;i<GenTaus.size();i++){
-        decayMode = GetDecayMode(GenTaus[i]);
-	    reco::Candidate::LorentzVector p4_vis = GetVisibleP4(GenTaus[i]);  //only look at visible decay products of gen. tau
+        std::vector<const reco::GenParticle*> genTauDaughters;
+        findDaughters(GenTaus[i], genTauDaughters);
+        decayMode = GetDecayMode(genTauDaughters);
+	    reco::Candidate::LorentzVector p4_vis = GetVisibleP4(genTauDaughters);  //only look at visible decay products of gen. tau
         tauPt = p4_vis.pt();
         tauEta = p4_vis.eta();
         tauMass = p4_vis.mass();
@@ -171,14 +227,20 @@ MiniAODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
                 recoTauPt = tau.pt();
                 recoTauEta = tau.eta();
                 recoTauMass = tau.mass();
+                dxy = tau.dxy();
+                dxy_error = tau.dxy_error();
+                dxy_Sig = tau.dxy_Sig();
+                flightLengthSig = tau.flightLengthSig();
+                hasSecondaryVertex = tau.hasSecondaryVertex();
                 int numSignalHadrons = 0;
                 reco::CandidatePtr leadChargedHadr = tau.leadChargedHadrCand();
                 reco::CandidatePtrVector signalCands = tau.signalCands();  //vector of the PF objects used in tau reconstruction
-                for(size_t ii=0; ii<signalCands.size(); ii++){
-                    if (TMath::Abs(signalCands[ii]->pdgId())==211) numSignalHadrons++;
+                for(size_t i=0; i<signalCands.size(); i++){
+                    if (TMath::Abs(signalCands[i]->pdgId())==211) numSignalHadrons++;
                 }
-                if (recoTauPt>18 && TMath::Abs(recoTauEta)<2.3 && tau.tauID("decayModeFindingNewDMs")>0.5 && tau.tauID(tauID)>0.5 && (recoDecayMode==5 || recoDecayMode==6) && reco::deltaR(tau.eta(),tau.phi(),p4_vis.eta(),p4_vis.phi())<0.3 && numSignalHadrons == 2){  //2-prong requirement (decay mode 5,6); dR gen. tau matching; lead track tagged as charged pion  
-                    int n=1;
+                if (recoTauPt>18 && TMath::Abs(recoTauEta)<2.3 && tau.tauID("decayModeFindingNewDMs")>0.5 && tau.tauID(tauID)>0.5 && (recoDecayMode==5 || recoDecayMode==6) && reco::deltaR(tau.eta(),tau.phi(),p4_vis.eta(),p4_vis.phi())<0.3){  //2-prong requirement (decay mode 5,6); dR gen. tau matching; lead track tagged as charged pion  
+
+                    int n=1;//Used to distinguish the two signal pions when filling the tree
                     const pat::PackedCandidate* firstHadron = hadronCandidates[0];  //signal Candidates do not contain hit info, so we will need to find the equivalent packed candidate
                     const pat::PackedCandidate* secondHadron = hadronCandidates[0];
                     for(size_t j=0; j<signalCands.size(); j++){
@@ -191,6 +253,8 @@ MiniAODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
                                 for(size_t l=0; l<hadronCandidates.size(); l++){
                                     if (pT1 == hadronCandidates[l]->pt()) firstHadron = hadronCandidates[l];                               
                                 }
+                                dxy1 = firstHadron->dxy();
+                                dz1 = firstHadron->dz();
                                 numHits1 = firstHadron->numberOfHits();
                                 numPixHits1 = firstHadron->numberOfPixelHits();
                             }
@@ -200,25 +264,56 @@ MiniAODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
                                 dxyErr2 = signalCands[j]->dxyError();
                                 dzErr2 = signalCands[j]->dzError();
                                 for(size_t l=0; l<hadronCandidates.size(); l++){
-                                    if (pT1 == hadronCandidates[l]->pt()) secondHadron = hadronCandidates[l];
+                                    if (pT2 == hadronCandidates[l]->pt()) secondHadron = hadronCandidates[l];
                                 }
+                                dxy2 = secondHadron->dxy();
+                                dz2 = secondHadron->dz();
                                 numHits2 = secondHadron->numberOfHits();
                                 numPixHits2 = secondHadron->numberOfPixelHits();
-
                             }
                             if (n==3) std::cout << "problem";
                             n++;
                         }
                     }
-                    const pat::PackedCandidate* thirdHadron = findThirdHadron(hadronCandidates,signalCands,tau);  //find nearest PF charged pion not already used in reconstruction
-                    pT3 = thirdHadron->pt();
-                    dR3 = reco::deltaR(thirdHadron->phi(),thirdHadron->eta(),tau.phi(),tau.eta());
-                    dxyErr3 = thirdHadron->dxyError();
-                    dzErr3 = thirdHadron->dzError();
-                    numHits3 = thirdHadron->numberOfHits();
-                    numPixHits3 = thirdHadron->numberOfPixelHits();
+                    const pat::PackedCandidate* thirdHadron = findThirdHadron(hadronCandidates,signalCands,genTauDaughters, &recoTrack, &genTrack3, &trackDR);  //find nearest PF charged pion not already used in reconstruction
+                    std::cout << "\nReco 3rd pT: "<< genTrack3->pt();
+                    const pat::PackedGenParticle* thirdGenHadron = packedHadrons[0];
+                    float minDiffpT = 1.0; 
+                    for (size_t i=0; i<packedHadrons.size(); ++i){
+                        if (TMath::Abs(genTrack3->pt()-packedHadrons[i]->pt()) < minDiffpT){
+                            minDiffpT = TMath::Abs(genTrack3->pt()-packedHadrons[i]->pt());
+                            thirdGenHadron = packedHadrons[i];
+                        } 
+                    }
+                    trackDpT = TMath::Abs(thirdHadron->pt() - thirdGenHadron->pt());
+                    gendxy3 = thirdGenHadron->dxy();
+                    gendz3 = TMath::Abs(tau.vertex().z()-genTrack3->vz());
+                    gendxyErr3 = genTrack3->dxyError();
+                    gendzErr3 = genTrack3->dzError();
+                    std::cout << " with gen pT of " << thirdGenHadron->pt();
+                    if (recoTrack == 1){
+                        pT3 = thirdHadron->pt();
+                        dR3 = reco::deltaR(thirdHadron->phi(),thirdHadron->eta(),tau.phi(),tau.eta());
+                        dxy3 = thirdHadron->dxy();
+                        dz3 = thirdHadron->dz();
+                        dxyErr3 = thirdHadron->dxyError();
+                        dzErr3 = thirdHadron->dzError();
+                        numHits3 = thirdHadron->numberOfHits();
+                        numPixHits3 = thirdHadron->numberOfPixelHits();
+                    }
+                    else{
+                        pT3 = genTrack3->pt();
+    
+                        dR3 = reco::deltaR(genTrack3->phi(),genTrack3->eta(),tau.phi(),tau.eta());
+                        dxy3 = -1;//genTrack3->dxy();
+                        dz3 = -1;//;genTrack3->dz();
+                        //pat::genParticle genTrack3= pat::genParticle(genTrack3);
+                        dxyErr3 = genTrack3->dxyError();
+                        dzErr3 = genTrack3->dzError();
+                        numHits3 = -1;
+                        numPixHits3 = -1;
+                    }
                     leadPDG = leadChargedHadr->pdgId();
-                    myfile << tauID << " " << pT1 << " " << pT2 << " " <<pT3 << " " << dR1 << " " << dR2 << " " << dR3 << " " << dxyErr1 << " "<< dxyErr2 << " "<< dxyErr3 <<  " " << dzErr1 << " "<< dzErr2 << " "<< dzErr3 << " " << numHits1 << " " << numHits2 << " " << numHits3 << " " << numPixHits1 << " " << numPixHits2 << " " << numPixHits3 <<  "\n";
                     tree->Fill();
                 }
             }

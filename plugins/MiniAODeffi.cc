@@ -48,7 +48,7 @@ class MiniAODeffi : public edm::EDAnalyzer {
 		edm::EDGetTokenT<pat::ElectronCollection> electronToken_;
 		std::string tauID_;
 		edm::EDGetTokenT<std::vector <reco::GenParticle> > prunedGenToken_;
-                edm::EDGetTokenT<std::vector < pat::PackedGenParticle> >packedGenToken_;
+                edm::EDGetTokenT<std::vector < reco::GenParticle> >packedGenToken_;
 
 		TTree* tree;
 		Float_t tauPt_;
@@ -70,7 +70,7 @@ MiniAODeffi::MiniAODeffi(const edm::ParameterSet& iConfig):
 	jetToken_(consumes<pat::JetCollection>(iConfig.getParameter<edm::InputTag>("jets"))),
         electronToken_(consumes<pat::ElectronCollection>(iConfig.getParameter<edm::InputTag>("electrons"))),
 	prunedGenToken_(consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("pruned"))),
-	packedGenToken_(consumes<std::vector<pat::PackedGenParticle> >(iConfig.getParameter<edm::InputTag>("packed")))
+	packedGenToken_(consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("packed")))
 {
 	tauID_    = iConfig.getParameter<std::string>("tauID");
 	edm::Service<TFileService> fs;
@@ -123,7 +123,9 @@ MiniAODeffi::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		tauEta_ = tau.eta();
 		tauMass_ = tau.mass();
 		for (size_t i=0; i < GenTaus.size(); i++){	//Loop through all generated taus to check for match
-			reco::Candidate::LorentzVector p4_vis = GetVisibleP4(GenTaus[i]);
+            std::vector<const reco::GenParticle*> genTauDaughters;
+            findDaughters(GenTaus[i], genTauDaughters);
+			reco::Candidate::LorentzVector p4_vis = GetVisibleP4(genTauDaughters);
 			if (reco::deltaR(tau.eta(),tau.phi(),p4_vis.eta(),p4_vis.phi()) < 0.3 && p4_vis.pt() > 20.0 && TMath::Abs(p4_vis.eta())<2.3 && isHadronic(GenTaus[i])){
 				genTauMatch_ = 1;
 				break;	
