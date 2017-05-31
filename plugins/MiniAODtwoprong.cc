@@ -48,7 +48,8 @@ class MiniAODtwoprong : public edm::EDAnalyzer {
         reco::Candidate::LorentzVector GetVisibleP4(std::vector<const reco::GenParticle*>& daughters);
         void eraseHadronCands(std::vector<const pat::PackedCandidate*>& hadronCands, reco::CandidatePtrVector signalCands);
         bool isNeutrino(const reco::Candidate* daughter);
-
+        bool isAncestor(const reco::Candidate * ancestor, const reco::Candidate * particle);           
+           
     private:
 		    virtual void beginJob() override;
 		    virtual void analyze(const edm::Event&, const edm::EventSetup&) override;
@@ -63,11 +64,22 @@ class MiniAODtwoprong : public edm::EDAnalyzer {
         edm::EDGetTokenT<std::vector <reco::GenParticle> > prunedGenToken;
         edm::EDGetTokenT<std::vector <pat::PackedGenParticle> >packedGenToken;
 
-        TTree* tree;
+        TTree* RecoTree;
         int nvtx;
+        
+        double j1Pt;
+        double j1Eta;
+        double j1Phi;
+        float j1ConsEtaPhiSpread;
+        
+        //Charged Hadron Variables
         int nChHadrj1;
-        double recoTrkj1;
+        int ChHadrTotalCharge; 
+        int recoTrkj1;
+        int TrkTotalCharge;
+
         double Trk1Pt;
+        int Trk1Charge;
         double Trk1PtFrac;
         double Trk1Eta;
         double Trk1Phi;
@@ -91,6 +103,7 @@ class MiniAODtwoprong : public edm::EDAnalyzer {
 
 
         double Trk2Pt;
+        int Trk2Charge;
         double Trk2PtFrac;
         double Trk2Eta;
         double Trk2Phi;
@@ -114,6 +127,62 @@ class MiniAODtwoprong : public edm::EDAnalyzer {
         double ChHadr2_fromPV;//returns a number between 3 and 0 to define how tight the association with the first PV is
         double ChHadr2_numHits;
         double ChHadr2_numPixelHits;
+
+        //Neutral Hadron Variables
+        int nNeutrHadrj1;
+        int NeutrHadrTotalCharge; 
+        int recoNHTrkj1;
+        int NHTrkTotalCharge;
+
+        double NHTrk1Pt;
+        int NHTrk1Charge;
+        double NHTrk1PtFrac;
+        double NHTrk1Eta;
+        double NHTrk1Phi;
+        double NeutrHadr1_pt;
+        double NeutrHadr1_PtDiff;
+        double NeutrHadr1_ptfrac;
+        double NeutrHadr1_eta;
+        double NeutrHadr1_phi;
+        double NeutrHadr1_phiAtVtx;//this is identical to phi() for the vast majority
+        //of the particles, but the two might differ for some of them if the calorimeters had contributed significantly in defining the
+        //4-vector of the particle.
+        float NeutrHadr1_dxy;//longitudinal and transverse impact parameters with respect to the PV: dxy(), dzAssociatedPVAssociatedPV().
+        float NeutrHadr1_dzAssociatedPV;
+        double NeutrHadr1_vx;//returns the position of the point of closest approach to the PV 
+        double NeutrHadr1_vy;
+        double NeutrHadr1_vz;
+        double NeutrHadr1_vertexRef;//reference to the PV itself
+        double NeutrHadr1_fromPV;//returns a number between 3 and 0 to define how tight the association with the first PV is
+        double NeutrHadr1_numHits;
+        double NeutrHadr1_numPixelHits;
+
+
+        double NHTrk2Pt;
+        int NHTrk2Charge;
+        double NHTrk2PtFrac;
+        double NHTrk2Eta;
+        double NHTrk2Phi;
+        
+        double dRNHTrk12; //deltaR between two highest PtTracks
+        
+        double NeutrHadr2_pt;
+        double NeutrHadr2_PtDiff;
+        double NeutrHadr2_ptfrac;
+        double NeutrHadr2_eta;
+        double NeutrHadr2_phi;
+        double NeutrHadr2_phiAtVtx;//this is identical to phi() for the vast majority
+        //of the particles, but the two might differ for some of them if the calorimeters had contributed significantly in defining the
+        //4-vector of the particle.
+        float NeutrHadr2_dxy;//longitudinal and transverse impact parameters with respect to the PV: dxy(), dzAssociatedPVAssociatedPV().
+        float NeutrHadr2_dzAssociatedPV;
+        double NeutrHadr2_vx;//returns the x-coordinate of vertex position
+        double NeutrHadr2_vy;
+        double NeutrHadr2_vz;
+        double NeutrHadr2_vertexRef;//reference to the PV itself
+        double NeutrHadr2_fromPV;//returns a number between 3 and 0 to define how tight the association with the first PV is
+        double NeutrHadr2_numHits;
+        double NeutrHadr2_numPixelHits;
 };
 
 MiniAODtwoprong::MiniAODtwoprong(const edm::ParameterSet& iConfig):
@@ -127,52 +196,112 @@ MiniAODtwoprong::MiniAODtwoprong(const edm::ParameterSet& iConfig):
     tauID = iConfig.getParameter<std::string>("tauID");
     edm::Service<TFileService> fs;
 
-    tree = fs->make<TTree>("Ntuple", "Ntuple");
-    tree->Branch("nvtx",&nvtx,"nvtx/I");
-    tree->Branch("nChHadrj1",&nChHadrj1,"nChHadrj1");
-    tree->Branch("recoTrkj1",&recoTrkj1,"recoTrkj1");
-    
-    tree->Branch("Trk1Pt",&Trk1Pt,"Trk1Pt/D");
-    tree->Branch("Trk1Eta",&Trk1Eta,"Trk1Eta/D");
-    tree->Branch("Trk1Phi",&Trk1Phi,"Trk1Phi/D");
-    tree->Branch("Trk1PtFrac",&Trk1PtFrac,"Trk1PtFrac/D");
-    
-    tree->Branch("ChHadr1_pt",&ChHadr1_pt,"ChHadr1_pt/D");
-    tree->Branch("ChHadr1_PtDiff",&ChHadr1_PtDiff,"ChHadr1_PtDiff/D");
-    tree->Branch("ChHadr1_ptfrac",&ChHadr1_ptfrac,"ChHadr1_ptfrac/D");
-    tree->Branch("ChHadr1_eta",&ChHadr1_eta,"ChHadr1_eta/D");
-    tree->Branch("ChHadr1_phi",&ChHadr1_phi,"ChHadr1_phi/D");
-    tree->Branch("ChHadr1_phiAtVtx",&ChHadr1_phiAtVtx,"ChHadr1_phiAtVtx/D");
-    tree->Branch("ChHadr1_dxy",&ChHadr1_dxy,"ChHadr1_dxy/F");
-    tree->Branch("ChHadr1_dzAssociatedPV",&ChHadr1_dzAssociatedPV,"ChHadr1_dzAssociatedPV/F");
-    tree->Branch("ChHadr1_vx",&ChHadr1_vx,"ChHadr1_vx/D");
-    tree->Branch("ChHadr1_vy",&ChHadr1_vy,"ChHadr1_vy/D");
-    tree->Branch("ChHadr1_vz",&ChHadr1_vz,"ChHadr1_vz/D");
-    tree->Branch("ChHadr1_fromPV",&ChHadr1_fromPV,"ChHadr1_fromPV/D");
-    tree->Branch("ChHadr1_numHits",&ChHadr1_numHits,"ChHadr1_numHits/D");
-    tree->Branch("ChHadr1_numPixelHits",&ChHadr1_numPixelHits,"ChHadr1_numPixelHits/D");
+    RecoTree = fs->make<TTree>("RecoTree", "RecoTree");
+    RecoTree->Branch("nvtx",&nvtx,"nvtx/I");
 
-    tree->Branch("Trk2Pt",&Trk2Pt,"Trk2Pt/D");
-    tree->Branch("Trk2Eta",&Trk2Eta,"Trk2Eta/D");
-    tree->Branch("Trk2Phi",&Trk2Phi,"Trk2Phi/D");
-    tree->Branch("Trk2PtFrac",&Trk2PtFrac,"Trk2PtFrac/D");
-
-    tree->Branch("dRTrk12",&dRTrk12,"dRTrk12/D");
+    RecoTree->Branch("j1Pt",&j1Pt,"j1Pt/D");
+    RecoTree->Branch("j1Eta",&j1Eta,"j1Eta/D");
+    RecoTree->Branch("j1Phi",&j1Phi,"j1Phi/D");
+    RecoTree->Branch("j1ConsEtaPhiSpread",&j1ConsEtaPhiSpread,"j1ConsEtaPhiSpread/F");
     
-    tree->Branch("ChHadr2_pt",&ChHadr2_pt,"ChHadr2_pt/D");
-    tree->Branch("ChHadr2_PtDiff",&ChHadr2_PtDiff,"ChHadr2_PtDiff/D");
-    tree->Branch("ChHadr2_ptfrac",&ChHadr2_ptfrac,"ChHadr2_ptfrac/D");
-    tree->Branch("ChHadr2_eta",&ChHadr2_eta,"ChHadr2_eta/D");
-    tree->Branch("ChHadr2_phi",&ChHadr2_phi,"ChHadr2_phi/D");
-    tree->Branch("ChHadr2_phiAtVtx",&ChHadr2_phiAtVtx,"ChHadr2_phiAtVtx/D");
-    tree->Branch("ChHadr2_dxy",&ChHadr2_dxy,"ChHadr2_dxy/F");
-    tree->Branch("ChHadr2_dzAssociatedPV",&ChHadr2_dzAssociatedPV,"ChHadr2_dzAssociatedPV/F");
-    tree->Branch("ChHadr2_vx",&ChHadr2_vx,"ChHadr2_vx/D");
-    tree->Branch("ChHadr2_vy",&ChHadr2_vy,"ChHadr2_vy/D");
-    tree->Branch("ChHadr2_vz",&ChHadr2_vz,"ChHadr2_vz/D");
-    tree->Branch("ChHadr2_fromPV",&ChHadr2_fromPV,"ChHadr2_fromPV/D");
-    tree->Branch("ChHadr2_numHits",&ChHadr2_numHits,"ChHadr2_numHits/D");
-    tree->Branch("ChHadr2_numPixelHits",&ChHadr2_numPixelHits,"ChHadr2_numPixelHits/D");
+    RecoTree->Branch("nChHadrj1",&nChHadrj1,"nChHadrj1/I");
+    RecoTree->Branch("TrkTotalCharge",&TrkTotalCharge,"TrkTotalCharge/I");
+    RecoTree->Branch("recoTrkj1",&recoTrkj1,"recoTrkj1/I");
+    RecoTree->Branch("ChHadrTotalCharge",&ChHadrTotalCharge,"ChHadrTotalCharge/I");
+    
+    RecoTree->Branch("Trk1Pt",&Trk1Pt,"Trk1Pt/D"); 
+    RecoTree->Branch("Trk1Charge",&Trk1Charge,"Trk1Charge/I");
+    RecoTree->Branch("Trk1Eta",&Trk1Eta,"Trk1Eta/D");
+    RecoTree->Branch("Trk1Phi",&Trk1Phi,"Trk1Phi/D");
+    RecoTree->Branch("Trk1PtFrac",&Trk1PtFrac,"Trk1PtFrac/D");
+    
+    RecoTree->Branch("ChHadr1_pt",&ChHadr1_pt,"ChHadr1_pt/D");
+    RecoTree->Branch("ChHadr1_PtDiff",&ChHadr1_PtDiff,"ChHadr1_PtDiff/D");
+    RecoTree->Branch("ChHadr1_ptfrac",&ChHadr1_ptfrac,"ChHadr1_ptfrac/D");
+    RecoTree->Branch("ChHadr1_eta",&ChHadr1_eta,"ChHadr1_eta/D");
+    RecoTree->Branch("ChHadr1_phi",&ChHadr1_phi,"ChHadr1_phi/D");
+    RecoTree->Branch("ChHadr1_phiAtVtx",&ChHadr1_phiAtVtx,"ChHadr1_phiAtVtx/D");
+    RecoTree->Branch("ChHadr1_dxy",&ChHadr1_dxy,"ChHadr1_dxy/F");
+    RecoTree->Branch("ChHadr1_dzAssociatedPV",&ChHadr1_dzAssociatedPV,"ChHadr1_dzAssociatedPV/F");
+    RecoTree->Branch("ChHadr1_vx",&ChHadr1_vx,"ChHadr1_vx/D");
+    RecoTree->Branch("ChHadr1_vy",&ChHadr1_vy,"ChHadr1_vy/D");
+    RecoTree->Branch("ChHadr1_vz",&ChHadr1_vz,"ChHadr1_vz/D");
+    RecoTree->Branch("ChHadr1_fromPV",&ChHadr1_fromPV,"ChHadr1_fromPV/D");
+    RecoTree->Branch("ChHadr1_numHits",&ChHadr1_numHits,"ChHadr1_numHits/D");
+    RecoTree->Branch("ChHadr1_numPixelHits",&ChHadr1_numPixelHits,"ChHadr1_numPixelHits/D");
+
+    RecoTree->Branch("Trk2Pt",&Trk2Pt,"Trk2Pt/D"); 
+    RecoTree->Branch("Trk2Charge",&Trk2Charge,"Trk2Charge/I");
+    RecoTree->Branch("Trk2Eta",&Trk2Eta,"Trk2Eta/D");
+    RecoTree->Branch("Trk2Phi",&Trk2Phi,"Trk2Phi/D");
+    RecoTree->Branch("Trk2PtFrac",&Trk2PtFrac,"Trk2PtFrac/D");
+
+    RecoTree->Branch("dRTrk12",&dRTrk12,"dRTrk12/D");
+    
+    RecoTree->Branch("ChHadr2_pt",&ChHadr2_pt,"ChHadr2_pt/D");
+    RecoTree->Branch("ChHadr2_PtDiff",&ChHadr2_PtDiff,"ChHadr2_PtDiff/D");
+    RecoTree->Branch("ChHadr2_ptfrac",&ChHadr2_ptfrac,"ChHadr2_ptfrac/D");
+    RecoTree->Branch("ChHadr2_eta",&ChHadr2_eta,"ChHadr2_eta/D");
+    RecoTree->Branch("ChHadr2_phi",&ChHadr2_phi,"ChHadr2_phi/D");
+    RecoTree->Branch("ChHadr2_phiAtVtx",&ChHadr2_phiAtVtx,"ChHadr2_phiAtVtx/D");
+    RecoTree->Branch("ChHadr2_dxy",&ChHadr2_dxy,"ChHadr2_dxy/F");
+    RecoTree->Branch("ChHadr2_dzAssociatedPV",&ChHadr2_dzAssociatedPV,"ChHadr2_dzAssociatedPV/F");
+    RecoTree->Branch("ChHadr2_vx",&ChHadr2_vx,"ChHadr2_vx/D");
+    RecoTree->Branch("ChHadr2_vy",&ChHadr2_vy,"ChHadr2_vy/D");
+    RecoTree->Branch("ChHadr2_vz",&ChHadr2_vz,"ChHadr2_vz/D");
+    RecoTree->Branch("ChHadr2_fromPV",&ChHadr2_fromPV,"ChHadr2_fromPV/D");
+    RecoTree->Branch("ChHadr2_numHits",&ChHadr2_numHits,"ChHadr2_numHits/D");
+    RecoTree->Branch("ChHadr2_numPixelHits",&ChHadr2_numPixelHits,"ChHadr2_numPixelHits/D");
+
+    //Neutral Hadrons
+    RecoTree->Branch("nNeutrHadrj1",&nNeutrHadrj1,"nNeutrHadrj1/I");
+    RecoTree->Branch("NHTrkTotalCharge",&NHTrkTotalCharge,"NHTrkTotalCharge/I");
+    RecoTree->Branch("recoNHTrkj1",&recoNHTrkj1,"recoNHTrkj1/I");
+    RecoTree->Branch("NeutrHadrTotalCharge",&NeutrHadrTotalCharge,"NeutrHadrTotalCharge/I");
+    
+    RecoTree->Branch("NHTrk1Pt",&NHTrk1Pt,"NHTrk1Pt/D"); 
+    RecoTree->Branch("NHTrk1Charge",&NHTrk1Charge,"NHTrk1Charge/I");
+    RecoTree->Branch("NHTrk1Eta",&NHTrk1Eta,"NHTrk1Eta/D");
+    RecoTree->Branch("NHTrk1Phi",&NHTrk1Phi,"NHTrk1Phi/D");
+    RecoTree->Branch("NHTrk1PtFrac",&NHTrk1PtFrac,"NHTrk1PtFrac/D");
+    
+    RecoTree->Branch("NeutrHadr1_pt",&NeutrHadr1_pt,"NeutrHadr1_pt/D");
+    RecoTree->Branch("NeutrHadr1_PtDiff",&NeutrHadr1_PtDiff,"NeutrHadr1_PtDiff/D");
+    RecoTree->Branch("NeutrHadr1_ptfrac",&NeutrHadr1_ptfrac,"NeutrHadr1_ptfrac/D");
+    RecoTree->Branch("NeutrHadr1_eta",&NeutrHadr1_eta,"NeutrHadr1_eta/D");
+    RecoTree->Branch("NeutrHadr1_phi",&NeutrHadr1_phi,"NeutrHadr1_phi/D");
+    RecoTree->Branch("NeutrHadr1_phiAtVtx",&NeutrHadr1_phiAtVtx,"NeutrHadr1_phiAtVtx/D");
+    RecoTree->Branch("NeutrHadr1_dxy",&NeutrHadr1_dxy,"NeutrHadr1_dxy/F");
+    RecoTree->Branch("NeutrHadr1_dzAssociatedPV",&NeutrHadr1_dzAssociatedPV,"NeutrHadr1_dzAssociatedPV/F");
+    RecoTree->Branch("NeutrHadr1_vx",&NeutrHadr1_vx,"NeutrHadr1_vx/D");
+    RecoTree->Branch("NeutrHadr1_vy",&NeutrHadr1_vy,"NeutrHadr1_vy/D");
+    RecoTree->Branch("NeutrHadr1_vz",&NeutrHadr1_vz,"NeutrHadr1_vz/D");
+    RecoTree->Branch("NeutrHadr1_fromPV",&NeutrHadr1_fromPV,"NeutrHadr1_fromPV/D");
+    RecoTree->Branch("NeutrHadr1_numHits",&NeutrHadr1_numHits,"NeutrHadr1_numHits/D");
+    RecoTree->Branch("NeutrHadr1_numPixelHits",&NeutrHadr1_numPixelHits,"NeutrHadr1_numPixelHits/D");
+
+    RecoTree->Branch("NHTrk2Pt",&NHTrk2Pt,"NHTrk2Pt/D"); 
+    RecoTree->Branch("NHTrk2Charge",&NHTrk2Charge,"NHTrk2Charge/I");
+    RecoTree->Branch("NHTrk2Eta",&NHTrk2Eta,"NHTrk2Eta/D");
+    RecoTree->Branch("NHTrk2Phi",&NHTrk2Phi,"NHTrk2Phi/D");
+    RecoTree->Branch("NHTrk2PtFrac",&NHTrk2PtFrac,"NHTrk2PtFrac/D");
+
+    RecoTree->Branch("dRNHTrk12",&dRNHTrk12,"dRNHTrk12/D");
+    
+    RecoTree->Branch("NeutrHadr2_pt",&NeutrHadr2_pt,"NeutrHadr2_pt/D");
+    RecoTree->Branch("NeutrHadr2_PtDiff",&NeutrHadr2_PtDiff,"NeutrHadr2_PtDiff/D");
+    RecoTree->Branch("NeutrHadr2_ptfrac",&NeutrHadr2_ptfrac,"NeutrHadr2_ptfrac/D");
+    RecoTree->Branch("NeutrHadr2_eta",&NeutrHadr2_eta,"NeutrHadr2_eta/D");
+    RecoTree->Branch("NeutrHadr2_phi",&NeutrHadr2_phi,"NeutrHadr2_phi/D");
+    RecoTree->Branch("NeutrHadr2_phiAtVtx",&NeutrHadr2_phiAtVtx,"NeutrHadr2_phiAtVtx/D");
+    RecoTree->Branch("NeutrHadr2_dxy",&NeutrHadr2_dxy,"NeutrHadr2_dxy/F");
+    RecoTree->Branch("NeutrHadr2_dzAssociatedPV",&NeutrHadr2_dzAssociatedPV,"NeutrHadr2_dzAssociatedPV/F");
+    RecoTree->Branch("NeutrHadr2_vx",&NeutrHadr2_vx,"NeutrHadr2_vx/D");
+    RecoTree->Branch("NeutrHadr2_vy",&NeutrHadr2_vy,"NeutrHadr2_vy/D");
+    RecoTree->Branch("NeutrHadr2_vz",&NeutrHadr2_vz,"NeutrHadr2_vz/D");
+    RecoTree->Branch("NeutrHadr2_fromPV",&NeutrHadr2_fromPV,"NeutrHadr2_fromPV/D");
+    RecoTree->Branch("NeutrHadr2_numHits",&NeutrHadr2_numHits,"NeutrHadr2_numHits/D");
+    RecoTree->Branch("NeutrHadr2_numPixelHits",&NeutrHadr2_numPixelHits,"NeutrHadr2_numPixelHits/D");
 }
 
 MiniAODtwoprong::~MiniAODtwoprong()
@@ -192,8 +321,8 @@ void MiniAODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     edm::Handle<std::vector<pat::Tau> > taus;
     iEvent.getByToken(tauToken, taus);
     
-    edm::Handle<std::vector<reco::GenParticle> > genParticles;
-    iEvent.getByToken(prunedGenToken, genParticles);
+    edm::Handle<std::vector<reco::GenParticle> > prunedGenParticles;
+    iEvent.getByToken(prunedGenToken, prunedGenParticles);
     
     edm::Handle<std::vector<pat::PackedGenParticle> > packedGenParticles;
     iEvent.getByToken(packedGenToken, packedGenParticles);
@@ -211,10 +340,14 @@ void MiniAODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     for(std::vector<pat::PackedCandidate>::const_iterator candidate= PFCandidates->begin(); candidate != PFCandidates->end(); candidate++){
         if(TMath::Abs(candidate->pdgId()) == 211) hadronCandidates.push_back(&(*candidate));
     }
+    recoTrkj1 = 0; //count the number of reco Tracks within dR of leading Jet
     for(uint32_t i=0; i < ak4jets->size(); i++){
-        recoTrkj1 = -99; //count the number of reco Tracks within dR of leading Jet
         const pat::Jet &jet = (*ak4jets)[i];
-        if (i==0){   
+        if (i==0){
+        j1Pt = jet.pt();
+        j1Eta = jet.eta();
+        j1Phi = jet.phi();
+        j1ConsEtaPhiSpread = jet.constituentEtaPhiSpread();
         double difference = 0;
         //These vectors will store the PtDifference between a packed PFCandidate and a nearbyJet
         std::vector<std::pair<double,const pat::PackedCandidate*>> PtDiffChHadr;//pdgId = abs(211) 
@@ -242,19 +375,23 @@ void MiniAODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& i
         //std::sort(PtDiffChHadr.begin(),PtDiffChHadr.end(),pairCompare);
         std::sort(PtDiffNeutrHadr.begin(),PtDiffNeutrHadr.end(),pairCompare); //or you can use the specific pairCompare function. Sort has some issues with template that I cannot fix right now?
         std::sort(PtDiffPhotons.begin(),PtDiffPhotons.end(),pairCompare);//pairCompare is defined in util.h
-
-        if(PtDiffChHadr.size()>0){
+        
+          //Charged Hadron begin
           nChHadrj1 = PtDiffChHadr.size();
           for (int i=0;i<nChHadrj1;i++){
             const pat::PackedCandidate &ChHadr = *(PtDiffChHadr.at(i).second);
-            if(ChHadr.bestTrack()!=nullptr){//method points to null if there is no track
+            ChHadrTotalCharge+=ChHadr.charge();
+            if(ChHadr.bestTrack()!=nullptr){//method points to null if there is no track 
+              const reco::Track &Trk = *(ChHadr.bestTrack());
               recoTrkj1++;
+              TrkTotalCharge+=Trk.charge();
             }
 
             const pat::PackedCandidate &ChHadr1 = *(PtDiffChHadr.at(0).second);
             if(ChHadr1.bestTrack()!=nullptr){//lets store some info about Trk1 associated with highestPt Hadron
               const reco::Track &Trk = *(ChHadr1.bestTrack());
               Trk1Pt = Trk.pt();
+              Trk1Charge = Trk.charge();
               Trk1PtFrac = (Trk1Pt/jet.pt());
               Trk1Eta = Trk.eta();
               Trk1Phi = Trk.phi();
@@ -273,11 +410,14 @@ void MiniAODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& i
             ChHadr1_fromPV = ChHadr1.fromPV();
             ChHadr1_numHits = ChHadr1.numberOfHits();
             ChHadr1_numPixelHits = ChHadr1.numberOfPixelHits();
-
+             
+            //std::cout<<"Where is this error?"<<std::endl;
+            if(PtDiffChHadr.size()>=2){
             const pat::PackedCandidate &ChHadr2 = *(PtDiffChHadr.at(1).second);
             if(ChHadr2.bestTrack()!=nullptr){//lets store some info about Trk2 associated with second highestPt charged Hadron
               const reco::Track &Trk = *(ChHadr2.bestTrack());
               Trk2Pt = Trk.pt();
+              Trk2Charge = Trk.charge();
               Trk2PtFrac = (Trk2Pt/jet.pt());
               Trk2Eta = Trk.eta();
               Trk2Phi = Trk.phi();
@@ -296,114 +436,90 @@ void MiniAODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& i
             ChHadr2_fromPV = ChHadr2.fromPV();
             ChHadr2_numHits = ChHadr2.numberOfHits();
             ChHadr2_numPixelHits = ChHadr2.numberOfPixelHits();
-          }
-            dRTrk12 = reco::deltaR(Trk1Eta,Trk1Phi,Trk2Eta,Trk2Phi);
-          }
+            } 
+            dRTrk12 = reco::deltaR(Trk1Eta,Trk1Phi,Trk2Eta,Trk2Phi);}//Reco ChargeHadron analysis ends
 
-  } 
+          //Reco Neutral Hadron Analysis begins
+          nNeutrHadrj1 = PtDiffNeutrHadr.size();
+          for (int i=0;i<nNeutrHadrj1;i++){
+            const pat::PackedCandidate &NeutrHadr = *(PtDiffNeutrHadr.at(i).second);
+            NeutrHadrTotalCharge+=NeutrHadr.charge();
+            if(NeutrHadr.bestTrack()!=nullptr){//method points to null if there is no track 
+              const reco::Track &NHTrk = *(NeutrHadr.bestTrack());
+              recoNHTrkj1++;
+              NHTrkTotalCharge+=NHTrk.charge();
+            }
+
+            const pat::PackedCandidate &NeutrHadr1 = *(PtDiffNeutrHadr.at(0).second);
+            if(NeutrHadr1.bestTrack()!=nullptr){//lets store some info about NHTrk1 associated with highestPt Hadron
+              const reco::Track &NHTrk = *(NeutrHadr1.bestTrack());
+              NHTrk1Pt = NHTrk.pt();
+              NHTrk1Charge = NHTrk.charge();
+              NHTrk1PtFrac = (NHTrk1Pt/jet.pt());
+              NHTrk1Eta = NHTrk.eta();
+              NHTrk1Phi = NHTrk.phi();
+              }
+            NeutrHadr1_pt = NeutrHadr1.pt();
+            NeutrHadr1_PtDiff = PtDiffNeutrHadr.at(0).first;
+            NeutrHadr1_ptfrac = (NeutrHadr1_pt/jet.pt());
+            NeutrHadr1_eta = NeutrHadr1.eta();
+            NeutrHadr1_phi = NeutrHadr1.phi();
+            NeutrHadr1_phiAtVtx = NeutrHadr1.phiAtVtx();
+            NeutrHadr1_dxy = NeutrHadr1.dxy();
+            NeutrHadr1_dzAssociatedPV = NeutrHadr1.dzAssociatedPV();
+            NeutrHadr1_vx = NeutrHadr1.vx();
+            NeutrHadr1_vy = NeutrHadr1.vy();
+            NeutrHadr1_vz = NeutrHadr1.vz();
+            NeutrHadr1_fromPV = NeutrHadr1.fromPV();
+            NeutrHadr1_numHits = NeutrHadr1.numberOfHits();
+            NeutrHadr1_numPixelHits = NeutrHadr1.numberOfPixelHits();
+             
+            //std::cout<<"Where is this error?"<<std::endl;
+            if(PtDiffNeutrHadr.size()>=2){
+            const pat::PackedCandidate &NeutrHadr2 = *(PtDiffNeutrHadr.at(1).second);
+            if(NeutrHadr2.bestTrack()!=nullptr){//lets store some info about NHTrk2 associated with second highestPt charged Hadron
+              const reco::Track &NHTrk = *(NeutrHadr2.bestTrack());
+              NHTrk2Pt = NHTrk.pt();
+              NHTrk2Charge = NHTrk.charge();
+              NHTrk2PtFrac = (NHTrk2Pt/jet.pt());
+              NHTrk2Eta = NHTrk.eta();
+              NHTrk2Phi = NHTrk.phi();
+              }
+            NeutrHadr2_pt = NeutrHadr2.pt();
+            NeutrHadr2_PtDiff = PtDiffNeutrHadr.at(1).first;
+            NeutrHadr2_ptfrac = (NeutrHadr2_pt/jet.pt());
+            NeutrHadr2_eta = NeutrHadr2.eta();
+            NeutrHadr2_phi = NeutrHadr2.phi();
+            NeutrHadr2_phiAtVtx = NeutrHadr2.phiAtVtx();
+            NeutrHadr2_dxy = NeutrHadr2.dxy();
+            NeutrHadr2_dzAssociatedPV = NeutrHadr2.dzAssociatedPV();
+            NeutrHadr2_vx = NeutrHadr2.vx();
+            NeutrHadr2_vy = NeutrHadr2.vy();
+            NeutrHadr2_vz = NeutrHadr2.vz();
+            NeutrHadr2_fromPV = NeutrHadr2.fromPV();
+            NeutrHadr2_numHits = NeutrHadr2.numberOfHits();
+            NeutrHadr2_numPixelHits = NeutrHadr2.numberOfPixelHits();
+            } 
+            dRNHTrk12 = reco::deltaR(NHTrk1Eta,NHTrk1Phi,NHTrk2Eta,NHTrk2Phi);} //Reco Neutral Hadron Analysis ends
+        }
+
+
+        }
+           
+            RecoTree->Fill();
 }
-
- //   for(uint32_t j=0; j < taus->size(); j++){
- //       const pat::Tau &tau = (*taus)[j];
- //       recoDecayMode = tau.decayMode();
- //       recoTauPt = tau.pt();
- //       recoTauEta = tau.eta();
- //       recoTauMass = tau.mass();
- //       dxy = tau.dxy();
- //       dxy_error = tau.dxy_error();
- //       dxy_Sig = tau.dxy_Sig();
- //       flightLengthSig = tau.flightLengthSig();
- //       hasSecondaryVertex = tau.hasSecondaryVertex();
- //       int numSignalHadrons = 0;
- //       const reco::CandidatePtr leadChargedHadr = tau.leadChargedHadrCand();
- //       hadrPDG = leadChargedHadr->pdgId();
- //       std::cout<<"leadChargedHadrId: "<<hadrPDG<<std::endl;
- //       reco::CandidatePtrVector signalCands = tau.signalCands();  //vector of the PF objects used in tau reconstruction
- //       for(size_t i=0; i<signalCands.size(); i++){
- //           if (TMath::Abs(signalCands[i]->pdgId())==211) numSignalHadrons++;
- //       }
- //       std::cout<<"numSignalHadrons: "<<numSignalHadrons<<std::endl;
- //       if (recoTauPt>18 && TMath::Abs(recoTauEta)<2.3 && tau.tauID("decayModeFindingNewDMs")>0.5 && tau.tauID(tauID)>0.5 && (recoDecayMode==5 || recoDecayMode==6) && reco::deltaR(tau.eta(),tau.phi(),p4_vis.eta(),p4_vis.phi())<0.3){  //2-prong requirement (decay mode 5,6); dR gen. tau matching; lead track tagged as charged pion  
-
- //           int n=1;//Used to distinguish the two signal pions when filling the tree
- //           const pat::PackedCandidate* firstHadron = hadronCandidates[0];  //signal Candidates do not contain hit info, so we will need to find the equivalent packed candidate
- //           const pat::PackedCandidate* secondHadron = hadronCandidates[0];
- //           for(size_t j=0; j<signalCands.size(); j++){
- //               if (TMath::Abs(signalCands[j]->pdgId())==211){  //There should be two pions used in reconstruction of a 2-prong tau
- //                   if (n==1){
- //                       pT1 = signalCands[j]->pt();
- //                       dR1 = reco::deltaR(signalCands[j]->phi(),signalCands[j]->eta(),tau.phi(),tau.eta());
- //                       dxyErr1 = signalCands[j]->dxyError();
- //                       dzErr1 = signalCands[j]->dzError();
- //                       for(size_t l=0; l<hadronCandidates.size(); l++){
- //                           if (pT1 == hadronCandidates[l]->pt()) firstHadron = hadronCandidates[l];                               
- //                       }
- //                       dxy1 = firstHadron->dxy();
- //                       dz1 = firstHadron->dz();
- //                       numHits1 = firstHadron->numberOfHits();
- //                       numPixHits1 = firstHadron->numberOfPixelHits();
- //                   }
- //                   if (n==2){
- //                       pT2 = signalCands[j]->pt();
- //                       dR2 = reco::deltaR(signalCands[j]->phi(),signalCands[j]->eta(),tau.phi(),tau.eta());
- //                       dxyErr2 = signalCands[j]->dxyError();
- //                       dzErr2 = signalCands[j]->dzError();
- //                       for(size_t l=0; l<hadronCandidates.size(); l++){
- //                           if (pT2 == hadronCandidates[l]->pt()) secondHadron = hadronCandidates[l];
- //                       }
- //                       dxy2 = secondHadron->dxy();
- //                       dz2 = secondHadron->dz();
- //                       numHits2 = secondHadron->numberOfHits();
- //                       numPixHits2 = secondHadron->numberOfPixelHits();
- //                   }
- //                   if (n==3) std::cout << "problem";
- //                   n++;
- //               }
- //           }
- //           const pat::PackedCandidate* thirdHadron = findThirdHadron(hadronCandidates,signalCands,genTauDaughters, &recoTrack, &genTrack3, &trackDR);  //find nearest PF charged pion not already used in reconstruction
- //           std::cout<<"thirdHadronID: "<<thirdHadron->pdgId();
- //           std::cout << "\nReco 3rd pT: "<< genTrack3->pt();
- //           const pat::PackedGenParticle* thirdGenHadron = packedHadrons[0];
- //           float minDiffpT = 1.0; 
- //           for (size_t i=0; i<packedHadrons.size(); ++i){
- //               if (TMath::Abs(genTrack3->pt()-packedHadrons[i]->pt()) < minDiffpT){
- //                   minDiffpT = TMath::Abs(genTrack3->pt()-packedHadrons[i]->pt());
- //                   thirdGenHadron = packedHadrons[i];
- //               } 
- //           }
- //           trackDpT = TMath::Abs(thirdHadron->pt() - thirdGenHadron->pt());
- //           gendxy3 = thirdGenHadron->dxy();
- //           gendz3 = TMath::Abs(tau.vertex().z()-genTrack3->vz());
- //           gendxyErr3 = genTrack3->dxyError();
- //           gendzErr3 = genTrack3->dzError();
- //           std::cout <<" with gen pT of: " << thirdGenHadron->pt();
- //           if (recoTrack == 1){
- //               pT3 = thirdHadron->pt();
- //               dR3 = reco::deltaR(thirdHadron->phi(),thirdHadron->eta(),tau.phi(),tau.eta());
- //               dxy3 = thirdHadron->dxy();
- //               dz3 = thirdHadron->dz();
- //               dxyErr3 = thirdHadron->dxyError();
- //               dzErr3 = thirdHadron->dzError();
- //               numHits3 = thirdHadron->numberOfHits();
- //               numPixHits3 = thirdHadron->numberOfPixelHits();
- //           }
- //           else{
- //               pT3 = genTrack3->pt();
- //   
- //               dR3 = reco::deltaR(genTrack3->phi(),genTrack3->eta(),tau.phi(),tau.eta());
- //               dxy3 = -1;//genTrack3->dxy();
- //               dz3 = -1;//;genTrack3->dz();
- //               //pat::genParticle genTrack3= pat::genParticle(genTrack3);
- //               dxyErr3 = genTrack3->dxyError();
- //               dzErr3 = genTrack3->dzError();
- //               numHits3 = -1;
- //               numPixHits3 = -1;
- //           }
- //       }
-
- //           leadPDG = leadChargedHadr->pdgId();
- //           }
-            tree->Fill();
+bool MiniAODtwoprong::isAncestor(const reco::Candidate* ancestor, const reco::Candidate * particle)
+{
+  //particle is already the ancestor
+        if(ancestor == particle ) return true;
+ 
+        //otherwise loop on mothers, if any and return true if the ancestor is found
+        for(size_t i=0;i< particle->numberOfMothers();i++)
+          {
+              if(isAncestor(ancestor,particle->mother(i))) return true;
+          }
+          //if we did not return yet, then particle and ancestor are not relatives
+        return false;
 }
 
 
