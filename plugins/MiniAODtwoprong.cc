@@ -65,6 +65,9 @@ class MiniAODtwoprong : public edm::EDAnalyzer {
         edm::EDGetTokenT<std::vector <pat::PackedGenParticle> >packedGenToken;
 
         TTree* RecoTree;
+        int     run_;
+        int  event_;
+        int     lumis_;
         int nvtx;
         
         double j1Pt;
@@ -74,16 +77,21 @@ class MiniAODtwoprong : public edm::EDAnalyzer {
         
         //Charged Hadron Variables
         int nChHadrj1;
-        int ChHadrTotalCharge; 
+        double ChHadrTotalCharge; 
         int recoTrkj1;
-        int TrkTotalCharge;
+        double TrkTotalCharge;
 
         double Trk1Pt;
-        int Trk1Charge;
+        double Trk1_Charge;
+        double Trk1PosCharge; 
+        double Trk1NegCharge;
+        int nTrk1Pos;
+        int nTrk1Neg;
         double Trk1PtFrac;
         double Trk1Eta;
         double Trk1Phi;
         double ChHadr1_pt;
+        double ChHadr1_Charge;
         double ChHadr1_PtDiff;
         double ChHadr1_ptfrac;
         double ChHadr1_eta;
@@ -102,8 +110,12 @@ class MiniAODtwoprong : public edm::EDAnalyzer {
         double ChHadr1_numPixelHits;
 
 
-        double Trk2Pt;
-        int Trk2Charge;
+        double Trk2Pt; 
+        double Trk2_Charge;
+        double Trk2PosCharge; 
+        double Trk2NegCharge;
+        int nTrk2Pos;
+        int nTrk2Neg;
         double Trk2PtFrac;
         double Trk2Eta;
         double Trk2Phi;
@@ -111,6 +123,7 @@ class MiniAODtwoprong : public edm::EDAnalyzer {
         double dRTrk12; //deltaR between two highest PtTracks
         
         double ChHadr2_pt;
+        double ChHadr2_Charge;
         double ChHadr2_PtDiff;
         double ChHadr2_ptfrac;
         double ChHadr2_eta;
@@ -128,61 +141,42 @@ class MiniAODtwoprong : public edm::EDAnalyzer {
         double ChHadr2_numHits;
         double ChHadr2_numPixelHits;
 
+        double dRChHadr12; //deltaR between two highest PtTracks
+        double ChHadr12_Ptfrac;
+        int ChHadr12_Charge;
+
+        double Trk12_Ptfrac;
+        int Trk12_Charge;
+
         //Neutral Hadron Variables
         int nNeutrHadrj1;
-        int NeutrHadrTotalCharge; 
-        int recoNHTrkj1;
-        int NHTrkTotalCharge;
 
-        double NHTrk1Pt;
-        int NHTrk1Charge;
-        double NHTrk1PtFrac;
-        double NHTrk1Eta;
-        double NHTrk1Phi;
-        double NeutrHadr1_pt;
-        double NeutrHadr1_PtDiff;
-        double NeutrHadr1_ptfrac;
-        double NeutrHadr1_eta;
-        double NeutrHadr1_phi;
-        double NeutrHadr1_phiAtVtx;//this is identical to phi() for the vast majority
-        //of the particles, but the two might differ for some of them if the calorimeters had contributed significantly in defining the
-        //4-vector of the particle.
-        float NeutrHadr1_dxy;//longitudinal and transverse impact parameters with respect to the PV: dxy(), dzAssociatedPVAssociatedPV().
-        float NeutrHadr1_dzAssociatedPV;
-        double NeutrHadr1_vx;//returns the position of the point of closest approach to the PV 
-        double NeutrHadr1_vy;
-        double NeutrHadr1_vz;
-        double NeutrHadr1_vertexRef;//reference to the PV itself
-        double NeutrHadr1_fromPV;//returns a number between 3 and 0 to define how tight the association with the first PV is
-        double NeutrHadr1_numHits;
-        double NeutrHadr1_numPixelHits;
+        //Photons in packedGenParticles
+        int nPhoj1;
+        double PhoTotalCharge;
 
-
-        double NHTrk2Pt;
-        int NHTrk2Charge;
-        double NHTrk2PtFrac;
-        double NHTrk2Eta;
-        double NHTrk2Phi;
+        double Pho1_pt;
+        double Pho1_Charge;
+        double Pho1_PtDiff;
+        double Pho1_ptfrac;
+        double Pho1_eta;
+        double Pho1_phi;
+        double Pho1_vx;//returns the position of the point of closest approach to the PV 
+        double Pho1_vy;
+        double Pho1_vz;
         
-        double dRNHTrk12; //deltaR between two highest PtTracks
-        
-        double NeutrHadr2_pt;
-        double NeutrHadr2_PtDiff;
-        double NeutrHadr2_ptfrac;
-        double NeutrHadr2_eta;
-        double NeutrHadr2_phi;
-        double NeutrHadr2_phiAtVtx;//this is identical to phi() for the vast majority
-        //of the particles, but the two might differ for some of them if the calorimeters had contributed significantly in defining the
-        //4-vector of the particle.
-        float NeutrHadr2_dxy;//longitudinal and transverse impact parameters with respect to the PV: dxy(), dzAssociatedPVAssociatedPV().
-        float NeutrHadr2_dzAssociatedPV;
-        double NeutrHadr2_vx;//returns the x-coordinate of vertex position
-        double NeutrHadr2_vy;
-        double NeutrHadr2_vz;
-        double NeutrHadr2_vertexRef;//reference to the PV itself
-        double NeutrHadr2_fromPV;//returns a number between 3 and 0 to define how tight the association with the first PV is
-        double NeutrHadr2_numHits;
-        double NeutrHadr2_numPixelHits;
+        double Pho2_pt;
+        double Pho2_Charge;
+        double Pho2_PtDiff;
+        double Pho2_ptfrac;
+        double Pho2_eta;
+        double Pho2_phi;
+        double Pho2_vx;//returns the x-coordinate of vertex position
+        double Pho2_vy;
+        double Pho2_vz;
+
+        double Pho12_Ptfrac; 
+        double dRPho12; //deltaR between two highest PtTracks
 };
 
 MiniAODtwoprong::MiniAODtwoprong(const edm::ParameterSet& iConfig):
@@ -205,17 +199,21 @@ MiniAODtwoprong::MiniAODtwoprong(const edm::ParameterSet& iConfig):
     RecoTree->Branch("j1ConsEtaPhiSpread",&j1ConsEtaPhiSpread,"j1ConsEtaPhiSpread/F");
     
     RecoTree->Branch("nChHadrj1",&nChHadrj1,"nChHadrj1/I");
-    RecoTree->Branch("TrkTotalCharge",&TrkTotalCharge,"TrkTotalCharge/I");
+    RecoTree->Branch("TrkTotalCharge",&TrkTotalCharge,"TrkTotalCharge/D");
     RecoTree->Branch("recoTrkj1",&recoTrkj1,"recoTrkj1/I");
-    RecoTree->Branch("ChHadrTotalCharge",&ChHadrTotalCharge,"ChHadrTotalCharge/I");
+    RecoTree->Branch("ChHadrTotalCharge",&ChHadrTotalCharge,"ChHadrTotalCharge/D");
     
     RecoTree->Branch("Trk1Pt",&Trk1Pt,"Trk1Pt/D"); 
-    RecoTree->Branch("Trk1Charge",&Trk1Charge,"Trk1Charge/I");
+    RecoTree->Branch("Trk1PosCharge",&Trk1PosCharge,"Trk1PosCharge/D"); 
+    RecoTree->Branch("Trk1NegCharge",&Trk1NegCharge,"Trk1NegCharge/D");
+    RecoTree->Branch("nTrk1Pos",&nTrk1Pos,"nTrk1Pos/I"); 
+    RecoTree->Branch("nTrk1Neg",&nTrk1Neg,"nTrk1Neg/I");
     RecoTree->Branch("Trk1Eta",&Trk1Eta,"Trk1Eta/D");
     RecoTree->Branch("Trk1Phi",&Trk1Phi,"Trk1Phi/D");
     RecoTree->Branch("Trk1PtFrac",&Trk1PtFrac,"Trk1PtFrac/D");
     
     RecoTree->Branch("ChHadr1_pt",&ChHadr1_pt,"ChHadr1_pt/D");
+    RecoTree->Branch("ChHadr1_Charge",&ChHadr1_Charge,"ChHadr1_Charge/D");
     RecoTree->Branch("ChHadr1_PtDiff",&ChHadr1_PtDiff,"ChHadr1_PtDiff/D");
     RecoTree->Branch("ChHadr1_ptfrac",&ChHadr1_ptfrac,"ChHadr1_ptfrac/D");
     RecoTree->Branch("ChHadr1_eta",&ChHadr1_eta,"ChHadr1_eta/D");
@@ -231,14 +229,16 @@ MiniAODtwoprong::MiniAODtwoprong(const edm::ParameterSet& iConfig):
     RecoTree->Branch("ChHadr1_numPixelHits",&ChHadr1_numPixelHits,"ChHadr1_numPixelHits/D");
 
     RecoTree->Branch("Trk2Pt",&Trk2Pt,"Trk2Pt/D"); 
-    RecoTree->Branch("Trk2Charge",&Trk2Charge,"Trk2Charge/I");
+    RecoTree->Branch("Trk2PosCharge",&Trk2PosCharge,"Trk2PosCharge/D"); 
+    RecoTree->Branch("Trk2NegCharge",&Trk2NegCharge,"Trk2NegCharge/D");
+    RecoTree->Branch("nTrk2Pos",&nTrk2Pos,"nTrk2Pos/I"); 
+    RecoTree->Branch("nTrk2Neg",&nTrk2Neg,"nTrk2Neg/I");
     RecoTree->Branch("Trk2Eta",&Trk2Eta,"Trk2Eta/D");
     RecoTree->Branch("Trk2Phi",&Trk2Phi,"Trk2Phi/D");
     RecoTree->Branch("Trk2PtFrac",&Trk2PtFrac,"Trk2PtFrac/D");
-
-    RecoTree->Branch("dRTrk12",&dRTrk12,"dRTrk12/D");
-    
+ 
     RecoTree->Branch("ChHadr2_pt",&ChHadr2_pt,"ChHadr2_pt/D");
+    RecoTree->Branch("ChHadr2_Charge",&ChHadr2_Charge,"ChHadr2_Charge/D");
     RecoTree->Branch("ChHadr2_PtDiff",&ChHadr2_PtDiff,"ChHadr2_PtDiff/D");
     RecoTree->Branch("ChHadr2_ptfrac",&ChHadr2_ptfrac,"ChHadr2_ptfrac/D");
     RecoTree->Branch("ChHadr2_eta",&ChHadr2_eta,"ChHadr2_eta/D");
@@ -253,55 +253,46 @@ MiniAODtwoprong::MiniAODtwoprong(const edm::ParameterSet& iConfig):
     RecoTree->Branch("ChHadr2_numHits",&ChHadr2_numHits,"ChHadr2_numHits/D");
     RecoTree->Branch("ChHadr2_numPixelHits",&ChHadr2_numPixelHits,"ChHadr2_numPixelHits/D");
 
+    RecoTree->Branch("dRTrk12",&dRTrk12,"dRTrk12/D");
+
+    RecoTree->Branch("Trk12_Ptfrac",&Trk12_Ptfrac,"Trk12_Ptfrac/D"); 
+    RecoTree->Branch("Trk12_Charge",&Trk12_Charge,"Trk12_Charge/I");
+    
+    RecoTree->Branch("dRChHadr12",&dRChHadr12,"dRChHadr12/D");
+    RecoTree->Branch("ChHadr12_Ptfrac",&ChHadr12_Ptfrac,"ChHadr12_Ptfrac/D"); 
+    RecoTree->Branch("ChHadr12_Charge",&ChHadr12_Charge,"ChHadr12_Charge/I");
+
     //Neutral Hadrons
     RecoTree->Branch("nNeutrHadrj1",&nNeutrHadrj1,"nNeutrHadrj1/I");
-    RecoTree->Branch("NHTrkTotalCharge",&NHTrkTotalCharge,"NHTrkTotalCharge/I");
-    RecoTree->Branch("recoNHTrkj1",&recoNHTrkj1,"recoNHTrkj1/I");
-    RecoTree->Branch("NeutrHadrTotalCharge",&NeutrHadrTotalCharge,"NeutrHadrTotalCharge/I");
-    
-    RecoTree->Branch("NHTrk1Pt",&NHTrk1Pt,"NHTrk1Pt/D"); 
-    RecoTree->Branch("NHTrk1Charge",&NHTrk1Charge,"NHTrk1Charge/I");
-    RecoTree->Branch("NHTrk1Eta",&NHTrk1Eta,"NHTrk1Eta/D");
-    RecoTree->Branch("NHTrk1Phi",&NHTrk1Phi,"NHTrk1Phi/D");
-    RecoTree->Branch("NHTrk1PtFrac",&NHTrk1PtFrac,"NHTrk1PtFrac/D");
-    
-    RecoTree->Branch("NeutrHadr1_pt",&NeutrHadr1_pt,"NeutrHadr1_pt/D");
-    RecoTree->Branch("NeutrHadr1_PtDiff",&NeutrHadr1_PtDiff,"NeutrHadr1_PtDiff/D");
-    RecoTree->Branch("NeutrHadr1_ptfrac",&NeutrHadr1_ptfrac,"NeutrHadr1_ptfrac/D");
-    RecoTree->Branch("NeutrHadr1_eta",&NeutrHadr1_eta,"NeutrHadr1_eta/D");
-    RecoTree->Branch("NeutrHadr1_phi",&NeutrHadr1_phi,"NeutrHadr1_phi/D");
-    RecoTree->Branch("NeutrHadr1_phiAtVtx",&NeutrHadr1_phiAtVtx,"NeutrHadr1_phiAtVtx/D");
-    RecoTree->Branch("NeutrHadr1_dxy",&NeutrHadr1_dxy,"NeutrHadr1_dxy/F");
-    RecoTree->Branch("NeutrHadr1_dzAssociatedPV",&NeutrHadr1_dzAssociatedPV,"NeutrHadr1_dzAssociatedPV/F");
-    RecoTree->Branch("NeutrHadr1_vx",&NeutrHadr1_vx,"NeutrHadr1_vx/D");
-    RecoTree->Branch("NeutrHadr1_vy",&NeutrHadr1_vy,"NeutrHadr1_vy/D");
-    RecoTree->Branch("NeutrHadr1_vz",&NeutrHadr1_vz,"NeutrHadr1_vz/D");
-    RecoTree->Branch("NeutrHadr1_fromPV",&NeutrHadr1_fromPV,"NeutrHadr1_fromPV/D");
-    RecoTree->Branch("NeutrHadr1_numHits",&NeutrHadr1_numHits,"NeutrHadr1_numHits/D");
-    RecoTree->Branch("NeutrHadr1_numPixelHits",&NeutrHadr1_numPixelHits,"NeutrHadr1_numPixelHits/D");
 
-    RecoTree->Branch("NHTrk2Pt",&NHTrk2Pt,"NHTrk2Pt/D"); 
-    RecoTree->Branch("NHTrk2Charge",&NHTrk2Charge,"NHTrk2Charge/I");
-    RecoTree->Branch("NHTrk2Eta",&NHTrk2Eta,"NHTrk2Eta/D");
-    RecoTree->Branch("NHTrk2Phi",&NHTrk2Phi,"NHTrk2Phi/D");
-    RecoTree->Branch("NHTrk2PtFrac",&NHTrk2PtFrac,"NHTrk2PtFrac/D");
+    //Photons from pi0
 
-    RecoTree->Branch("dRNHTrk12",&dRNHTrk12,"dRNHTrk12/D");
-    
-    RecoTree->Branch("NeutrHadr2_pt",&NeutrHadr2_pt,"NeutrHadr2_pt/D");
-    RecoTree->Branch("NeutrHadr2_PtDiff",&NeutrHadr2_PtDiff,"NeutrHadr2_PtDiff/D");
-    RecoTree->Branch("NeutrHadr2_ptfrac",&NeutrHadr2_ptfrac,"NeutrHadr2_ptfrac/D");
-    RecoTree->Branch("NeutrHadr2_eta",&NeutrHadr2_eta,"NeutrHadr2_eta/D");
-    RecoTree->Branch("NeutrHadr2_phi",&NeutrHadr2_phi,"NeutrHadr2_phi/D");
-    RecoTree->Branch("NeutrHadr2_phiAtVtx",&NeutrHadr2_phiAtVtx,"NeutrHadr2_phiAtVtx/D");
-    RecoTree->Branch("NeutrHadr2_dxy",&NeutrHadr2_dxy,"NeutrHadr2_dxy/F");
-    RecoTree->Branch("NeutrHadr2_dzAssociatedPV",&NeutrHadr2_dzAssociatedPV,"NeutrHadr2_dzAssociatedPV/F");
-    RecoTree->Branch("NeutrHadr2_vx",&NeutrHadr2_vx,"NeutrHadr2_vx/D");
-    RecoTree->Branch("NeutrHadr2_vy",&NeutrHadr2_vy,"NeutrHadr2_vy/D");
-    RecoTree->Branch("NeutrHadr2_vz",&NeutrHadr2_vz,"NeutrHadr2_vz/D");
-    RecoTree->Branch("NeutrHadr2_fromPV",&NeutrHadr2_fromPV,"NeutrHadr2_fromPV/D");
-    RecoTree->Branch("NeutrHadr2_numHits",&NeutrHadr2_numHits,"NeutrHadr2_numHits/D");
-    RecoTree->Branch("NeutrHadr2_numPixelHits",&NeutrHadr2_numPixelHits,"NeutrHadr2_numPixelHits/D");
+    RecoTree->Branch("nPhoj1",&nPhoj1,"nPhoj1/I");
+    RecoTree->Branch("PhoTotalCharge",&PhoTotalCharge,"PhoTotalCharge/I");
+
+    RecoTree->Branch("Pho1_pt",&Pho1_pt,"Pho1_pt/D"); 
+    RecoTree->Branch("Pho1_Charge",&Pho1_Charge,"Pho1_Charge/D");
+    RecoTree->Branch("Pho1_PtDiff",&Pho1_PtDiff,"Pho1_PtDiff/D");
+    RecoTree->Branch("Pho1_ptfrac",&Pho1_ptfrac,"Pho1_ptfrac/D");
+    RecoTree->Branch("Pho1_eta",&Pho1_eta,"Pho1_eta/D");
+    RecoTree->Branch("Pho1_phi",&Pho1_phi,"Pho1_phi/D");
+    RecoTree->Branch("Pho1_vx",&Pho1_vx,"Pho1_vx/D");
+    RecoTree->Branch("Pho1_vy",&Pho1_vy,"Pho1_vy/D");
+    RecoTree->Branch("Pho1_vz",&Pho1_vz,"Pho1_vz/D");
+ 
+    RecoTree->Branch("Pho2_pt",&Pho2_pt,"Pho2_pt/D");
+    RecoTree->Branch("Pho2_Charge",&Pho2_Charge,"Pho2_Charge/D");
+    RecoTree->Branch("Pho2_PtDiff",&Pho2_PtDiff,"Pho2_PtDiff/D");
+    RecoTree->Branch("Pho2_ptfrac",&Pho2_ptfrac,"Pho2_ptfrac/D");
+    RecoTree->Branch("Pho2_eta",&Pho2_eta,"Pho2_eta/D");
+    RecoTree->Branch("Pho2_phi",&Pho2_phi,"Pho2_phi/D");
+    RecoTree->Branch("Pho2_vx",&Pho2_vx,"Pho2_vx/D");
+    RecoTree->Branch("Pho2_vy",&Pho2_vy,"Pho2_vy/D");
+    RecoTree->Branch("Pho2_vz",&Pho2_vz,"Pho2_vz/D");
+
+
+    RecoTree->Branch("Pho12_Ptfrac",&Pho12_Ptfrac,"Pho12_Ptfrac/D");
+    RecoTree->Branch("dRPho12",&dRPho12,"dRPho12/D");
 }
 
 MiniAODtwoprong::~MiniAODtwoprong()
@@ -329,6 +320,25 @@ void MiniAODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     
     edm::Handle<std::vector<pat::PackedCandidate>> PFCandidates;
     iEvent.getByToken(PFCandidateToken, PFCandidates);
+    
+    ChHadrTotalCharge = -50;
+    TrkTotalCharge = -50;
+    Trk1PosCharge = -50;
+    Trk1NegCharge = -50; 
+    Trk2PosCharge = -50;
+    Trk2NegCharge = -50;
+    nTrk1Pos = nTrk1Neg = 0;
+    nTrk2Pos = nTrk2Neg = 0;
+    ChHadr1_pt = ChHadr2_pt = Trk1Pt = Trk2Pt = 0;
+    PhoTotalCharge = 0;
+    int nZprime = 0;
+
+    run_    = iEvent.id().run();
+    event_  = iEvent.id().event();
+    lumis_  = iEvent.luminosityBlock();
+    
+    std::cout<<"NewEvent"<<std::endl;
+    std::cout<<run_<<":"<<event_<<":"<<lumis_<<std::endl;
 
     std::vector<const pat::PackedGenParticle*> packedHadrons;
     for(std::vector<pat::PackedGenParticle>::const_iterator genParticle = packedGenParticles->begin(); genParticle != packedGenParticles->end(); genParticle++){
@@ -353,50 +363,104 @@ void MiniAODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& i
         std::vector<std::pair<double,const pat::PackedCandidate*>> PtDiffChHadr;//pdgId = abs(211) 
         std::vector<std::pair<double,const pat::PackedCandidate*>> PtDiffNeutrHadr;//pdgId = abs(130)
         std::vector<std::pair<double,const pat::PackedCandidate*>> PtDiffPhotons;//pdgId = abs(22)
-        //Loop over all PFCandidates
-        for(uint32_t j = 0; j < PFCandidates->size(); j++) {
-            const pat::PackedCandidate &pfCand = (*PFCandidates)[j]; 
-            if(reco::deltaR(jet.eta(),jet.phi(),pfCand.eta(),pfCand.phi())< 0.1){
-                if(abs(pfCand.pdgId())== 211) {
-                  difference = abs(jet.pt()-pfCand.pt());
-                  PtDiffChHadr.push_back({difference,&pfCand});}
+        
+        for(uint32_t j=0;j<prunedGenParticles->size();j++){
+          if(abs((*prunedGenParticles)[j].pdgId())==600001){
+            const reco::Candidate * Zprime = &(*prunedGenParticles)[j];
+            nZprime++;
+            //Loop over all packedGenParticles
+            if(nZprime<2){
+            for(uint32_t k = 0; k < packedGenParticles->size(); k++) {
+              const pat::PackedGenParticle &genCand = (*packedGenParticles)[k]; 
+              //Find ancestor of this genCand
+              const reco::Candidate * genCand_Ancestor = &(*(genCand.mother(0)));
+              //Now we confirm that if this genCand has Zprime ancestor, lets try matching it to appropriate PFCandidate
+              if(genCand_Ancestor != nullptr && isAncestor(Zprime,genCand_Ancestor)){
+                //We have to see which PFCandidate matches this GenCandidate so loop over all PFCandidates
+                float diff = 0; //diff between PFCandPt and GenPt
+                std::vector<std::pair<float,unsigned>> PtDifference; //save index of the PFCandidate that matches the genParticle from Zprime
+                for(unsigned l = 0; l < PFCandidates->size(); l++) {
+                  const pat::PackedCandidate &pfCand = (*PFCandidates)[l];
+                  if(reco::deltaR(genCand.eta(),genCand.phi(),pfCand.eta(),pfCand.phi())<0.1){
+                    diff=abs(genCand.pt()-pfCand.pt());
+                    PtDifference.push_back(std::make_pair(diff,l));}}
+                
+                std::sort(PtDifference.begin(),PtDifference.end(),[](const auto& p1, const auto& p2){return p1.first<p2.first;});
+                if(PtDifference.size()>0 && (PtDifference.at(0).first<20)){
+                  unsigned m = PtDifference.at(0).second;
+                  const pat::PackedCandidate &PFCand = (*PFCandidates)[m];
+                  if(reco::deltaR(jet.eta(),jet.phi(),PFCand.eta(),PFCand.phi())< 0.2){
+                     if(abs(PFCand.pdgId())== 211) { 
+                       std::cout<<"genCand matching with ChHadr: "<<abs(genCand.pdgId())<<std::endl;
+                       std::cout<<"PtDifference: "<<PtDifference.at(0).first<<std::endl;
+                       difference = abs(jet.pt()-PFCand.pt());
+                       PtDiffChHadr.push_back({difference,&PFCand});}
 
-                if(abs(pfCand.pdgId())== 130) {
-                  difference = abs(jet.pt()-pfCand.pt());
-                  PtDiffNeutrHadr.push_back(std::make_pair(difference,&pfCand));}
+                     if(abs(PFCand.pdgId())== 130) {
+                       std::cout<<"genCand matching with NeutrHadr: "<<abs(genCand.pdgId())<<std::endl;
+                       std::cout<<"PtDifference: "<<PtDifference.at(0).first<<std::endl;
+                       difference = abs(jet.pt()-PFCand.pt());
+                       PtDiffNeutrHadr.push_back(std::make_pair(difference,&PFCand));}
 
-                if(abs(pfCand.pdgId())== 22) {
-                  difference = abs(jet.pt()-pfCand.pt());
-                  PtDiffPhotons.push_back(std::make_pair(difference,&pfCand));}
+                     if(abs(PFCand.pdgId())== 22) {
+                       std::cout<<"genCand matching with recoPhotons: "<<abs(genCand.pdgId())<<std::endl;
+                       std::cout<<"PtDifference: "<<PtDifference.at(0).first<<std::endl;
+                       difference = abs(jet.pt()-PFCand.pt());
+                       PtDiffPhotons.push_back(std::make_pair(difference,&PFCand));}
       }
-    }
+
+                }
+                  }
+
+              }}}}   
+    
         //Sort these PtDifference vectors by ascending order in PtDifference from the Jet
         std::sort(PtDiffChHadr.begin(),PtDiffChHadr.end(),[](const auto& p1, const auto& p2){return p1.first<p2.first;});
         //std::sort(PtDiffChHadr.begin(),PtDiffChHadr.end(),pairCompare);
         std::sort(PtDiffNeutrHadr.begin(),PtDiffNeutrHadr.end(),pairCompare); //or you can use the specific pairCompare function. Sort has some issues with template that I cannot fix right now?
         std::sort(PtDiffPhotons.begin(),PtDiffPhotons.end(),pairCompare);//pairCompare is defined in util.h
-        
           //Charged Hadron begin
           nChHadrj1 = PtDiffChHadr.size();
           for (int i=0;i<nChHadrj1;i++){
             const pat::PackedCandidate &ChHadr = *(PtDiffChHadr.at(i).second);
-            ChHadrTotalCharge+=ChHadr.charge();
+            //std::cout<<"ChHadr: "<<ChHadr.charge();
+            ChHadrTotalCharge= ChHadrTotalCharge + ChHadr.charge();
             if(ChHadr.bestTrack()!=nullptr){//method points to null if there is no track 
               const reco::Track &Trk = *(ChHadr.bestTrack());
               recoTrkj1++;
-              TrkTotalCharge+=Trk.charge();
-            }
-
+              //std::cout<<"TrkCharge: "<<Trk.charge()<<std::endl;
+              TrkTotalCharge= TrkTotalCharge + Trk.charge();
+            }}
+          //std::cout<<"TotalChHadrons in dR<0.1: "<<nChHadrj1<<std::endl;
+          //std::cout<<"TotalRecoTracks in dR<0.1: "<<recoTrkj1<<std::endl;
+          //std::cout<<"ChHadrTotalCharge: "<<ChHadrTotalCharge<<std::endl;
+          //std::cout<<"TrkTotalCharge: "<<TrkTotalCharge<<std::endl;
+          if(nChHadrj1>0){
             const pat::PackedCandidate &ChHadr1 = *(PtDiffChHadr.at(0).second);
             if(ChHadr1.bestTrack()!=nullptr){//lets store some info about Trk1 associated with highestPt Hadron
               const reco::Track &Trk = *(ChHadr1.bestTrack());
               Trk1Pt = Trk.pt();
-              Trk1Charge = Trk.charge();
+              Trk1_Charge = Trk.charge();
+              //std::cout<<"Trk1Charge: "<<Trk.charge()<<std::endl;
+              if(Trk.charge()==1){
+                Trk1PosCharge = Trk.charge();
+                //std::cout<<"It's positive"<<std::endl;
+                nTrk1Pos = nTrk1Pos+1;
+                //std::cout<<"nTrk1Pos: "<<nTrk1Pos<<std::endl;
+              }
+              else{
+                Trk1NegCharge = Trk.charge();
+                //std::cout<<"It's negative"<<std::endl;
+                nTrk1Neg = nTrk1Neg+1;
+                //std::cout<<"nTrk1Neg: "<<nTrk1Neg<<std::endl;
+              }
               Trk1PtFrac = (Trk1Pt/jet.pt());
               Trk1Eta = Trk.eta();
               Trk1Phi = Trk.phi();
               }
             ChHadr1_pt = ChHadr1.pt();
+            ChHadr1_Charge = ChHadr1.charge();
+            //std::cout<<"ChHadr1_Charge: "<<ChHadr1_Charge<<std::endl;
             ChHadr1_PtDiff = PtDiffChHadr.at(0).first;
             ChHadr1_ptfrac = (ChHadr1_pt/jet.pt());
             ChHadr1_eta = ChHadr1.eta();
@@ -410,19 +474,28 @@ void MiniAODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& i
             ChHadr1_fromPV = ChHadr1.fromPV();
             ChHadr1_numHits = ChHadr1.numberOfHits();
             ChHadr1_numPixelHits = ChHadr1.numberOfPixelHits();
-             
-            //std::cout<<"Where is this error?"<<std::endl;
-            if(PtDiffChHadr.size()>=2){
+          }//Close the loop for first Charged Hadron 
+          //Start to look at second charged Hadron in the event  
+          if(PtDiffChHadr.size()>=2){
             const pat::PackedCandidate &ChHadr2 = *(PtDiffChHadr.at(1).second);
             if(ChHadr2.bestTrack()!=nullptr){//lets store some info about Trk2 associated with second highestPt charged Hadron
               const reco::Track &Trk = *(ChHadr2.bestTrack());
               Trk2Pt = Trk.pt();
-              Trk2Charge = Trk.charge();
+              Trk2_Charge = Trk.charge();
+              if(Trk.charge()==1){
+                Trk2PosCharge = Trk.charge(); 
+                 nTrk2Pos = nTrk2Pos+1;
+              }
+              else{
+                Trk2NegCharge = Trk.charge();
+                nTrk2Neg = nTrk2Neg+1;
+              }
               Trk2PtFrac = (Trk2Pt/jet.pt());
               Trk2Eta = Trk.eta();
               Trk2Phi = Trk.phi();
               }
             ChHadr2_pt = ChHadr2.pt();
+            ChHadr2_Charge = ChHadr2.charge();
             ChHadr2_PtDiff = PtDiffChHadr.at(1).first;
             ChHadr2_ptfrac = (ChHadr2_pt/jet.pt());
             ChHadr2_eta = ChHadr2.eta();
@@ -437,74 +510,58 @@ void MiniAODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& i
             ChHadr2_numHits = ChHadr2.numberOfHits();
             ChHadr2_numPixelHits = ChHadr2.numberOfPixelHits();
             } 
-            dRTrk12 = reco::deltaR(Trk1Eta,Trk1Phi,Trk2Eta,Trk2Phi);}//Reco ChargeHadron analysis ends
+            dRTrk12 = reco::deltaR(Trk1Eta,Trk1Phi,Trk2Eta,Trk2Phi);//Reco ChargeHadron analysis ends
+            
+            dRChHadr12 = reco::deltaR(ChHadr1_eta,ChHadr1_phi,ChHadr2_eta,ChHadr2_phi);//Reco ChargeHadron analysis ends
+            ChHadr12_Ptfrac = (ChHadr1_pt+ChHadr2_pt)/(j1Pt);
+            ChHadr12_Charge = ChHadr1_Charge + ChHadr2_Charge;
 
-          //Reco Neutral Hadron Analysis begins
-          nNeutrHadrj1 = PtDiffNeutrHadr.size();
-          for (int i=0;i<nNeutrHadrj1;i++){
-            const pat::PackedCandidate &NeutrHadr = *(PtDiffNeutrHadr.at(i).second);
-            NeutrHadrTotalCharge+=NeutrHadr.charge();
-            if(NeutrHadr.bestTrack()!=nullptr){//method points to null if there is no track 
-              const reco::Track &NHTrk = *(NeutrHadr.bestTrack());
-              recoNHTrkj1++;
-              NHTrkTotalCharge+=NHTrk.charge();
+            Trk12_Ptfrac = (Trk1Pt+Trk2Pt)/(j1Pt);
+            Trk12_Charge = Trk1_Charge + Trk2_Charge;
+        
+            //Reco Neutral Hadrons(130) inside the jet that match to genlevel hadrons coming from Zprime. Expect ~0
+            nNeutrHadrj1 = PtDiffNeutrHadr.size();
+            
+            //RecoPhotons
+            nPhoj1 = PtDiffPhotons.size();
+            for (int i=0;i<nPhoj1;i++){
+              const pat::PackedCandidate &Pho = *(PtDiffPhotons.at(i).second);
+              PhoTotalCharge = PhoTotalCharge + Pho.charge();
             }
+            if(nPhoj1>0){
+              const pat::PackedCandidate &Pho1 = *(PtDiffPhotons.at(0).second);
+              Pho1_pt = Pho1.pt();
+              Pho1_Charge = Pho1.charge();
+              //const reco::Candidate &Pho1_Ancestor = *(Pho1.mother(0));
+              //std::cout<<"Pho1_Ancestor: "<<abs(Pho1_Ancestor.pdgId())<<std::endl;
+              Pho1_PtDiff = PtDiffPhotons.at(0).first;
+              Pho1_ptfrac = (Pho1_pt/jet.pt());
+              Pho1_eta = Pho1.eta();
+              Pho1_phi = Pho1.phi();
+              Pho1_vx = Pho1.vx();
+              Pho1_vy = Pho1.vy();
+              Pho1_vz = Pho1.vz();
+            }
+              //std::cout<<"Where is this error?"<<std::endl;
+              if(PtDiffPhotons.size()>=2){
+              const pat::PackedCandidate &Pho2 = *(PtDiffPhotons.at(1).second);
+              Pho2_pt = Pho2.pt();
+              Pho2_Charge = Pho2.charge();
+              //const reco::Candidate &Pho2_Ancestor = *(Pho2.mother(0));
+              //std::cout<<"Pho2_Ancestor: "<<abs(Pho2_Ancestor.pdgId())<<std::endl;
+              Pho2_PtDiff = PtDiffPhotons.at(1).first;
+              Pho2_ptfrac = (Pho2_pt/jet.pt());
+              Pho2_eta = Pho2.eta();
+              Pho2_phi = Pho2.phi();
+              Pho2_vx = Pho2.vx();
+              Pho2_vy = Pho2.vy();
+              Pho2_vz = Pho2.vz();
+              } 
+              dRPho12 = reco::deltaR(Pho1_eta,Pho1_phi,Pho2_eta,Pho2_phi); //Reco Neutral Hadron Analysis ends 
+              Pho12_Ptfrac = (Pho1_pt+Pho2_pt)/(j1Pt);
 
-            const pat::PackedCandidate &NeutrHadr1 = *(PtDiffNeutrHadr.at(0).second);
-            if(NeutrHadr1.bestTrack()!=nullptr){//lets store some info about NHTrk1 associated with highestPt Hadron
-              const reco::Track &NHTrk = *(NeutrHadr1.bestTrack());
-              NHTrk1Pt = NHTrk.pt();
-              NHTrk1Charge = NHTrk.charge();
-              NHTrk1PtFrac = (NHTrk1Pt/jet.pt());
-              NHTrk1Eta = NHTrk.eta();
-              NHTrk1Phi = NHTrk.phi();
-              }
-            NeutrHadr1_pt = NeutrHadr1.pt();
-            NeutrHadr1_PtDiff = PtDiffNeutrHadr.at(0).first;
-            NeutrHadr1_ptfrac = (NeutrHadr1_pt/jet.pt());
-            NeutrHadr1_eta = NeutrHadr1.eta();
-            NeutrHadr1_phi = NeutrHadr1.phi();
-            NeutrHadr1_phiAtVtx = NeutrHadr1.phiAtVtx();
-            NeutrHadr1_dxy = NeutrHadr1.dxy();
-            NeutrHadr1_dzAssociatedPV = NeutrHadr1.dzAssociatedPV();
-            NeutrHadr1_vx = NeutrHadr1.vx();
-            NeutrHadr1_vy = NeutrHadr1.vy();
-            NeutrHadr1_vz = NeutrHadr1.vz();
-            NeutrHadr1_fromPV = NeutrHadr1.fromPV();
-            NeutrHadr1_numHits = NeutrHadr1.numberOfHits();
-            NeutrHadr1_numPixelHits = NeutrHadr1.numberOfPixelHits();
-             
-            //std::cout<<"Where is this error?"<<std::endl;
-            if(PtDiffNeutrHadr.size()>=2){
-            const pat::PackedCandidate &NeutrHadr2 = *(PtDiffNeutrHadr.at(1).second);
-            if(NeutrHadr2.bestTrack()!=nullptr){//lets store some info about NHTrk2 associated with second highestPt charged Hadron
-              const reco::Track &NHTrk = *(NeutrHadr2.bestTrack());
-              NHTrk2Pt = NHTrk.pt();
-              NHTrk2Charge = NHTrk.charge();
-              NHTrk2PtFrac = (NHTrk2Pt/jet.pt());
-              NHTrk2Eta = NHTrk.eta();
-              NHTrk2Phi = NHTrk.phi();
-              }
-            NeutrHadr2_pt = NeutrHadr2.pt();
-            NeutrHadr2_PtDiff = PtDiffNeutrHadr.at(1).first;
-            NeutrHadr2_ptfrac = (NeutrHadr2_pt/jet.pt());
-            NeutrHadr2_eta = NeutrHadr2.eta();
-            NeutrHadr2_phi = NeutrHadr2.phi();
-            NeutrHadr2_phiAtVtx = NeutrHadr2.phiAtVtx();
-            NeutrHadr2_dxy = NeutrHadr2.dxy();
-            NeutrHadr2_dzAssociatedPV = NeutrHadr2.dzAssociatedPV();
-            NeutrHadr2_vx = NeutrHadr2.vx();
-            NeutrHadr2_vy = NeutrHadr2.vy();
-            NeutrHadr2_vz = NeutrHadr2.vz();
-            NeutrHadr2_fromPV = NeutrHadr2.fromPV();
-            NeutrHadr2_numHits = NeutrHadr2.numberOfHits();
-            NeutrHadr2_numPixelHits = NeutrHadr2.numberOfPixelHits();
-            } 
-            dRNHTrk12 = reco::deltaR(NHTrk1Eta,NHTrk1Phi,NHTrk2Eta,NHTrk2Phi);} //Reco Neutral Hadron Analysis ends
-        }
-
-
-        }
+          } //closing the leading jet
+        }//closing the ak4jets loop
            
             RecoTree->Fill();
 }

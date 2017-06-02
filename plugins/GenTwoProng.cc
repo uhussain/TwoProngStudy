@@ -57,7 +57,7 @@ class GenTwoProng : public edm::EDAnalyzer {
 
         // ----------member data ---------------------------
         edm::EDGetTokenT<reco::VertexCollection> vtxToken;
-        edm::EDGetTokenT<std::vector<pat::Jet> > jetsToken;
+        edm::EDGetTokenT<std::vector<reco::GenJet> > jetsToken;
         edm::EDGetTokenT<std::vector <reco::GenParticle> > prunedGenToken;
         edm::EDGetTokenT<std::vector <pat::PackedGenParticle> >packedGenToken;
 
@@ -68,6 +68,7 @@ class GenTwoProng : public edm::EDAnalyzer {
         int nvtx;
         
         double j1Pt;
+        double j2Pt;
         double j1Eta;
         double j1Phi;
         float j1ConsEtaPhiSpread;
@@ -88,7 +89,8 @@ class GenTwoProng : public edm::EDAnalyzer {
         double ChHadr1_vertexRef;//reference to the PV itself
 
 
-        double ChHadr12_Ptfrac; 
+        double ChHadr12_Ptfrac;
+        int ChHadr12_Charge;
         double dRChHadr12; //deltaR between two highest PtTracks
         
         double ChHadr2_pt;
@@ -158,7 +160,7 @@ class GenTwoProng : public edm::EDAnalyzer {
 
 GenTwoProng::GenTwoProng(const edm::ParameterSet& iConfig):
     vtxToken(consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertices"))),
-    jetsToken(consumes<std::vector<pat::Jet>>(iConfig.getParameter<edm::InputTag>("jets"))),
+    jetsToken(consumes<std::vector<reco::GenJet>>(iConfig.getParameter<edm::InputTag>("jets"))),
     prunedGenToken(consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("pruned"))),
     packedGenToken(consumes<std::vector<pat::PackedGenParticle> >(iConfig.getParameter<edm::InputTag>("packed")))
 {
@@ -168,6 +170,7 @@ GenTwoProng::GenTwoProng(const edm::ParameterSet& iConfig):
     GenTree->Branch("nvtx",&nvtx,"nvtx/I");
 
     GenTree->Branch("j1Pt",&j1Pt,"j1Pt/D");
+    GenTree->Branch("j2Pt",&j2Pt,"j2Pt/D");
     GenTree->Branch("j1Eta",&j1Eta,"j1Eta/D");
     GenTree->Branch("j1Phi",&j1Phi,"j1Phi/D");
     GenTree->Branch("j1ConsEtaPhiSpread",&j1ConsEtaPhiSpread,"j1ConsEtaPhiSpread/F");
@@ -196,7 +199,8 @@ GenTwoProng::GenTwoProng(const edm::ParameterSet& iConfig):
     GenTree->Branch("ChHadr2_vy",&ChHadr2_vy,"ChHadr2_vy/D");
     GenTree->Branch("ChHadr2_vz",&ChHadr2_vz,"ChHadr2_vz/D");
 
-    GenTree->Branch("ChHadr12_Ptfrac",&ChHadr12_Ptfrac,"ChHadr12_Ptfrac/D");
+    GenTree->Branch("ChHadr12_Ptfrac",&ChHadr12_Ptfrac,"ChHadr12_Ptfrac/D"); 
+    GenTree->Branch("ChHadr12_Charge",&ChHadr12_Charge,"ChHadr12_Charge/I");
     GenTree->Branch("dRChHadr12",&dRChHadr12,"dRChHadr12/D");
 
     //Neutral Hadrons
@@ -267,7 +271,7 @@ void GenTwoProng::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     nvtx=vertices->size();
     //const reco::Vertex &PV = vertices->front();
     
-    edm::Handle<std::vector<pat::Jet> > ak4jets;
+    edm::Handle<std::vector<reco::GenJet> > ak4jets;
     iEvent.getByToken(jetsToken, ak4jets);
 
     
@@ -279,7 +283,7 @@ void GenTwoProng::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     
     
     ChHadrTotalCharge = 0;
-
+    int nZprime = 0;
     //NeutralHadrons
     NeutrHadrTotalCharge = 0;
 
@@ -307,7 +311,7 @@ void GenTwoProng::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
     //std::cout<<"PrunedGenParticles: "<<prunedGenParticles->size()<<std::endl;
     for(uint32_t i=0; i < ak4jets->size(); i++){
-        const pat::Jet &jet = (*ak4jets)[i];
+        const reco::GenJet &jet = (*ak4jets)[i];
         if (i==0){
         j1Pt = jet.pt();
         j1Eta = jet.eta();
@@ -318,23 +322,37 @@ void GenTwoProng::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
         std::vector<std::pair<double,const pat::PackedGenParticle*>> PtDiffChHadr;//pdgId = abs(211) 
         std::vector<std::pair<double,const pat::PackedGenParticle*>> PtDiffNeutrHadr;//pdgId = abs(130)
         std::vector<std::pair<double,const pat::PackedGenParticle*>> PtDiffPhotons;//pdgId = abs(22)
-        //Loop over all packedGenParticles
-        for(uint32_t j = 0; j < packedGenParticles->size(); j++) {
-            const pat::PackedGenParticle &genCand = (*packedGenParticles)[j]; 
-            if(reco::deltaR(jet.eta(),jet.phi(),genCand.eta(),genCand.phi())< 0.1){
-                if(abs(genCand.pdgId())== 211) {
-                  difference = abs(jet.pt()-genCand.pt());
-                  PtDiffChHadr.push_back({difference,&genCand});}
+        
+        //Let's only save particles in these categories which originate from Z'
+        for(uint32_t j=0;j<prunedGenParticles->size();j++){
+          if(abs((*prunedGenParticles)[j].pdgId())==600001){
+            const reco::Candidate * Zprime = &(*prunedGenParticles)[j];
+            nZprime++;
+            //Loop over all packedGenParticles
+            if(nZprime<2){
+            for(uint32_t j = 0; j < packedGenParticles->size(); j++) {
+              const pat::PackedGenParticle &genCand = (*packedGenParticles)[j]; 
+              //Find ancestor of this genCand
+              const reco::Candidate * genCand_Ancestor = &(*(genCand.mother(0)));
+              if(genCand_Ancestor != nullptr && isAncestor(Zprime,genCand_Ancestor)){
+                //std::cout<<"genCand_Ancestor is Zprime: "<<std::endl;  
+                if(reco::deltaR(jet.eta(),jet.phi(),genCand.eta(),genCand.phi())< 0.2){
+                    if(abs(genCand.pdgId())== 211) {
+                      difference = abs(jet.pt()-genCand.pt());
+                      PtDiffChHadr.push_back({difference,&genCand});}
 
-                if(abs(genCand.pdgId())== 130) {
-                  difference = abs(jet.pt()-genCand.pt());
-                  PtDiffNeutrHadr.push_back(std::make_pair(difference,&genCand));}
+                    if(abs(genCand.pdgId())== 130) {
+                      difference = abs(jet.pt()-genCand.pt());
+                      PtDiffNeutrHadr.push_back(std::make_pair(difference,&genCand));}
 
-                if(abs(genCand.pdgId())== 22) {
-                  difference = abs(jet.pt()-genCand.pt());
-                  PtDiffPhotons.push_back(std::make_pair(difference,&genCand));}
+                    if(abs(genCand.pdgId())== 22) {
+                      difference = abs(jet.pt()-genCand.pt());
+                      PtDiffPhotons.push_back(std::make_pair(difference,&genCand));}
+                }
       }
     }
+            }//nZprime Condition is to avoid duplication
+          }}
         //Sort these PtDifference vectors by ascending order in PtDifference from the Jet
         std::sort(PtDiffChHadr.begin(),PtDiffChHadr.end(),[](const auto& p1, const auto& p2){return p1.first<p2.first;});
         //std::sort(PtDiffChHadr.begin(),PtDiffChHadr.end(),pairCompare);
@@ -349,13 +367,13 @@ void GenTwoProng::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
             //const reco::Candidate &Ancestor = *(ChHadr.mother(0));
             //std::cout<<"AncestorID: "<<abs(Ancestor.pdgId())<<std::endl;
             }
-          std::cout<<"TotalChHadrons in dR<0.1: "<<nChHadrj1<<std::endl;
-          std::cout<<"ChHadrTotalCharge: "<<ChHadrTotalCharge<<std::endl;
+          //std::cout<<"TotalChHadrons in dR<0.1: "<<nChHadrj1<<std::endl;
+          //std::cout<<"ChHadrTotalCharge: "<<ChHadrTotalCharge<<std::endl;
           if(nChHadrj1>0){
             const pat::PackedGenParticle &ChHadr1 = *(PtDiffChHadr.at(0).second);
             ChHadr1_pt = ChHadr1.pt(); //Does this Pt match with Trk1Pt at recoLevel
             ChHadr1_Charge = ChHadr1.charge();
-            std::cout<<"ChHadr1_Charge: "<<ChHadr1_Charge<<std::endl;
+            //std::cout<<"ChHadr1_Charge: "<<ChHadr1_Charge<<std::endl;
             ChHadr1_PtDiff = PtDiffChHadr.at(0).first;
             ChHadr1_ptfrac = (ChHadr1_pt/jet.pt());
             ChHadr1_eta = ChHadr1.eta();
@@ -363,12 +381,15 @@ void GenTwoProng::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
             ChHadr1_vx = ChHadr1.vx();
             ChHadr1_vy = ChHadr1.vy();
             ChHadr1_vz = ChHadr1.vz();
-          }//Close the loop for first Charged Hadron 
+          }//Close the loop for first Charged Hadron
+            //std::cout<<"nZprime: "<<nZprime<<std::endl;
           //Start to look at second charged Hadron in the event  
           if(PtDiffChHadr.size()>=2){
             const pat::PackedGenParticle &ChHadr2 = *(PtDiffChHadr.at(1).second);
             ChHadr2_pt = ChHadr2.pt();
             ChHadr2_Charge = ChHadr2.charge();
+            //const reco::Candidate &ChHadr2_Ancestor = *(ChHadr2.mother(2));
+            //std::cout<<"ChHadr2_Ancestor: "<<abs(ChHadr2_Ancestor.pdgId())<<std::endl;
             ChHadr2_PtDiff = PtDiffChHadr.at(1).first;
             ChHadr2_ptfrac = (ChHadr2_pt/j1Pt);
             ChHadr2_eta = ChHadr2.eta();
@@ -379,6 +400,7 @@ void GenTwoProng::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
             } 
             dRChHadr12 = reco::deltaR(ChHadr1_eta,ChHadr1_phi,ChHadr2_eta,ChHadr2_phi);//Reco ChargeHadron analysis ends
             ChHadr12_Ptfrac = (ChHadr1_pt+ChHadr2_pt)/(j1Pt);
+            ChHadr12_Charge = ChHadr1_Charge + ChHadr2_Charge;
           //Reco Neutral Hadron Analysis begins
           nNeutrHadrj1 = PtDiffNeutrHadr.size();
           for (int i=0;i<nNeutrHadrj1;i++){
@@ -424,6 +446,8 @@ void GenTwoProng::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
             const pat::PackedGenParticle &Pho1 = *(PtDiffPhotons.at(0).second);
             Pho1_pt = Pho1.pt();
             Pho1_Charge = Pho1.charge();
+            //const reco::Candidate &Pho1_Ancestor = *(Pho1.mother(0));
+            //std::cout<<"Pho1_Ancestor: "<<abs(Pho1_Ancestor.pdgId())<<std::endl;
             Pho1_PtDiff = PtDiffPhotons.at(0).first;
             Pho1_ptfrac = (Pho1_pt/jet.pt());
             Pho1_eta = Pho1.eta();
@@ -437,6 +461,8 @@ void GenTwoProng::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
             const pat::PackedGenParticle &Pho2 = *(PtDiffPhotons.at(1).second);
             Pho2_pt = Pho2.pt();
             Pho2_Charge = Pho2.charge();
+            //const reco::Candidate &Pho2_Ancestor = *(Pho2.mother(0));
+            //std::cout<<"Pho2_Ancestor: "<<abs(Pho2_Ancestor.pdgId())<<std::endl;
             Pho2_PtDiff = PtDiffPhotons.at(1).first;
             Pho2_ptfrac = (Pho2_pt/jet.pt());
             Pho2_eta = Pho2.eta();
@@ -449,6 +475,9 @@ void GenTwoProng::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
             Pho12_Ptfrac = (Pho1_pt+Pho2_pt)/(j1Pt);
 
           } //closing the leading jet
+        if(i==1){
+          j2Pt = jet.pt();
+        }
         }//closing the ak4jets loop
            
             GenTree->Fill();
