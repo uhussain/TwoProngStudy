@@ -1,7 +1,7 @@
 // -*- C++ -*-                
 //                            
 // Package:     -
-// File:        util.h       
+// File:        Genutil.h       
 //                            
 //                            
 
@@ -10,7 +10,7 @@
 //bool pairCompare(const std::pair<Comp1, T1>&p1, const std::pair<Comp2, T2>& p2) 
 //{return p1.first < p2.first;}
 
-bool pairCompare(const std::pair<double, const pat::PackedCandidate*>& firstElem, const std::pair<double, const pat::PackedCandidate*>& secondElem) {
+bool pairCompare(const std::pair<double, const pat::PackedGenParticle*>& firstElem, const std::pair<double, const pat::PackedGenParticle*>& secondElem) {
     return firstElem.first < secondElem.first;
 
 }
