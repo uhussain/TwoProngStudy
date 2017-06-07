@@ -88,6 +88,8 @@ class AODtwoprong : public edm::EDAnalyzer {
         double negTrk3Pt;
         double posTrk3Charge;
         double negTrk3Charge;
+
+        double dRPosTrk1negTrk1;
         
         //PosCharged Hadron Variables
         int nChHadrPosj1;
@@ -204,6 +206,29 @@ class AODtwoprong : public edm::EDAnalyzer {
 
         double Pho12_Ptfrac; 
         double dRPho12; //deltaR between two highest PtTracks
+
+        int nNeutralj1;
+
+        double Neutral1_pt;
+        double Neutral1_Charge;
+        double Neutral1_PtDiff;
+        double Neutral1_ptfrac;
+        double Neutral1_eta;
+        double Neutral1_phi;
+        double Neutral1_vx;//returns the position of the point of closest approach to the PV 
+        double Neutral1_vy;
+        double Neutral1_vz;
+        
+        double Neutral2_pt;
+        double Neutral2_Charge;
+        double Neutral2_PtDiff;
+        double Neutral2_ptfrac;
+        double Neutral2_eta;
+        double Neutral2_phi;
+        double Neutral2_vx;//returns the x-coordinate of vertex position
+        double Neutral2_vy;
+        double Neutral2_vz;
+
 };
 
 AODtwoprong::AODtwoprong(const edm::ParameterSet& iConfig):
@@ -236,7 +261,7 @@ AODtwoprong::AODtwoprong(const edm::ParameterSet& iConfig):
     RecoTree->Branch("negTrk1Charge",&negTrk1Charge,"negTrk1Charge/D");
     RecoTree->Branch("negTrk2Charge",&negTrk2Charge,"negTrk2Charge/D");
     RecoTree->Branch("negTrk3Charge",&negTrk3Charge,"negTrk3Charge/D");
-
+    RecoTree->Branch("dRPosTrk1negTrk1",&dRPosTrk1negTrk1,"dRPosTrk1negTrk1/D");
 
     RecoTree->Branch("j1Pt",&j1Pt,"j1Pt/D");
     RecoTree->Branch("j1Eta",&j1Eta,"j1Eta/D");
@@ -349,9 +374,32 @@ AODtwoprong::AODtwoprong(const edm::ParameterSet& iConfig):
     RecoTree->Branch("Pho2_vy",&Pho2_vy,"Pho2_vy/D");
     RecoTree->Branch("Pho2_vz",&Pho2_vz,"Pho2_vz/D");
 
-
     RecoTree->Branch("Pho12_Ptfrac",&Pho12_Ptfrac,"Pho12_Ptfrac/D");
     RecoTree->Branch("dRPho12",&dRPho12,"dRPho12/D");
+
+    //Neutrals in PencilJet that are not Photons
+
+    RecoTree->Branch("nNeutralj1",&nNeutralj1,"nNeutralj1/I");
+
+    RecoTree->Branch("Neutral1_pt",&Neutral1_pt,"Neutral1_pt/D"); 
+    RecoTree->Branch("Neutral1_Charge",&Neutral1_Charge,"Neutral1_Charge/D");
+    RecoTree->Branch("Neutral1_PtDiff",&Neutral1_PtDiff,"Neutral1_PtDiff/D");
+    RecoTree->Branch("Neutral1_ptfrac",&Neutral1_ptfrac,"Neutral1_ptfrac/D");
+    RecoTree->Branch("Neutral1_eta",&Neutral1_eta,"Neutral1_eta/D");
+    RecoTree->Branch("Neutral1_phi",&Neutral1_phi,"Neutral1_phi/D");
+    RecoTree->Branch("Neutral1_vx",&Neutral1_vx,"Neutral1_vx/D");
+    RecoTree->Branch("Neutral1_vy",&Neutral1_vy,"Neutral1_vy/D");
+    RecoTree->Branch("Neutral1_vz",&Neutral1_vz,"Neutral1_vz/D");
+ 
+    RecoTree->Branch("Neutral2_pt",&Neutral2_pt,"Neutral2_pt/D");
+    RecoTree->Branch("Neutral2_Charge",&Neutral2_Charge,"Neutral2_Charge/D");
+    RecoTree->Branch("Neutral2_PtDiff",&Neutral2_PtDiff,"Neutral2_PtDiff/D");
+    RecoTree->Branch("Neutral2_ptfrac",&Neutral2_ptfrac,"Neutral2_ptfrac/D");
+    RecoTree->Branch("Neutral2_eta",&Neutral2_eta,"Neutral2_eta/D");
+    RecoTree->Branch("Neutral2_phi",&Neutral2_phi,"Neutral2_phi/D");
+    RecoTree->Branch("Neutral2_vx",&Neutral2_vx,"Neutral2_vx/D");
+    RecoTree->Branch("Neutral2_vy",&Neutral2_vy,"Neutral2_vy/D");
+    RecoTree->Branch("Neutral2_vz",&Neutral2_vz,"Neutral2_vz/D");
 }
 
 AODtwoprong::~AODtwoprong()
@@ -378,8 +426,161 @@ void AODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     edm::Handle<std::vector<reco::Track> > recoTracks;
     iEvent.getByToken(TrackToken,recoTracks);
     
-    PhoTotalCharge = 0;
+    nPosTrkj1=0;
+    nNegTrkj1=0;
+    nTotTrkj1=0;
+    posTrk1Pt=0;
+    negTrk1Pt=0;
+    posTrk1Charge=0;
+    negTrk1Charge=0;
+
+    posTrk2Pt=0;
+    negTrk2Pt=0;
+    posTrk2Charge=0;
+    negTrk2Charge=0;
+
+    posTrk3Pt=0;
+    negTrk3Pt=0;
+    posTrk3Charge=0;
+    negTrk3Charge=0;
+
+    dRPosTrk1negTrk1=0;
+    
+    //Charged Hadron Variables
+    nChHadrPosj1=0;
+    ChHadrPosrecoTrkj1=0;
+
+    ChHadrPosTrk1Pt=0;
+    ChHadrPosTrk1_Charge=0;
+    ChHadrPosTrk1PtFrac=0;
+    ChHadrPosTrk1Eta=0;
+    ChHadrPosTrk1Phi=0;
+    ChHadrPos1_pt=0;
+    ChHadrPos1_Charge=0;
+    ChHadrPos1_PtDiff=0;
+    ChHadrPos1_ptfrac=0;
+    ChHadrPos1_eta=0;
+    ChHadrPos1_phi=0;
+    ChHadrPos1_vx=0;//returns the position of the point of closest approach to the PV 
+    ChHadrPos1_vy=0;
+    ChHadrPos1_vz=0;
+
+
+    ChHadrPosTrk2Pt=0; 
+    ChHadrPosTrk2_Charge=0;
+    ChHadrPosTrk2PtFrac=0;
+    ChHadrPosTrk2Eta=0;
+    ChHadrPosTrk2Phi=0;
+    
+    dRChHadrPosTrk12=0; //deltaR between two highest PtTracks
+    
+    ChHadrPos2_pt=0;
+    ChHadrPos2_Charge=0;
+    ChHadrPos2_PtDiff=0;
+    ChHadrPos2_ptfrac=0;
+    ChHadrPos2_eta=0;
+    ChHadrPos2_phi=0;
+    ChHadrPos2_vx=0;
+    ChHadrPos2_vy=0;
+    ChHadrPos2_vz=0;
+    dRChHadrPos12=0; 
+    ChHadrPos12_Ptfrac=0;
+    ChHadrPosTrk12_Ptfrac=0;
+    
+    //NegChHadr Hadron Variables
+    nChHadrNegj1=0;
+
+    ChHadrNegrecoTrkj1=0;
+
+    ChHadrNegTrk1Pt=0;
+    ChHadrNegTrk1_Charge=0;
+    ChHadrNegTrk1PtFrac=0;
+    ChHadrNegTrk1Eta=0;
+    ChHadrNegTrk1Phi=0;
+    ChHadrNeg1_pt=0;
+    ChHadrNeg1_Charge=0;
+    ChHadrNeg1_PtDiff=0;
+    ChHadrNeg1_ptfrac=0;
+    ChHadrNeg1_eta=0;
+    ChHadrNeg1_phi=0;
+    ChHadrNeg1_vx=0;//returns the position of the point of closest approach to the PV 
+    ChHadrNeg1_vy=0;
+    ChHadrNeg1_vz=0;
+
+
+    ChHadrNegTrk2Pt=0; 
+    ChHadrNegTrk2_Charge=0;
+    ChHadrNegTrk2PtFrac=0;
+    ChHadrNegTrk2Eta=0;
+    ChHadrNegTrk2Phi=0;
+    
+    dRChHadrNegTrk12=0; //deltaR between two highest PtTracks
+    
+    ChHadrNeg2_pt=0;
+    ChHadrNeg2_Charge=0;
+    ChHadrNeg2_PtDiff=0;
+    ChHadrNeg2_ptfrac=0;
+    ChHadrNeg2_eta=0;
+    ChHadrNeg2_phi=0;
+    ChHadrNeg2_vx=0;
+    ChHadrNeg2_vy=0;
+    ChHadrNeg2_vz=0;
+    dRChHadrNeg12=0;
+    ChHadrNeg12_Ptfrac=0;
+    ChHadrNegTrk12_Ptfrac=0;
+
+
+
+    //Photons in GenParticles
+    nPhoj1=0;
+    PhoTotalCharge=0;
+
+    Pho1_pt=0;
+    Pho1_Charge=0;
+    Pho1_PtDiff=0;
+    Pho1_ptfrac=0;
+    Pho1_eta=0;
+    Pho1_phi=0;
+    Pho1_vx=0;
+    Pho1_vy=0;
+    Pho1_vz=0;
+    
+    Pho2_pt=0;
+    Pho2_Charge=0;
+    Pho2_PtDiff=0;
+    Pho2_ptfrac=0;
+    Pho2_eta=0;
+    Pho2_phi=0;
+    Pho2_vx=0;
+    Pho2_vy=0;
+    Pho2_vz=0;
+
+    Pho12_Ptfrac=0; 
+    dRPho12=0; 
+    nNeutralj1=0;
+
+    Neutral1_pt=0;
+    Neutral1_Charge=0;
+    Neutral1_PtDiff=0;
+    Neutral1_ptfrac=0;
+    Neutral1_eta=0;
+    Neutral1_phi=0;
+    Neutral1_vx=0;//returns the position of the point of closest approach to the PV 
+    Neutral1_vy=0;
+    Neutral1_vz=0;
+    
+    Neutral2_pt=0;
+    Neutral2_Charge=0;
+    Neutral2_PtDiff=0;
+    Neutral2_ptfrac=0;
+    Neutral2_eta=0;
+    Neutral2_phi=0;
+    Neutral2_vx=0;//returns the x-coordinate of vertex position
+    Neutral2_vy=0;
+    Neutral2_vz=0;
+    //PhoTotalCharge = 0;
     int nZprime = 0;
+    //dRPosTrk1negTrk1= 0=0;
 
     run_    = iEvent.id().run();
     event_  = iEvent.id().event();
@@ -413,10 +614,10 @@ void AODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
         double PosTrkdifference = 0;
         double NegTrkdifference = 0;
         //These vectors will store the PtDifference between a packed PFCandidate and a nearbyJet
-        std::vector<std::pair<double,const reco::PFCandidate*>> PtDiffChHadrPos;//pdgId = abs(211) 
-        std::vector<std::pair<double,const reco::PFCandidate*>> PtDiffChHadrNeg;//pdgId = abs(130)
+        std::vector<std::pair<double,const reco::PFCandidate*>> PtDiffChHadrPos;//pdgId = 211 
+        std::vector<std::pair<double,const reco::PFCandidate*>> PtDiffChHadrNeg;//pdgId = -211
         std::vector<std::pair<double,const reco::PFCandidate*>> PtDiffPhotons;//pdgId = abs(22)
-        
+        std::vector<std::pair<double,const reco::PFCandidate*>> PtDiffNeutral; //miscellaneous neutral particles that are not photons
         std::vector<std::pair<double,const reco::Track*>>PtDiffPosTrk;//match the Trks to genlevel positive hadrons 
         std::vector<std::pair<double,const reco::Track*>>PtDiffNegTrk;//match the Trks to genlevel negative hadrons
 
@@ -447,21 +648,21 @@ void AODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
                   const reco::Track &TrkCand = (*recoTracks)[n];
                   if(reco::deltaR(jet.eta(),jet.phi(),TrkCand.eta(),TrkCand.phi())< 0.2){
                      if(TrkCand.charge()==1 && genCand.charge()==1 && genCand.status()==1) { 
-                       std::cout<<"genCand matching with PosTrk: "<<genCand.pdgId()<<std::endl;
-                       std::cout<<"genCandPt: "<<genCand.pt()<<std::endl;
-                       std::cout<<"TrkPt: " <<TrkCand.pt()<<std::endl;
-                       std::cout<<"TrkPtdifference: "<<TrkPtdifference.at(0).first<<std::endl;
-                       std::cout<<"TrkCharge: "<<TrkCand.charge()<<std::endl;
+                      // std::cout<<"genCand matching with PosTrk: "<<genCand.pdgId()<<std::endl;
+                      // std::cout<<"genCandPt: "<<genCand.pt()<<std::endl;
+                      // std::cout<<"TrkPt: " <<TrkCand.pt()<<std::endl;
+                      // std::cout<<"TrkPtdifference: "<<TrkPtdifference.at(0).first<<std::endl;
+                      // std::cout<<"TrkCharge: "<<TrkCand.charge()<<std::endl;
                        PosTrkdifference = abs(jet.pt()-TrkCand.pt());
                        PtDiffPosTrk.push_back({PosTrkdifference,&TrkCand});}
                 
                     //Negative Tracks with pdgId = -211
                      if(TrkCand.charge()==-1 && genCand.charge()== -1 && genCand.status()==1) { 
-                       std::cout<<"genCand matching with NegTrk: "<<genCand.pdgId()<<std::endl;
-                       std::cout<<"genCandPt: "<<genCand.pt()<<std::endl;
-                       std::cout<<"TrkPt: " <<TrkCand.pt()<<std::endl;
-                       std::cout<<"TrkPtdifference: "<<TrkPtdifference.at(0).first<<std::endl; 
-                       std::cout<<"TrkCharge: "<<TrkCand.charge()<<std::endl;
+                      // std::cout<<"genCand matching with NegTrk: "<<genCand.pdgId()<<std::endl;
+                      // std::cout<<"genCandPt: "<<genCand.pt()<<std::endl;
+                      // std::cout<<"TrkPt: " <<TrkCand.pt()<<std::endl;
+                      // std::cout<<"TrkPtdifference: "<<TrkPtdifference.at(0).first<<std::endl; 
+                      // std::cout<<"TrkCharge: "<<TrkCand.charge()<<std::endl;
                        NegTrkdifference = abs(jet.pt()-TrkCand.pt());
                        PtDiffNegTrk.push_back({NegTrkdifference,&TrkCand});}
                   }
@@ -474,32 +675,44 @@ void AODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
                   if(reco::deltaR(genCand.eta(),genCand.phi(),pfCand.eta(),pfCand.phi())<0.1){
                     diff=abs(genCand.pt()-pfCand.pt());
                     PtDifference.push_back(std::make_pair(diff,l));}}
-                
+                //std::cout<<"No.of PFCands matched to GenParticle: "<<PtDifference.size()<<std::endl; 
                 std::sort(PtDifference.begin(),PtDifference.end(),[](const auto& p1, const auto& p2){return p1.first<p2.first;});
-                if(PtDifference.size()>0 && (PtDifference.at(0).first<20)){
-                  unsigned m = PtDifference.at(0).second;
-                  const reco::PFCandidate &PFCand = (*PFCandidates)[m];
-                  if(reco::deltaR(jet.eta(),jet.phi(),PFCand.eta(),PFCand.phi())< 0.2){
-                     if((PFCand.pdgId()== 211 || PFCand.pdgId()==321) && genCand.charge()==1 && genCand.status()==1) { 
-                       //std::cout<<"genCand matching with ChHadr: "<<abs(genCand.pdgId())<<std::endl;
-                       //std::cout<<"PtDifference: "<<PtDifference.at(0).first<<std::endl;
-                       difference = abs(jet.pt()-PFCand.pt());
-                       PtDiffChHadrPos.push_back({difference,&PFCand});}
+                for(unsigned m=0;m<PtDifference.size();m++){
+                  if(PtDifference.at(m).first<20){
+                     unsigned q = PtDifference.at(m).second;
+                     const reco::PFCandidate &PFCand = (*PFCandidates)[q];
+                     if(reco::deltaR(jet.eta(),jet.phi(),PFCand.eta(),PFCand.phi())< 0.2){
+                        if((PFCand.pdgId()== 211 || PFCand.pdgId()==321) && genCand.charge()==1 && genCand.status()==1) { 
+                          //std::cout<<"genCand matching with ChHadr: "<<abs(genCand.pdgId())<<std::endl;
+                          //std::cout<<"PtDifference: "<<PtDifference.at(0).first<<std::endl;
+                          difference = abs(jet.pt()-PFCand.pt());
+                          PtDiffChHadrPos.push_back({difference,&PFCand});}
+                          
+                        if((PFCand.pdgId()== -211 || PFCand.pdgId()==-321) && genCand.charge()==-1 && genCand.status()==1) {
+                          //std::cout<<"genCand matching with ChHadrNeg: "<<abs(genCand.pdgId())<<std::endl;
+                          //std::cout<<"PtDifference: "<<PtDifference.at(0).first<<std::endl;
+                          difference = abs(jet.pt()-PFCand.pt());
+                          PtDiffChHadrNeg.push_back(std::make_pair(difference,&PFCand));}
 
-                     if((PFCand.pdgId()== -211 || PFCand.pdgId()==-321) && genCand.charge()==-1 && genCand.status()==1) {
-                       //std::cout<<"genCand matching with ChHadrNeg: "<<abs(genCand.pdgId())<<std::endl;
-                       //std::cout<<"PtDifference: "<<PtDifference.at(0).first<<std::endl;
-                       difference = abs(jet.pt()-PFCand.pt());
-                       PtDiffChHadrNeg.push_back(std::make_pair(difference,&PFCand));}
+                        if(abs(PFCand.pdgId())== 22 && genCand.charge()==0 && genCand.status()==1) {
+                          //std::cout<<"genCand matching with recoPhotons: "<<abs(genCand.pdgId())<<std::endl;
+                          //std::cout<<"PtDifference: "<<PtDifference.at(0).first<<std::endl;
+                          difference = abs(jet.pt()-PFCand.pt());
+                          PtDiffPhotons.push_back(std::make_pair(difference,&PFCand));}
 
-                     if(abs(PFCand.pdgId())== 22 && genCand.charge()==0 && genCand.status()==1) {
-                       //std::cout<<"genCand matching with recoPhotons: "<<abs(genCand.pdgId())<<std::endl;
-                       //std::cout<<"PtDifference: "<<PtDifference.at(0).first<<std::endl;
-                       difference = abs(jet.pt()-PFCand.pt());
-                       PtDiffPhotons.push_back(std::make_pair(difference,&PFCand));}
+                        //miscellaneous neutral particles that are mostly K-Long mesons and since K-long decays to pions, leptons, neutrinos, even pi0s
+                        //This genMatching is tricky because it could match to a whole bunch of genLevel particles
+                        if((PFCand.charge()==0 && PFCand.pdgId()==130) && genCand.status()==1){
+                          std::cout<<"Neutral PFCand: "<<PFCand.pdgId()<<std::endl;
+                          std::cout<<"genCand matching with neutral particles in PencilJet: "<<abs(genCand.pdgId())<<std::endl;
+                          std::cout<<"PtDifference: "<<PtDifference.at(0).first<<std::endl;
+                          difference = abs(jet.pt()-PFCand.pt());
+                          PtDiffNeutral.push_back(std::make_pair(difference,&PFCand));
+                        }
       }
 
                 }
+              }//closing loop for PtDifference which PFCandidates with PtDiff from genCandidate in question
                   }
 
               }}}}   
@@ -509,6 +722,8 @@ void AODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
           //std::sort(PtDiffChHadr.begin(),PtDiffChHadr.end(),pairCompare);
           std::sort(PtDiffChHadrNeg.begin(),PtDiffChHadrNeg.end(),[](const auto& p1, const auto& p2){return p1.first<p2.first;}); 
           std::sort(PtDiffPhotons.begin(),PtDiffPhotons.end(),[](const auto& p1, const auto& p2){return p1.first<p2.first;});
+          
+          std::sort(PtDiffNeutral.begin(),PtDiffNeutral.end(),[](const auto& p1, const auto& p2){return p1.first<p2.first;});
           //sort the tracks
 
           std::sort(PtDiffPosTrk.begin(),PtDiffPosTrk.end(),[](const auto& p1, const auto& p2){return p1.first<p2.first;}); 
@@ -534,7 +749,7 @@ void AODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
               posTrk3Pt = PosTrk.pt();
               posTrk3Charge = PosTrk.charge();
             }
-            if(i==2){
+            if(i==2){ 
               break;
             }
           }
@@ -554,9 +769,14 @@ void AODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
               negTrk3Pt = NegTrk.pt();
               negTrk3Charge = NegTrk.charge();
             }
-            if(i==2){
+            if(i==2){ 
               break;
             }
+          }
+          if(nPosTrkj1 >0 && nNegTrkj1>0){
+            const reco::Track &PosTrk1 = *(PtDiffPosTrk.at(0).second);
+            const reco::Track &NegTrk1 = *(PtDiffNegTrk.at(0).second);
+            dRPosTrk1negTrk1=deltaR(PosTrk1.eta(),PosTrk1.phi(),NegTrk1.eta(),NegTrk1.phi());
           }
           //PosCharged Hadron begin
           nChHadrPosj1 = PtDiffChHadrPos.size();
@@ -682,8 +902,6 @@ void AODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
               const reco::PFCandidate &Pho1 = *(PtDiffPhotons.at(0).second);
               Pho1_pt = Pho1.pt();
               Pho1_Charge = Pho1.charge();
-              //const reco::Candidate &Pho1_Ancestor = *(Pho1.mother(0));
-              //std::cout<<"Pho1_Ancestor: "<<abs(Pho1_Ancestor.pdgId())<<std::endl;
               Pho1_PtDiff = PtDiffPhotons.at(0).first;
               Pho1_ptfrac = (Pho1_pt/jet.pt());
               Pho1_eta = Pho1.eta();
@@ -697,8 +915,6 @@ void AODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
               const reco::PFCandidate &Pho2 = *(PtDiffPhotons.at(1).second);
               Pho2_pt = Pho2.pt();
               Pho2_Charge = Pho2.charge();
-              //const reco::Candidate &Pho2_Ancestor = *(Pho2.mother(0));
-              //std::cout<<"Pho2_Ancestor: "<<abs(Pho2_Ancestor.pdgId())<<std::endl;
               Pho2_PtDiff = PtDiffPhotons.at(1).first;
               Pho2_ptfrac = (Pho2_pt/jet.pt());
               Pho2_eta = Pho2.eta();
@@ -710,6 +926,35 @@ void AODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
               dRPho12 = reco::deltaR(Pho1_eta,Pho1_phi,Pho2_eta,Pho2_phi); //Reco Neutral Hadron Analysis ends 
               Pho12_Ptfrac = (Pho1_pt+Pho2_pt)/(j1Pt);
 
+            //Neutral Particles inside the PencilJet
+
+            nNeutralj1 = PtDiffNeutral.size();
+            std::cout<<"No.of Neutral particles in PencilJet that are not Photons: "<<nNeutralj1<<std::endl;
+            if(nNeutralj1>0){
+              const reco::PFCandidate &Neutral1 = *(PtDiffNeutral.at(0).second);
+              Neutral1_pt = Neutral1.pt();
+              Neutral1_Charge = Neutral1.charge();
+              Neutral1_PtDiff = PtDiffNeutral.at(0).first;
+              Neutral1_ptfrac = (Neutral1_pt/jet.pt());
+              Neutral1_eta = Neutral1.eta();
+              Neutral1_phi = Neutral1.phi();
+              Neutral1_vx = Neutral1.vx();
+              Neutral1_vy = Neutral1.vy();
+              Neutral1_vz = Neutral1.vz();
+            }
+              //std::cout<<"Where is this error?"<<std::endl;
+              if(PtDiffNeutral.size()>=2){
+              const reco::PFCandidate &Neutral2 = *(PtDiffNeutral.at(1).second);
+              Neutral2_pt = Neutral2.pt();
+              Neutral2_Charge = Neutral2.charge();
+              Neutral2_PtDiff = PtDiffNeutral.at(1).first;
+              Neutral2_ptfrac = (Neutral2_pt/jet.pt());
+              Neutral2_eta = Neutral2.eta();
+              Neutral2_phi = Neutral2.phi();
+              Neutral2_vx = Neutral2.vx();
+              Neutral2_vy = Neutral2.vy();
+              Neutral2_vz = Neutral2.vz();
+              } 
           } //closing the leading jet
         }//closing the ak4jets loop
            
