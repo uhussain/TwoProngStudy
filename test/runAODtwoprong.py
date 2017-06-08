@@ -8,7 +8,7 @@ options = VarParsing ('analysis')
 options.inputFiles = 'file:/data/uhussain/signalProduction/steps/CMSSW_8_0_3_patch2/src/Zprime_mchi_5GeV_3b.root'  
 #options.inputFiles ='/store/mc/RunIISummer16MiniAODv2/ZJetsToNuNu_HT-200To400_13TeV-madgraph/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/120000/029F6BD2-5AC9-E611-BD77-0025907DC9D6.root'
 #options.inputFiles = '/store/mc/RunIISpring16MiniAODv2/GluGluHToTauTau_M125_13TeV_powheg_pythia8/MINIAODSIM/PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/80000/065837E2-DA38-E611-9157-008CFA50291C.root'
-options.outputFile = "Zprime_AOD_dR02.root"
+options.outputFile = "Zprime_AOD_dR02_Test.root"
 options.parseArguments()
 
 #name the process
@@ -47,7 +47,9 @@ process.Reco = cms.EDAnalyzer("AODtwoprong",
     PFCandidates = cms.InputTag("particleFlow"),
     jets = cms.InputTag("ak4PFJetsCHS"),
     tracks = cms.InputTag("generalTracks"),
-    pruned = cms.InputTag("genParticles")
+    pruned = cms.InputTag("genParticles"),
+    MET = cms.InputTag("pfMet"),
+    CaloMET = cms.InputTag("caloMet")
 )
 
 process.GenLevel = cms.EDAnalyzer("GenTwoProng",

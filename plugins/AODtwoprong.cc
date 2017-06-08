@@ -12,6 +12,7 @@
 #include "DataFormats/JetReco/interface/PFJet.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/METReco/interface/PFMET.h"
+#include "DataFormats/METReco/interface/CaloMET.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/TrackReco/interface/TrackBase.h"
@@ -58,6 +59,8 @@ class AODtwoprong : public edm::EDAnalyzer {
         edm::EDGetTokenT<std::vector <reco::PFCandidate>> PFCandidateToken;
         edm::EDGetTokenT<std::vector<reco::Track>> TrackToken;
         edm::EDGetTokenT<std::vector <reco::GenParticle>> GenToken;
+        edm::EDGetTokenT<std::vector<reco::PFMET> > pfMETsToken;
+        edm::EDGetTokenT<std::vector<reco::CaloMET> > caloMETToken;
 
         TTree* RecoTree;
         int     run_;
@@ -65,9 +68,13 @@ class AODtwoprong : public edm::EDAnalyzer {
         int     lumis_;
         int nvtx;
         
+        float pfMET;
+        float caloMET;
         double j1Pt;
         double j1Eta;
         double j1Phi;
+        double j1CHF;
+        double j1NHF;
         float j1ConsEtaPhiSpread;
        
         //recoTrk variables
@@ -178,7 +185,7 @@ class AODtwoprong : public edm::EDAnalyzer {
 
         double ChHadrNegTrk12_Ptfrac;
 
-
+        double dRPosHadr1NegHadr1;
 
         //Photons in GenParticles
         int nPhoj1;
@@ -236,7 +243,9 @@ AODtwoprong::AODtwoprong(const edm::ParameterSet& iConfig):
     jetsToken(consumes<std::vector<reco::PFJet>>(iConfig.getParameter<edm::InputTag>("jets"))),
     PFCandidateToken(consumes<std::vector<reco::PFCandidate>>(iConfig.getParameter<edm::InputTag>("PFCandidates"))),
     TrackToken(consumes<std::vector<reco::Track>>(iConfig.getParameter<edm::InputTag>("tracks"))),
-    GenToken(consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("pruned")))
+    GenToken(consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("pruned"))),
+    pfMETsToken(consumes<std::vector<reco::PFMET>>(iConfig.getParameter<edm::InputTag>("MET"))),
+    caloMETToken(consumes<std::vector<reco::CaloMET>>(iConfig.getParameter<edm::InputTag>("CaloMET")))
 {
     edm::Service<TFileService> fs;
 
@@ -263,9 +272,13 @@ AODtwoprong::AODtwoprong(const edm::ParameterSet& iConfig):
     RecoTree->Branch("negTrk3Charge",&negTrk3Charge,"negTrk3Charge/D");
     RecoTree->Branch("dRPosTrk1negTrk1",&dRPosTrk1negTrk1,"dRPosTrk1negTrk1/D");
 
+    RecoTree->Branch("pfMET", &pfMET);
+    RecoTree->Branch("caloMET", &caloMET);
     RecoTree->Branch("j1Pt",&j1Pt,"j1Pt/D");
     RecoTree->Branch("j1Eta",&j1Eta,"j1Eta/D");
     RecoTree->Branch("j1Phi",&j1Phi,"j1Phi/D");
+    RecoTree->Branch("j1CHF",       &j1CHF,"j1CHF/D");
+    RecoTree->Branch("j1NHF",       &j1NHF,"j1NHF/D");
     RecoTree->Branch("j1ConsEtaPhiSpread",&j1ConsEtaPhiSpread,"j1ConsEtaPhiSpread/F");
     
     RecoTree->Branch("nChHadrPosj1",&nChHadrPosj1,"nChHadrPosj1/I");
@@ -342,6 +355,9 @@ AODtwoprong::AODtwoprong(const edm::ParameterSet& iConfig):
     RecoTree->Branch("ChHadrNeg2_vx",&ChHadrNeg2_vx,"ChHadrNeg2_vx/D");
     RecoTree->Branch("ChHadrNeg2_vy",&ChHadrNeg2_vy,"ChHadrNeg2_vy/D");
     RecoTree->Branch("ChHadrNeg2_vz",&ChHadrNeg2_vz,"ChHadrNeg2_vz/D");
+
+
+    RecoTree->Branch("dRPosHadr1NegHadr1",&dRPosHadr1NegHadr1,"dRPosHadr1NegHadr1/D");
 
     RecoTree->Branch("dRChHadrNegTrk12",&dRChHadrNegTrk12,"dRChHadrNegTrk12/D");
 
@@ -425,6 +441,13 @@ void AODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
     edm::Handle<std::vector<reco::Track> > recoTracks;
     iEvent.getByToken(TrackToken,recoTracks);
+
+    edm::Handle<std::vector<reco::PFMET> > pfMETs;
+    iEvent.getByToken(pfMETsToken, pfMETs);
+
+
+    edm::Handle<std::vector<reco::CaloMET> > caloMETs;
+    iEvent.getByToken(caloMETToken, caloMETs);
     
     nPosTrkj1=0;
     nNegTrkj1=0;
@@ -609,6 +632,8 @@ void AODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
         j1Pt = jet.pt();
         j1Eta = jet.eta();
         j1Phi = jet.phi();
+        j1CHF = jet.chargedHadronEnergyFraction();
+        j1NHF = jet.neutralHadronEnergyFraction();
         j1ConsEtaPhiSpread = jet.constituentEtaPhiSpread();
         double difference = 0;
         double PosTrkdifference = 0;
@@ -834,7 +859,7 @@ void AODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
             ChHadrPos12_Ptfrac = (ChHadrPos1_pt+ChHadrPos2_pt)/(j1Pt);
 
             ChHadrPosTrk12_Ptfrac = (ChHadrPosTrk1Pt+ChHadrPosTrk2Pt)/(j1Pt);
-       
+      
             //Neg Charged Hadrons
             nChHadrNegj1 = PtDiffChHadrNeg.size();
             
@@ -892,6 +917,10 @@ void AODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
               ChHadrNeg12_Ptfrac = (ChHadrNeg1_pt+ChHadrNeg2_pt)/(j1Pt);
 
               ChHadrNegTrk12_Ptfrac = (ChHadrNegTrk1Pt+ChHadrNegTrk2Pt)/(j1Pt);
+
+            //detaR between leading positive and negative hadron 
+            dRPosHadr1NegHadr1=deltaR(ChHadrPos1_eta,ChHadrPos1_phi,ChHadrNeg1_eta,ChHadrNeg1_phi);
+
             //RecoPhotons
             nPhoj1 = PtDiffPhotons.size();
             for (int i=0;i<nPhoj1;i++){
@@ -958,6 +987,10 @@ void AODtwoprong::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
           } //closing the leading jet
         }//closing the ak4jets loop
            
+            pfMET = -99,caloMET = -99;
+            pfMET = (*pfMETs)[0].pt();
+            caloMET = (*caloMETs)[0].pt();
+
             RecoTree->Fill();
 }
 bool AODtwoprong::isAncestor(const reco::Candidate* ancestor, const reco::Candidate * particle)
